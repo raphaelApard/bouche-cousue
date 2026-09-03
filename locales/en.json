@@ -1,0 +1,131 @@
+{
+  "app": {
+    "title": "Bouche Cousue",
+    "tagline": "Lips closed · film rolling"
+  },
+  "badge": {
+    "camera": "Camera"
+  },
+  "language": {
+    "group": "Language"
+  },
+  "status": {
+    "waiting": "Waiting…",
+    "loading": "Loading the AI…",
+    "ready": "Ready!",
+    "error": "Camera or network error",
+    "paused": "Paused ⏸",
+    "away": "No face detected",
+    "covered": "Mouth covered 🙌",
+    "pacifier": "Pacifier detected 🍼",
+    "open": "Mouth open",
+    "closed": "Mouth closed 👍"
+  },
+  "welcome": {
+    "title": "The film plays as long as the mouth stays closed.",
+    "subtitle": "Open mouth, hands over it, a pacifier or a face that wanders off — the film waits for you, gently.",
+    "urlPlaceholder": "Paste a YouTube link here",
+    "urlLabel": "YouTube link",
+    "openCinema": "🍿 Open the cinema",
+    "or": "or",
+    "chooseFile": "📁 Choose a video from this computer",
+    "demo": "or try the demo, without a video"
+  },
+  "quickBar": {
+    "placeholder": "🔗 Paste a YouTube link to change cartoon",
+    "label": "New YouTube link",
+    "change": "Change",
+    "file": "📁 File",
+    "fileLabel": "Open a video from this computer"
+  },
+  "veil": {
+    "start": {
+      "title": "Close your mouth to start the film! 🤫",
+      "text": "The film plays as long as your lips are touching."
+    },
+    "manual": {
+      "title": "Paused ⏸",
+      "text": "Press ▶ or the space bar to carry on."
+    }
+  },
+  "warning": {
+    "away": {
+      "title": "Come back soon… 👀",
+      "text": "Otherwise the film will pause."
+    },
+    "covered": {
+      "title": "Uncover your mouth 🙌",
+      "text": "Move your hands away so the film can carry on."
+    },
+    "pacifier": {
+      "title": "The pacifier, please 🍼",
+      "text": "Take your pacifier out so the film can carry on."
+    },
+    "open": {
+      "title": "Lips touching…",
+      "text": "Close your mouth so the film doesn't pause."
+    }
+  },
+  "paused": {
+    "away": {
+      "title": "Where are you? 👀",
+      "text": "Come back in front of the screen to carry on."
+    },
+    "covered": {
+      "title": "Mouth covered 🙌",
+      "text": "Uncover your mouth to start the film again."
+    },
+    "pacifier": {
+      "title": "Pacifier detected 🍼",
+      "text": "Take your pacifier out to start the film again."
+    },
+    "open": {
+      "title": "Closing the mouth…",
+      "text": "As soon as your lips touch, the film carries on!"
+    }
+  },
+  "reward": "Well done! 🌟",
+  "controls": {
+    "play": "Play the film",
+    "pause": "Pause the film",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "position": "Position in the video",
+    "volume": "Volume"
+  },
+  "settings": {
+    "sensitivity": "Sensitivity",
+    "sensitivityLabel": "Detection sensitivity",
+    "warning": "Warning",
+    "warningLabel": "Delay before the warning",
+    "pause": "Pause",
+    "pauseLabel": "Delay before pausing",
+    "secondsUnit": "s"
+  },
+  "buttons": {
+    "fullscreen": "⛶ Fullscreen",
+    "exitFullscreen": "⛶ Leave fullscreen",
+    "hideCamera": "Hide the camera",
+    "showCamera": "Show the camera"
+  },
+  "coach": {
+    "fullscreen": "👇 The fullscreen that works"
+  },
+  "alerts": {
+    "invalidLink": "YouTube link not recognised. Paste a link such as https://www.youtube.com/watch?v=… or https://youtu.be/…",
+    "needsServer": "YouTube cannot play videos when this page is opened as a local file (file://).\n\nServe it from a small local server instead, for example:\n  python3 -m http.server 8000\nthen open http://localhost:8000/",
+    "youtubeFailed": "Could not load the YouTube video:",
+    "unplayableVideo": "The browser cannot play this video.\n\nTry an .mp4 (H.264 + AAC audio) or .webm file. .mkv files are often silent: their audio track (AC-3, DTS) cannot be decoded by a browser.",
+    "startFailed": "Could not start:",
+    "startFailedHint": "\n\nCheck that the camera is allowed and that the computer is online (needed the first time, to download the model)."
+  },
+  "youtube": {
+    "invalidLink": "Invalid YouTube link.",
+    "playerError": "HTML5 player error.",
+    "notFound": "Video not found, or private.",
+    "embeddingDenied": "The owner of this video does not allow it to be played outside YouTube. Try another one.",
+    "blockedHere": "This video is blocked from playing on this page (embedding or origin restriction). Try another video, or open the page via http://localhost.",
+    "otherError": "YouTube error"
+  },
+  "privacy": "🔒 <strong>Privacy: nothing leaves this computer.</strong><br>No image, no video and no sound is ever recorded or sent over the internet. No account, no tracker, no analytics, no personal data collected.<br>Videos you open from your computer never leave it. Only your settings (sensitivity, delays, volume, language) are remembered in this browser, on this machine.<br>The code is fully open and <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">auditable on GitHub</a>.<br>One exception: if you pick a YouTube video, it is loaded from youtube-nocookie.com, which then applies its own rules."
+}

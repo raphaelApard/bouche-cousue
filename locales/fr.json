@@ -1,0 +1,131 @@
+{
+  "app": {
+    "title": "Bouche Cousue",
+    "tagline": "Bouche fermée · film qui tourne"
+  },
+  "badge": {
+    "camera": "Caméra"
+  },
+  "language": {
+    "group": "Langue"
+  },
+  "status": {
+    "waiting": "En attente…",
+    "loading": "Chargement de l'IA…",
+    "ready": "Prêt !",
+    "error": "Erreur caméra ou réseau",
+    "paused": "Pause ⏸",
+    "away": "Visage non détecté",
+    "covered": "Bouche cachée 🙌",
+    "pacifier": "Tétine détectée 🍼",
+    "open": "Bouche ouverte",
+    "closed": "Bouche fermée 👍"
+  },
+  "welcome": {
+    "title": "Le film tourne tant que la bouche reste fermée.",
+    "subtitle": "Bouche ouverte, mains dessus, tétine ou visage qui s'en va — le film t'attend gentiment.",
+    "urlPlaceholder": "Colle un lien YouTube ici",
+    "urlLabel": "Lien YouTube",
+    "openCinema": "🍿 Ouvrir la salle",
+    "or": "ou",
+    "chooseFile": "📁 Choisir une vidéo sur l'ordinateur",
+    "demo": "ou tester en démo, sans vidéo"
+  },
+  "quickBar": {
+    "placeholder": "🔗 Coller un lien YouTube pour changer de dessin animé",
+    "label": "Nouveau lien YouTube",
+    "change": "Changer",
+    "file": "📁 Fichier",
+    "fileLabel": "Ouvrir une vidéo de l'ordinateur"
+  },
+  "veil": {
+    "start": {
+      "title": "Ferme la bouche pour lancer le film ! 🤫",
+      "text": "Le film joue tant que tes lèvres se touchent."
+    },
+    "manual": {
+      "title": "Pause ⏸",
+      "text": "Appuie sur ▶ ou sur la barre d'espace pour reprendre."
+    }
+  },
+  "warning": {
+    "away": {
+      "title": "Reviens vite… 👀",
+      "text": "Sinon le film va faire une pause."
+    },
+    "covered": {
+      "title": "Découvre ta bouche 🙌",
+      "text": "Enlève tes mains pour que le film continue."
+    },
+    "pacifier": {
+      "title": "La tétine, s'il te plaît 🍼",
+      "text": "Enlève ta tétine pour que le film continue."
+    },
+    "open": {
+      "title": "Les lèvres qui se touchent…",
+      "text": "Ferme la bouche pour ne pas mettre le film en pause."
+    }
+  },
+  "paused": {
+    "away": {
+      "title": "Où es-tu ? 👀",
+      "text": "Reviens devant l'écran pour continuer le film."
+    },
+    "covered": {
+      "title": "Bouche cachée 🙌",
+      "text": "Découvre ta bouche pour reprendre le film."
+    },
+    "pacifier": {
+      "title": "Tétine détectée 🍼",
+      "text": "Enlève ta tétine pour reprendre le film."
+    },
+    "open": {
+      "title": "On ferme la bouche…",
+      "text": "Dès que tes lèvres se touchent, le film continue !"
+    }
+  },
+  "reward": "Bravo ! 🌟",
+  "controls": {
+    "play": "Lancer le film",
+    "pause": "Mettre le film en pause",
+    "mute": "Couper le son",
+    "unmute": "Remettre le son",
+    "position": "Position dans la vidéo",
+    "volume": "Volume"
+  },
+  "settings": {
+    "sensitivity": "Sensibilité",
+    "sensitivityLabel": "Sensibilité de détection",
+    "warning": "Avertissement",
+    "warningLabel": "Délai avant l'avertissement",
+    "pause": "Pause",
+    "pauseLabel": "Délai avant la pause",
+    "secondsUnit": "s"
+  },
+  "buttons": {
+    "fullscreen": "⛶ Plein écran",
+    "exitFullscreen": "⛶ Quitter le plein écran",
+    "hideCamera": "Masquer la caméra",
+    "showCamera": "Afficher la caméra"
+  },
+  "coach": {
+    "fullscreen": "👇 Le vrai plein écran"
+  },
+  "alerts": {
+    "invalidLink": "Lien YouTube non reconnu. Colle un lien de type https://www.youtube.com/watch?v=… ou https://youtu.be/…",
+    "needsServer": "YouTube ne peut pas lire les vidéos quand la page est ouverte en fichier local (file://).\n\nOuvre-la via un petit serveur local, par exemple :\n  python3 -m http.server 8000\npuis va sur http://localhost:8000/",
+    "youtubeFailed": "Impossible de charger la vidéo YouTube :",
+    "unplayableVideo": "Cette vidéo ne peut pas être lue par le navigateur.\n\nEssaie un fichier .mp4 (H.264 + audio AAC) ou .webm. Les .mkv sont souvent muets : leur piste audio (AC-3, DTS) n'est pas décodable par un navigateur.",
+    "startFailed": "Impossible de démarrer :",
+    "startFailedHint": "\n\nVérifie que la caméra est autorisée et que l'ordinateur est connecté à internet (nécessaire au premier chargement du modèle)."
+  },
+  "youtube": {
+    "invalidLink": "Lien YouTube invalide.",
+    "playerError": "Erreur du lecteur HTML5.",
+    "notFound": "Vidéo introuvable ou privée.",
+    "embeddingDenied": "Le propriétaire de cette vidéo interdit sa lecture en dehors de YouTube. Essaie une autre vidéo.",
+    "blockedHere": "Cette vidéo est bloquée à la lecture depuis cette page (restriction d'intégration ou d'origine). Essaie une autre vidéo, ou ouvre la page via http://localhost.",
+    "otherError": "Erreur YouTube"
+  },
+  "privacy": "🔒 <strong>Vie privée : rien ne sort de cet ordinateur.</strong><br>Aucune image, aucune vidéo, aucun son n'est enregistré ni envoyé sur internet. Pas de compte, pas de traceur, pas de statistiques, aucune donnée personnelle collectée.<br>Les vidéos que tu ouvres depuis ton ordinateur ne le quittent jamais. Seuls tes réglages (sensibilité, délais, volume, langue) sont mémorisés dans ce navigateur, sur cette machine.<br>Le code est entièrement ouvert et <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">vérifiable sur GitHub</a>.<br>Seule exception : si tu choisis une vidéo YouTube, elle est chargée depuis youtube-nocookie.com, qui applique alors ses propres règles."
+}

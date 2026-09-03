@@ -1,0 +1,74 @@
+/* Design tokens, reset, and page-wide defaults. */
+
+:root {
+  /* Palette — a night-time cinema */
+  --night: #0f0a24;
+  --velvet: #3b1c5a;
+  --marquee: #ffd23f;
+  --marquee-light: #ffdd6b;
+  --marquee-dark: #c99f14;
+  --cream: #fff3d9;
+  --coral: #ff6b6b;
+  --mint: #4ecdc4;
+  --soft-violet: #8d7bd4;
+
+  /* Text on light surfaces */
+  --on-marquee: #2a1a00;
+  --on-mint: #0a2a28;
+
+  --radius: 18px;
+
+  --font-display: "Alfa Slab One", Georgia, serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(900px 500px at 15% 0%, rgba(255, 210, 63, 0.08), transparent 60%),
+    radial-gradient(900px 500px at 85% 100%, rgba(78, 205, 196, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--night), #1a0e35 60%, var(--night));
+  color: var(--cream);
+  font-family: var(--font-body);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Shown by main.js when the app cannot boot at all. */
+.boot-error {
+  margin: 0;
+  padding: 14px 20px;
+  background: var(--coral);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bulb,
+  .coach,
+  .mascot__mouth,
+  .veil.is-visible,
+  .reward.is-visible {
+    animation: none !important;
+  }
+}

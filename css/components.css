@@ -1,0 +1,296 @@
+/* Reusable pieces: badges, buttons, sliders, the two link bars. */
+
+/* ---------- Status badges ---------- */
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 243, 217, 0.1);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--cream);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #666;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+.led.is-ok {
+  background: var(--mint);
+  box-shadow: 0 0 8px var(--mint);
+}
+
+.led.is-alert {
+  background: var(--coral);
+  box-shadow: 0 0 8px var(--coral);
+}
+
+/* ---------- Language switch ---------- */
+
+.language-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(255, 243, 217, 0.1);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.language-switch__button {
+  padding: 4px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: rgba(255, 243, 217, 0.55);
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.language-switch__button:hover {
+  color: var(--cream);
+}
+
+.language-switch__button[aria-pressed="true"] {
+  background: var(--marquee);
+  color: var(--on-marquee);
+}
+
+/* ---------- Buttons ---------- */
+
+.button-primary {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--marquee);
+  color: var(--on-marquee);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--marquee-dark), 0 0 24px rgba(255, 210, 63, 0.35);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+
+.button-primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--marquee-dark);
+}
+
+.button-quiet {
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button-quiet:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/*
+ * Needs its own hover state: .button-quiet:hover carries a pseudo-class and so
+ * outranks this variant's background, which would otherwise turn the yellow
+ * button translucent grey on hover.
+ */
+.button-quiet--accent {
+  border-color: transparent;
+  background: var(--marquee);
+  color: var(--on-marquee);
+  box-shadow: 0 3px 0 var(--marquee-dark);
+}
+
+.button-quiet--accent:hover {
+  background: var(--marquee-light);
+}
+
+.button-quiet--accent:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--marquee-dark);
+}
+
+.button-outline {
+  width: 100%;
+  padding: 14px 22px;
+  border: 1px solid rgba(255, 210, 63, 0.45);
+  border-radius: 999px;
+  background: rgba(255, 210, 63, 0.08);
+  color: var(--marquee);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button-outline:hover {
+  background: rgba(255, 210, 63, 0.16);
+}
+
+.button-link {
+  margin-top: 2px;
+  padding: 4px 8px;
+  border: 0;
+  background: none;
+  color: var(--soft-violet);
+  font: inherit;
+  font-size: 0.8rem;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.button-link:hover {
+  color: var(--cream);
+}
+
+/* One visible focus treatment for every control. */
+:where(button, input, a):focus-visible {
+  outline: 3px solid var(--mint);
+  outline-offset: 2px;
+}
+
+/* ---------- Link bars ---------- */
+
+.link-bar {
+  display: none;
+  align-items: stretch;
+  gap: 10px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.link-bar.is-visible {
+  display: flex;
+}
+
+.link-bar__input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.link-bar__input::placeholder {
+  color: rgba(255, 243, 217, 0.4);
+  font-weight: 500;
+}
+
+.link-bar__file {
+  flex: 0 0 auto;
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.link-bar__file:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ---------- Settings sliders ---------- */
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 243, 217, 0.85);
+}
+
+.setting input[type="range"] {
+  width: 120px;
+  accent-color: var(--marquee);
+}
+
+.setting__value {
+  min-width: 3.2ch;
+  color: var(--cream);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Coach mark ---------- */
+
+.coach-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.coach {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  display: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: var(--mint);
+  color: var(--on-mint);
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.35);
+  transform: translateX(-50%);
+  animation: coach-bobble 2.2s ease-in-out infinite;
+}
+
+.coach.is-visible {
+  display: block;
+}
+
+.coach::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  border-bottom: 0;
+  border-top-color: var(--mint);
+  transform: translateX(-50%);
+}
+
+@keyframes coach-bobble {
+  0%,
+  100% { transform: translateX(-50%) translateY(0); }
+  50%  { transform: translateX(-50%) translateY(-4px); }
+}
+
+@media (max-width: 640px) {
+  .setting input[type="range"] { width: 90px; }
+
+  .link-bar {
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 22px;
+  }
+
+  .link-bar__input { text-align: center; }
+}

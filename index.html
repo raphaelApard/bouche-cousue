@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bouche Cousue</title>
+<meta name="description" content="A cartoon that only plays while the child's mouth stays closed. Lip-closure practice, made playful.">
+<meta name="color-scheme" content="dark">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/stage.css">
+</head>
+
+<body>
+
+<div class="marquee" id="marquee" aria-hidden="true"></div>
+
+<header class="masthead">
+  <p class="wordmark">
+    Bouche Cousue
+    <small class="wordmark__tagline" data-i18n="app.tagline">Bouche fermée · film qui tourne</small>
+  </p>
+
+  <div class="status-strip">
+    <p class="badge">
+      <span class="led" id="cameraLed"></span>
+      <span data-i18n="badge.camera">Caméra</span>
+    </p>
+    <p class="badge">
+      <span class="led" id="mouthLed"></span>
+      <span id="mouthStatus">En attente…</span>
+    </p>
+
+    <div class="language-switch" role="group" data-i18n-aria-label="language.group" aria-label="Langue">
+      <button type="button" class="language-switch__button" data-locale="fr" aria-pressed="true">FR</button>
+      <button type="button" class="language-switch__button" data-locale="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="stage-area">
+  <div class="scene">
+
+    <!-- Quick change bar, revealed once a film is playing -->
+    <form class="link-bar" id="quickBar">
+      <input type="url" class="link-bar__input" id="quickUrl"
+             data-i18n-placeholder="quickBar.placeholder"
+             data-i18n-aria-label="quickBar.label"
+             placeholder="🔗 Coller un lien YouTube pour changer de dessin animé"
+             aria-label="Nouveau lien YouTube">
+      <button type="submit" class="button-primary" data-i18n="quickBar.change">Changer</button>
+      <button type="button" class="link-bar__file" id="quickFileButton"
+              data-i18n="quickBar.file"
+              data-i18n-aria-label="quickBar.fileLabel"
+              aria-label="Ouvrir une vidéo de l'ordinateur">📁 Fichier</button>
+    </form>
+
+    <div class="stage" id="stage">
+      <video class="stage__video" id="localVideo" playsinline hidden></video>
+      <div class="stage__embed" id="youtubeWrap" hidden><div id="youtubeFrame"></div></div>
+
+      <!-- Welcome panel: pick a source -->
+      <section class="welcome" id="welcome">
+        <p class="welcome__curtain" aria-hidden="true">🎬</p>
+        <h1 class="welcome__title" data-i18n="welcome.title">
+          Le film tourne tant que la bouche reste fermée.
+        </h1>
+        <p class="welcome__subtitle" data-i18n="welcome.subtitle">
+          Bouche ouverte, mains dessus, tétine ou visage qui s'en va — le film t'attend gentiment.
+        </p>
+
+        <form class="welcome__form" id="welcomeForm">
+          <input type="url" id="welcomeUrl" required
+                 data-i18n-placeholder="welcome.urlPlaceholder"
+                 data-i18n-aria-label="welcome.urlLabel"
+                 placeholder="Colle un lien YouTube ici" aria-label="Lien YouTube">
+          <button type="submit" class="button-primary" data-i18n="welcome.openCinema">🍿 Ouvrir la salle</button>
+        </form>
+
+        <div class="welcome__local">
+          <span class="welcome__separator" data-i18n="welcome.or">ou</span>
+          <button type="button" class="button-outline" id="chooseFileButton" data-i18n="welcome.chooseFile">
+            📁 Choisir une vidéo sur l'ordinateur
+          </button>
+          <button type="button" class="button-link" id="demoButton" data-i18n="welcome.demo">
+            ou tester en démo, sans vidéo
+          </button>
+        </div>
+
+        <input type="file" id="filePicker" accept="video/*" hidden>
+      </section>
+
+      <!-- Warning / pause veil -->
+      <div class="veil" id="veil" role="status" aria-live="polite">
+        <svg class="mascot" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="86" fill="#FFD23F"/>
+          <circle cx="70" cy="82" r="10" fill="#0F0A24"/>
+          <circle cx="130" cy="82" r="10" fill="#0F0A24"/>
+          <circle cx="73" cy="79" r="3" fill="#fff"/>
+          <circle cx="133" cy="79" r="3" fill="#fff"/>
+          <ellipse cx="55" cy="112" rx="12" ry="7" fill="#FF9F7A" opacity=".7"/>
+          <ellipse cx="145" cy="112" rx="12" ry="7" fill="#FF9F7A" opacity=".7"/>
+          <g class="mascot__mouth">
+            <ellipse cx="100" cy="128" rx="26" ry="18" fill="#0F0A24"/>
+            <ellipse cx="100" cy="134" rx="14" ry="7" fill="#FF6B6B"/>
+          </g>
+        </svg>
+        <h2 class="veil__title" id="veilTitle">Ferme la bouche pour lancer le film</h2>
+        <p class="veil__text" id="veilText">Le film joue tant que tes lèvres se touchent.</p>
+      </div>
+
+      <div class="reward" id="reward" aria-hidden="true"><span data-i18n="reward">Bravo ! 🌟</span></div>
+    </div>
+
+    <!-- Playback bar, local files only -->
+    <div class="playback-bar" id="playbackBar">
+      <button type="button" class="icon-button" id="playButton"
+              aria-label="Lancer le film" title="Lancer le film">▶</button>
+
+      <div class="playback-bar__group playback-bar__group--position">
+        <input type="range" class="playback-bar__progress" id="progress"
+               min="0" max="0" step="0.1" value="0"
+               data-i18n-aria-label="controls.position" aria-label="Position dans la vidéo">
+        <span class="playback-bar__time" id="timeLabel">0:00 / 0:00</span>
+      </div>
+
+      <div class="playback-bar__group">
+        <button type="button" class="icon-button" id="muteButton"
+                aria-label="Couper le son" title="Couper le son">🔊</button>
+        <input type="range" class="playback-bar__volume" id="volume"
+               min="0" max="100" step="1" value="100"
+               data-i18n-aria-label="controls.volume" aria-label="Volume">
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="controls-bar">
+  <label class="setting">
+    <span data-i18n="settings.sensitivity">Sensibilité</span>
+    <input type="range" id="sensitivity" min="15" max="90" value="90"
+           data-i18n-aria-label="settings.sensitivityLabel" aria-label="Sensibilité de détection">
+  </label>
+
+  <label class="setting">
+    <span data-i18n="settings.warning">Avertissement</span>
+    <input type="range" id="warningDelay" min="300" max="5000" step="100" value="1500"
+           data-i18n-aria-label="settings.warningLabel" aria-label="Délai avant l'avertissement">
+    <span class="setting__value" id="warningDelayValue">1,5 s</span>
+  </label>
+
+  <label class="setting">
+    <span data-i18n="settings.pause">Pause</span>
+    <input type="range" id="pauseDelay" min="0" max="5000" step="100" value="5000"
+           data-i18n-aria-label="settings.pauseLabel" aria-label="Délai avant la pause">
+    <span class="setting__value" id="pauseDelayValue">5,0 s</span>
+  </label>
+
+  <span class="coach-anchor">
+    <span class="coach" id="fullscreenCoach" data-i18n="coach.fullscreen">👇 Le vrai plein écran</span>
+    <button type="button" class="button-quiet button-quiet--accent" id="fullscreenButton">⛶ Plein écran</button>
+  </span>
+
+  <button type="button" class="button-quiet" id="cameraButton">Masquer la caméra</button>
+
+  <p class="privacy" data-i18n-html="privacy"></p>
+</footer>
+
+<div class="camera-preview" id="cameraBox">
+  <video id="cameraVideo" playsinline muted></video>
+  <div class="gauge"><div class="gauge__fill" id="gauge"></div></div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
