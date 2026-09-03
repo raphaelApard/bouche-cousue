@@ -10,11 +10,11 @@
  * `t(key)` and re-renders through the listeners registered here.
  */
 
-import { I18N, REPO_URL, STORAGE_KEYS } from "./config.js";
+import { CONTACT_EMAIL, I18N, REPO_URL, STORAGE_KEYS } from "./config.js";
 import { readRaw, writeRaw } from "./storage.js";
 
 /** Values available to every string, written as `{name}` in the locale files. */
-const GLOBAL_PLACEHOLDERS = { repo: REPO_URL };
+const GLOBAL_PLACEHOLDERS = { repo: REPO_URL, email: CONTACT_EMAIL };
 
 let locale = I18N.FALLBACK;
 let messages = {};

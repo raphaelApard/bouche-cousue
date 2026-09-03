@@ -190,6 +190,15 @@ Les issues et pull requests sont bienvenues. Gardez en tête que l'interface
 s'adresse à de jeunes enfants : le texte doit rester court, chaleureux et
 rassurant, dans toutes les langues.
 
+## Contact
+
+Une question, un retour, ou le récit de ce que ça a donné avec votre enfant :
+[raphael.apard@acolad.fr](mailto:raphael.apard@acolad.fr).
+
+Les retours d'orthophonistes sont particulièrement bienvenus — la sensibilité
+et les délais par défaut ont été réglés à la main, et seul l'usage réel dira
+s'ils conviennent à d'autres.
+
 ## Licence
 
 MIT — voir [LICENSE](LICENSE).

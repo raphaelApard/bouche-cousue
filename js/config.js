@@ -8,6 +8,9 @@
 /** Repository URL, quoted in the privacy note. */
 export const REPO_URL = "https://github.com/raphaelApard/bouche-cousue";
 
+/** Contact address, offered in the footer. */
+export const CONTACT_EMAIL = "raphael.apard@acolad.fr";
+
 /** Playback sources the app can drive. */
 export const SOURCE = Object.freeze({
   YOUTUBE: "youtube",

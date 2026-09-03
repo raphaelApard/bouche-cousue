@@ -124,6 +124,15 @@
   color: var(--cream);
 }
 
+/* Sits on its own row beneath the privacy note, for the same reason. */
+.contact {
+  flex: 0 0 100%;
+  margin-top: 8px;
+  color: rgba(255, 243, 217, 0.4);
+  font-size: 0.74rem;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .marquee { padding: 10px 14px; }
   .masthead { padding: 4px 14px 12px; }

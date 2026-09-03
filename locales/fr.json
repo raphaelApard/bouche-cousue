@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Bouche Cousue",
+    "title": "Petit Cinéma",
     "tagline": "Bouche fermée · film qui tourne"
   },
   "badge": {
@@ -127,5 +127,6 @@
     "blockedHere": "Cette vidéo est bloquée à la lecture depuis cette page (restriction d'intégration ou d'origine). Essaie une autre vidéo, ou ouvre la page via http://localhost.",
     "otherError": "Erreur YouTube"
   },
-  "privacy": "🔒 <strong>Vie privée : rien ne sort de cet ordinateur.</strong><br>Aucune image, aucune vidéo, aucun son n'est enregistré ni envoyé sur internet. Pas de compte, pas de traceur, pas de statistiques, aucune donnée personnelle collectée.<br>Les vidéos que tu ouvres depuis ton ordinateur ne le quittent jamais. Seuls tes réglages (sensibilité, délais, volume, langue) sont mémorisés dans ce navigateur, sur cette machine.<br>Le code est entièrement ouvert et <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">vérifiable sur GitHub</a>.<br>Seule exception : si tu choisis une vidéo YouTube, elle est chargée depuis youtube-nocookie.com, qui applique alors ses propres règles."
+  "privacy": "🔒 <strong>Vie privée : rien ne sort de cet ordinateur.</strong><br>Aucune image, aucune vidéo, aucun son n'est enregistré ni envoyé sur internet. Pas de compte, pas de traceur, pas de statistiques, aucune donnée personnelle collectée.<br>Les vidéos que tu ouvres depuis ton ordinateur ne le quittent jamais. Seuls tes réglages (sensibilité, délais, volume, langue) sont mémorisés dans ce navigateur, sur cette machine.<br>Le code est entièrement ouvert et <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">vérifiable sur GitHub</a>.<br>Seule exception : si tu choisis une vidéo YouTube, elle est chargée depuis youtube-nocookie.com, qui applique alors ses propres règles.",
+  "contact": "Une question, une remarque, une idée ? Écris à <a class=\"privacy__link\" href=\"mailto:{email}\">{email}</a>."
 }

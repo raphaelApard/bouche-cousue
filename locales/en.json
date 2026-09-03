@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Bouche Cousue",
+    "title": "Petit Cinéma",
     "tagline": "Lips closed · film rolling"
   },
   "badge": {
@@ -127,5 +127,6 @@
     "blockedHere": "This video is blocked from playing on this page (embedding or origin restriction). Try another video, or open the page via http://localhost.",
     "otherError": "YouTube error"
   },
-  "privacy": "🔒 <strong>Privacy: nothing leaves this computer.</strong><br>No image, no video and no sound is ever recorded or sent over the internet. No account, no tracker, no analytics, no personal data collected.<br>Videos you open from your computer never leave it. Only your settings (sensitivity, delays, volume, language) are remembered in this browser, on this machine.<br>The code is fully open and <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">auditable on GitHub</a>.<br>One exception: if you pick a YouTube video, it is loaded from youtube-nocookie.com, which then applies its own rules."
+  "privacy": "🔒 <strong>Privacy: nothing leaves this computer.</strong><br>No image, no video and no sound is ever recorded or sent over the internet. No account, no tracker, no analytics, no personal data collected.<br>Videos you open from your computer never leave it. Only your settings (sensitivity, delays, volume, language) are remembered in this browser, on this machine.<br>The code is fully open and <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">auditable on GitHub</a>.<br>One exception: if you pick a YouTube video, it is loaded from youtube-nocookie.com, which then applies its own rules.",
+  "contact": "A question, a remark, an idea? Write to <a class=\"privacy__link\" href=\"mailto:{email}\">{email}</a>."
 }

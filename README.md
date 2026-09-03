@@ -181,6 +181,15 @@ Issues and pull requests are welcome. Keep in mind that the user interface is
 written for young children — text should stay short, warm, and reassuring in
 every language.
 
+## Contact
+
+Questions, feedback, or a story about how it went with your child:
+[raphael.apard@acolad.fr](mailto:raphael.apard@acolad.fr).
+
+Reports from speech and language therapists are especially welcome — the
+default sensitivity and delays were tuned by hand, and real use is the only way
+to know whether they suit anyone else.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
