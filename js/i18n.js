@@ -16,6 +16,13 @@ import { readRaw, writeRaw } from "./storage.js";
 /** Values available to every string, written as `{name}` in the locale files. */
 const GLOBAL_PLACEHOLDERS = { repo: REPO_URL, email: CONTACT_EMAIL };
 
+/**
+ * Resolved against this module's own URL rather than the page's, so the app
+ * works from any base path — a project site such as
+ * `https://user.github.io/bouche-cousue/` as readily as a domain root.
+ */
+const LOCALES_URL = new URL(`../${I18N.PATH}/`, import.meta.url);
+
 let locale = I18N.FALLBACK;
 let messages = {};
 let fallbackMessages = {};
@@ -40,7 +47,7 @@ function detectLocale() {
 }
 
 async function fetchLocale(code) {
-  const response = await fetch(`${I18N.PATH}/${code}.json`);
+  const response = await fetch(new URL(`${code}.json`, LOCALES_URL));
   if (!response.ok) throw new Error(`Cannot load locale "${code}" (HTTP ${response.status})`);
   return response.json();
 }
