@@ -4,6 +4,8 @@
 
 A cartoon that only plays while the child's mouth stays closed.
 
+**▶ [Try it in your browser](https://raphaelapard.github.io/bouche-cousue/)** — nothing to install; the camera never leaves your machine.
+
 Bouche Cousue turns lip closure into a game. The film rolls while the lips are
 touching; it gently warns, then pauses, when the mouth falls open. Closing the
 mouth brings the film straight back, with a small "Well done!" flash.

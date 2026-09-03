@@ -4,6 +4,8 @@
 
 Un dessin animé qui ne tourne que si la bouche de l'enfant reste fermée.
 
+**▶ [Essayer dans le navigateur](https://raphaelapard.github.io/bouche-cousue/)** — rien à installer ; la caméra ne quitte jamais votre machine.
+
 Bouche Cousue transforme la fermeture des lèvres en jeu. Le film joue tant que
 les lèvres se touchent ; il prévient doucement, puis met en pause, quand la
 bouche s'ouvre. Refermer la bouche relance aussitôt le film, avec un petit
