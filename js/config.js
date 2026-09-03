@@ -6,7 +6,7 @@
  */
 
 /** Repository URL, quoted in the privacy note. */
-export const REPO_URL = "#";
+export const REPO_URL = "https://github.com/raphaelApard/bouche-cousue";
 
 /** Playback sources the app can drive. */
 export const SOURCE = Object.freeze({

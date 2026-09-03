@@ -9,9 +9,9 @@ les lèvres se touchent ; il prévient doucement, puis met en pause, quand la
 bouche s'ouvre. Refermer la bouche relance aussitôt le film, avec un petit
 « Bravo ! ».
 
-Tout tourne dans le navigateur, sur la machine devant vous. C'est un unique
-fichier HTML — pas d'installation, pas de serveur, pas de compte, aucune
-collecte de données.
+Tout tourne dans le navigateur, sur la machine devant vous — pas de compilation,
+aucune dépendance à installer, pas de serveur, pas de compte, aucune collecte
+de données.
 
 ## Pourquoi
 
@@ -192,4 +192,4 @@ rassurant, dans toutes les langues.
 
 ## Licence
 
-_À choisir — ajouter un fichier `LICENSE` et l'indiquer ici._
+MIT — voir [LICENSE](LICENSE).

@@ -183,4 +183,4 @@ every language.
 
 ## License
 
-_To be chosen — add a `LICENSE` file and state it here._
+MIT — see [LICENSE](LICENSE).
