@@ -5,12 +5,6 @@
  * import from anywhere.
  */
 
-/** Repository URL, quoted in the privacy note. */
-export const REPO_URL = "https://github.com/raphaelApard/bouche-cousue";
-
-/** Contact address, offered in the footer. */
-export const CONTACT_EMAIL = "raphael.apard@acolad.fr";
-
 /** Playback sources the app can drive. */
 export const SOURCE = Object.freeze({
   YOUTUBE: "youtube",
@@ -49,8 +43,7 @@ export const STORAGE_KEYS = Object.freeze({
   warningDelay: "p4l.warningDelay",
   pauseDelay: "p4l.pauseDelay",
   volume: "p4l.volume",
-  muted: "p4l.muted",
-  locale: "p4l.locale"
+  muted: "p4l.muted"
 });
 
 export const DETECTION = Object.freeze({
@@ -88,7 +81,6 @@ export const MEDIAPIPE = Object.freeze({
 export const CAMERA = Object.freeze({ width: 480, height: 360 });
 
 export const I18N = Object.freeze({
-  SUPPORTED: ["fr", "en"],
-  FALLBACK: "fr",
+  LOCALE: "fr",
   PATH: "locales"
 });

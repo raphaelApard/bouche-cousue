@@ -2,12 +2,12 @@
  * Everything the user sees, apart from the playback bar.
  *
  * The veil and the status badge remember *which translation keys* they are
- * showing rather than the rendered text, so switching language mid-pause
- * rewrites what is on screen instead of leaving a stale sentence behind.
+ * showing rather than the rendered text, so a re-render rewrites what is on
+ * screen instead of leaving a stale sentence behind.
  */
 
 import { el } from "./dom.js";
-import { t, onLocaleChange, setLocale, getLocale, translateDocument } from "./i18n.js";
+import { t, onLocaleChange, translateDocument } from "./i18n.js";
 import { TIMING } from "./config.js";
 
 /** @type {{title: string, text: string}|null} */
@@ -115,10 +115,6 @@ export function showWelcome() {
   el.quickBar.classList.remove("is-visible");
 }
 
-export function showFullscreenCoach() {
-  el.fullscreenCoach.classList.add("is-visible");
-}
-
 /* ---------- Fullscreen ---------- */
 
 function refreshFullscreenButton() {
@@ -136,7 +132,6 @@ async function toggleFullscreen() {
     } else if (el.stage.webkitRequestFullscreen) {
       await el.stage.webkitRequestFullscreen();
     }
-    el.fullscreenCoach.classList.remove("is-visible"); // the point has landed
   } catch (error) {
     console.error(error);
   }
@@ -155,27 +150,10 @@ function toggleCameraPreview() {
   refreshCameraButton();
 }
 
-/* ---------- Language switch ---------- */
-
-function refreshLanguageButtons() {
-  for (const button of document.querySelectorAll("[data-locale]")) {
-    button.setAttribute("aria-pressed", String(button.dataset.locale === getLocale()));
-  }
-}
-
-function wireLanguageButtons() {
-  for (const button of document.querySelectorAll("[data-locale]")) {
-    button.addEventListener("click", () => {
-      setLocale(button.dataset.locale).catch(error => console.error(error));
-    });
-  }
-}
-
 /* ---------- Setup ---------- */
 
 export function initUi() {
   buildMarquee();
-  wireLanguageButtons();
 
   el.fullscreenButton.addEventListener("click", toggleFullscreen);
   document.addEventListener("fullscreenchange", refreshFullscreenButton);
@@ -186,7 +164,6 @@ export function initUi() {
     setStatus(statusKey);
     refreshFullscreenButton();
     refreshCameraButton();
-    refreshLanguageButtons();
   });
 
   translateDocument();

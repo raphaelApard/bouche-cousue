@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A bilingual (FR/EN) browser app — "Bouche Cousue" — that plays a chosen cartoon only while the child's mouth stays closed, using webcam face landmark detection. It is aimed at children with facial hypotonia, turning lip-closure practice into a game. Everything is client-side: no build system, no package manager, no server code, no dependencies to install.
+A French browser app — "Bouche Cousue" — that plays a chosen cartoon only while the child's mouth stays closed, using webcam face landmark detection. It is aimed at children with facial hypotonia, turning lip-closure practice into a game. Everything is client-side: no build system, no package manager, no server code, no dependencies to install.
 
 ## Running
 
@@ -39,17 +39,17 @@ The sensitivity slider maps 15–90 → threshold 0.080–0.005 via `SENSITIVITY
 
 ## Conventions
 
-Code, comments, and identifiers are **English**. User-facing strings are **never** written inline — they belong in `locales/*.json` and are read via `t(key)`, or bound in markup with `data-i18n`, `data-i18n-html`, `data-i18n-placeholder`, `data-i18n-aria-label`. Every locale file must define every key.
+Code, comments, and identifiers are **English**. User-facing strings are **never** written inline — they belong in `locales/fr.json` and are read via `t(key)`, or bound in markup with `data-i18n`, `data-i18n-placeholder`, `data-i18n-aria-label`.
 
-Anything rendered dynamically must survive a language switch. Register a callback with `onLocaleChange()` and re-render from state, which is why the veil tracks *translation keys* (`veilKeys`) rather than the sentences it printed.
+Anything rendered dynamically registers a callback with `onLocaleChange()` and re-renders from state. `translateDocument()` fires those callbacks once at startup, so they are also the first-render path — and the veil tracking *translation keys* (`veilKeys`) rather than printed sentences is what would let a language switch be restored cheaply.
 
-The values in `REASON` double as translation key segments (`warning.<reason>.title`, `status.<reason>`) — renaming one means renaming it across both locale files.
+The values in `REASON` double as translation key segments (`warning.<reason>.title`, `status.<reason>`) — renaming one means renaming it in `locales/fr.json` too.
 
-UI copy targets young children: keep it short, warm, and reassuring in every language.
+UI copy targets young children: keep it short, warm, and reassuring.
 
 Landmark indices in `LANDMARK` come from the MediaPipe FaceLandmarker topology; changing them requires consulting that spec.
 
-`localStorage` holds only preferences, under the `p4l.*` keys in `STORAGE_KEYS`. Always read numbers through `readNumberInRange()` — a missing key reads back as `null`, and `Number(null)` is `0`, which silently looks valid for any slider whose minimum is 0. If you ever store more than preferences, update the privacy note (`privacy` key) to stay truthful.
+`localStorage` holds only preferences, under the `p4l.*` keys in `STORAGE_KEYS`. Always read numbers through `readNumberInRange()` — a missing key reads back as `null`, and `Number(null)` is `0`, which silently looks valid for any slider whose minimum is 0. If you ever store more than preferences, update the Privacy section of both READMEs to stay truthful.
 
 ## Verifying changes
 
@@ -57,4 +57,4 @@ There is no test suite. After edits, serve the app and check the browser console
 
 - every `byId()` in `js/dom.js` matches an `id` in `index.html`
 - every named import exists as an export in the target module, and the graph stays acyclic
-- `locales/en.json` and `locales/fr.json` have identical key sets, and every key referenced via `t()` or `data-i18n*` exists
+- every key referenced via `t()` or `data-i18n*` exists in `locales/fr.json`

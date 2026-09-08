@@ -33,39 +33,6 @@
   box-shadow: 0 0 8px var(--coral);
 }
 
-/* ---------- Language switch ---------- */
-
-.language-switch {
-  display: flex;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid rgba(255, 243, 217, 0.1);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.language-switch__button {
-  padding: 4px 11px;
-  border: 0;
-  border-radius: 999px;
-  background: none;
-  color: rgba(255, 243, 217, 0.55);
-  font-family: inherit;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-}
-
-.language-switch__button:hover {
-  color: var(--cream);
-}
-
-.language-switch__button[aria-pressed="true"] {
-  background: var(--marquee);
-  color: var(--on-marquee);
-}
-
 /* ---------- Buttons ---------- */
 
 .button-primary {
@@ -234,53 +201,6 @@
   color: var(--cream);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-}
-
-/* ---------- Coach mark ---------- */
-
-.coach-anchor {
-  position: relative;
-  display: inline-flex;
-}
-
-.coach {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  display: none;
-  padding: 8px 14px;
-  border-radius: 12px;
-  background: var(--mint);
-  color: var(--on-mint);
-  font-size: 0.8rem;
-  font-weight: 800;
-  white-space: nowrap;
-  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.35);
-  transform: translateX(-50%);
-  animation: coach-bobble 2.2s ease-in-out infinite;
-}
-
-.coach.is-visible {
-  display: block;
-}
-
-.coach::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border: 7px solid transparent;
-  border-bottom: 0;
-  border-top-color: var(--mint);
-  transform: translateX(-50%);
-}
-
-@keyframes coach-bobble {
-  0%,
-  100% { transform: translateX(-50%) translateY(0); }
-  50%  { transform: translateX(-50%) translateY(-4px); }
 }
 
 @media (max-width: 640px) {

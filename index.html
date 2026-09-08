@@ -36,11 +36,6 @@
       <span class="led" id="mouthLed"></span>
       <span id="mouthStatus">En attente…</span>
     </p>
-
-    <div class="language-switch" role="group" data-i18n-aria-label="language.group" aria-label="Langue">
-      <button type="button" class="language-switch__button" data-locale="fr" aria-pressed="true">FR</button>
-      <button type="button" class="language-switch__button" data-locale="en" aria-pressed="false">EN</button>
-    </div>
   </div>
 </header>
 
@@ -77,6 +72,7 @@
 
         <form class="welcome__form" id="welcomeForm">
           <input type="url" id="welcomeUrl" required
+                 value="https://www.youtube.com/watch?v=s0aqyAUiF70"
                  data-i18n-placeholder="welcome.urlPlaceholder"
                  data-i18n-aria-label="welcome.urlLabel"
                  placeholder="Colle un lien YouTube ici" aria-label="Lien YouTube">
@@ -163,15 +159,9 @@
     <span class="setting__value" id="pauseDelayValue">5,0 s</span>
   </label>
 
-  <span class="coach-anchor">
-    <span class="coach" id="fullscreenCoach" data-i18n="coach.fullscreen">👇 Le vrai plein écran</span>
-    <button type="button" class="button-quiet button-quiet--accent" id="fullscreenButton">⛶ Plein écran</button>
-  </span>
+  <button type="button" class="button-quiet button-quiet--accent" id="fullscreenButton">⛶ Plein écran</button>
 
   <button type="button" class="button-quiet" id="cameraButton">Masquer la caméra</button>
-
-  <p class="privacy" data-i18n-html="privacy"></p>
-  <p class="contact" data-i18n-html="contact"></p>
 </footer>
 
 <div class="camera-preview" id="cameraBox">

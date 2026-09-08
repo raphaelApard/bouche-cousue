@@ -95,44 +95,6 @@
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent);
 }
 
-/*
- * flex: 0 0 100% keeps the note on its own row beneath the settings and
- * buttons. A plain width: 100% would still let it shrink alongside them.
- */
-.privacy {
-  flex: 0 0 100%;
-  max-width: 100%;
-  margin: 10px auto 0;
-  padding: 14px 24px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  color: rgba(255, 243, 217, 0.4);
-  font-size: 0.74rem;
-  line-height: 1.55;
-  text-align: center;
-}
-
-.privacy strong {
-  color: rgba(255, 243, 217, 0.62);
-}
-
-.privacy__link {
-  color: var(--soft-violet);
-  text-underline-offset: 2px;
-}
-
-.privacy__link:hover {
-  color: var(--cream);
-}
-
-/* Sits on its own row beneath the privacy note, for the same reason. */
-.contact {
-  flex: 0 0 100%;
-  margin-top: 8px;
-  color: rgba(255, 243, 217, 0.4);
-  font-size: 0.74rem;
-  text-align: center;
-}
-
 @media (max-width: 640px) {
   .marquee { padding: 10px 14px; }
   .masthead { padding: 4px 14px 12px; }

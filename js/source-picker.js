@@ -25,8 +25,7 @@ async function enterCinema() {
   }
 
   const started = await startMonitoring();
-  if (started) ui.showFullscreenCoach();
-  else backToWelcome();   // no camera, no cinema
+  if (!started) backToWelcome();   // no camera, no cinema
 }
 
 /* ---------- Local file ---------- */

@@ -6,9 +6,6 @@
   "badge": {
     "camera": "Caméra"
   },
-  "language": {
-    "group": "Langue"
-  },
   "status": {
     "waiting": "En attente…",
     "loading": "Chargement de l'IA…",
@@ -108,9 +105,6 @@
     "hideCamera": "Masquer la caméra",
     "showCamera": "Afficher la caméra"
   },
-  "coach": {
-    "fullscreen": "👇 Le vrai plein écran"
-  },
   "alerts": {
     "invalidLink": "Lien YouTube non reconnu. Colle un lien de type https://www.youtube.com/watch?v=… ou https://youtu.be/…",
     "needsServer": "YouTube ne peut pas lire les vidéos quand la page est ouverte en fichier local (file://).\n\nOuvre-la via un petit serveur local, par exemple :\n  python3 -m http.server 8000\npuis va sur http://localhost:8000/",
@@ -126,7 +120,5 @@
     "embeddingDenied": "Le propriétaire de cette vidéo interdit sa lecture en dehors de YouTube. Essaie une autre vidéo.",
     "blockedHere": "Cette vidéo est bloquée à la lecture depuis cette page (restriction d'intégration ou d'origine). Essaie une autre vidéo, ou ouvre la page via http://localhost.",
     "otherError": "Erreur YouTube"
-  },
-  "privacy": "🔒 <strong>Vie privée : rien ne sort de cet ordinateur.</strong><br>Aucune image, aucune vidéo, aucun son n'est enregistré ni envoyé sur internet. Pas de compte, pas de traceur, pas de statistiques, aucune donnée personnelle collectée.<br>Les vidéos que tu ouvres depuis ton ordinateur ne le quittent jamais. Seuls tes réglages (sensibilité, délais, volume, langue) sont mémorisés dans ce navigateur, sur cette machine.<br>Le code est entièrement ouvert et <a class=\"privacy__link\" href=\"{repo}\" target=\"_blank\" rel=\"noopener\">vérifiable sur GitHub</a>.<br>Seule exception : si tu choisis une vidéo YouTube, elle est chargée depuis youtube-nocookie.com, qui applique alors ses propres règles.",
-  "contact": "Une question, une remarque, une idée ? Écris à <a class=\"privacy__link\" href=\"mailto:{email}\">{email}</a>."
+  }
 }

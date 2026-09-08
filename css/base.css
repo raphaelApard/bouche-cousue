@@ -65,7 +65,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .bulb,
-  .coach,
   .mascot__mouth,
   .veil.is-visible,
   .reward.is-visible {

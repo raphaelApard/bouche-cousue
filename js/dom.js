@@ -58,6 +58,5 @@ export const el = {
   pauseDelay: byId("pauseDelay"),
   pauseDelayValue: byId("pauseDelayValue"),
   fullscreenButton: byId("fullscreenButton"),
-  fullscreenCoach: byId("fullscreenCoach"),
   cameraButton: byId("cameraButton")
 };
