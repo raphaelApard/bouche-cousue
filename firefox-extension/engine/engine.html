@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Bouche Cousue</title>
+  <link rel="stylesheet" href="engine.css">
+</head>
+<body>
+
+<div class="camera-preview">
+  <video id="cameraVideo" playsinline muted
+         data-i18n-aria-label="ext.cameraLabel"></video>
+  <div class="gauge"><div class="gauge__fill" id="gauge"></div></div>
+</div>
+
+<p class="status">
+  <span class="led" id="mouthLed"></span>
+  <span id="mouthStatus"></span>
+</p>
+
+<p class="boot-error" id="bootError" hidden></p>
+
+<button type="button" class="button-primary" id="retryButton" hidden
+        data-i18n="engine.retry">Réessayer</button>
+
+<p class="note" data-i18n="engine.note"></p>
+
+<script type="module" src="engine.js"></script>
+</body>
+</html>

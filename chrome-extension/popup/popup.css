@@ -1,0 +1,155 @@
+/* The popup borrows the web app's palette so the two feel like one thing. */
+
+:root {
+  --night: #0f0a24;
+  --marquee: #ffd23f;
+  --cream: #fff3d9;
+  --coral: #ff6b6b;
+  --mint: #4ecdc4;
+  --on-marquee: #2a1a00;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 300px;   /* a popup is sized by its content, not by a viewport */
+  padding: 14px;
+  background:
+    radial-gradient(600px 400px at 20% 0%, rgba(255, 210, 63, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--night), #1a0e35 60%, var(--night));
+  color: var(--cream);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Idle ---------- */
+
+.tagline {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0.65;
+}
+
+/* ---------- Active ----------
+   The camera, the reading and the sliders travel together: they all appear
+   the moment the rule starts running, and all go away when it stops. */
+
+#live {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.boot-error {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--coral);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* ---------- Status ---------- */
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #666;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+.led.is-ok {
+  background: var(--mint);
+  box-shadow: 0 0 8px var(--mint);
+}
+
+.led.is-alert {
+  background: var(--coral);
+  box-shadow: 0 0 8px var(--coral);
+}
+
+/* ---------- Actions ---------- */
+
+.button-primary {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--marquee);
+  color: var(--on-marquee);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.button-primary:hover {
+  filter: brightness(1.06);
+}
+
+.button-primary.is-on {
+  background: rgba(255, 243, 217, 0.12);
+  color: var(--cream);
+}
+
+/* ---------- Settings ---------- */
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.setting {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.setting input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--marquee);
+}
+
+.setting__value {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.hint {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0.5;
+}

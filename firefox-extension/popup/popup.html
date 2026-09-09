@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Bouche Cousue</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<!-- The switch comes first: it is the only control that matters before the
+     camera is on, and the only one an adult reaches for in a hurry. -->
+<button type="button" class="button-primary" id="powerButton"
+        data-i18n-aria-label="ext.startLabel">🎬 Activer</button>
+
+<p class="boot-error" id="bootError" hidden></p>
+
+<!-- Idle: one line saying what the switch is for. -->
+<p class="tagline" id="tagline" data-i18n="ext.idleHint"></p>
+
+<!-- Active: the reading, and the tuning. The camera itself is shown in the
+     engine window, which is the thing that actually holds it. -->
+<div id="live" hidden>
+  <p class="status">
+    <span class="led" id="mouthLed"></span>
+    <span id="mouthStatus"></span>
+  </p>
+
+  <section class="settings">
+    <label class="setting">
+      <span data-i18n="settings.sensitivity">Sensibilité</span>
+      <input type="range" id="sensitivity"
+             data-i18n-aria-label="settings.sensitivityLabel">
+    </label>
+
+    <label class="setting">
+      <span data-i18n="settings.warning">Avertissement</span>
+      <input type="range" id="warningDelay"
+             data-i18n-aria-label="settings.warningLabel">
+      <span class="setting__value" id="warningDelayValue"></span>
+    </label>
+
+    <label class="setting">
+      <span data-i18n="settings.pause">Pause</span>
+      <input type="range" id="pauseDelay"
+             data-i18n-aria-label="settings.pauseLabel">
+      <span class="setting__value" id="pauseDelayValue"></span>
+    </label>
+  </section>
+
+  <p class="hint" data-i18n="ext.hint"></p>
+</div>
+
+<script type="module" src="popup.js"></script>
+</body>
+</html>

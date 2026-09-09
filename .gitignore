@@ -53,3 +53,8 @@ desktop.ini
 *.mov
 *.m4v
 .vercel
+
+# ---------- Browser extensions ----------
+# The MediaPipe runtime and models, ~20 MB fetched by each fetch-vendor.sh.
+firefox-extension/vendor/
+chrome-extension/vendor/
