@@ -133,6 +133,36 @@ Chrome and Edge are the safest choice (WebGPU/GPU delegate and the widest codec
 support). Any Chromium browser should work. Firefox and Safari can run the
 detection but are more restrictive about video codecs.
 
+## Three front ends
+
+One idea, in three shapes. The rule is the same in all of them — the same
+thresholds, the same delays, the same dead band — and so is the copy the child
+reads. What changes is whose video it is.
+
+| | Where it lives | What it plays | Install |
+|---|---|---|---|
+| **Web app** | this folder | a cartoon you give it, by link or file | nothing to install — [serve it](#getting-started) |
+| **Firefox add-on** | [`firefox-extension/`](firefox-extension/) | a video already playing on someone else's page | [`firefox-extension/README.md`](firefox-extension/README.md) |
+| **Chrome extension** | [`chrome-extension/`](chrome-extension/) | the same, in Chrome | [`chrome-extension/README.md`](chrome-extension/README.md) |
+
+**The web app** is the whole cinema: you hand it a YouTube link or a file from
+the computer, and it plays it on a stage of its own, with a playback bar and a
+fullscreen button. It is the one to use when the point is to sit down and watch
+something you chose.
+
+**The two extensions** are the same rule applied to somebody else's page. You
+turn one on and whatever the tab is playing — YouTube, a replay site, a video
+embedded in a blog — runs only while the mouth stays closed. Videos in *every*
+open tab are watched, not only the one in front.
+
+Both extensions are the same program: every file but `manifest.json` and the
+icons is byte-identical between the two folders. They differ from the web app
+in one visible way — the camera lives in a small window of its own, because
+neither browser will open a camera from a background page or a toolbar popup
+that closes the moment you click away.
+
+A change to the rule belongs in all three.
+
 ## Project layout
 
 ```
@@ -157,7 +187,17 @@ js/
   source-picker.js          welcome screen, quick bar, file picker
 locales/
   en.json, fr.json          all user-facing text
+
+firefox-extension/          the Firefox add-on — see its own README
+chrome-extension/           the same add-on for Chrome
 ```
+
+The two extension folders are one program in two packages: every file but
+`manifest.json` and the icons is byte-identical, and `lib/api.js` is what
+absorbs `browser` versus `chrome`. They carry their own copies of the app's
+modules, under the same names, because an extension cannot import from a web
+page — so the rule lives in three places, and a change to it belongs in all of
+them.
 
 Dependencies flow one way — `config`/`dom`/`storage` → `i18n` → `ui`/`player`/
 `detector`/`settings` → `mouth-monitor` → `source-picker` → `main` — with no

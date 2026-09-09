@@ -141,6 +141,37 @@ Chrome et Edge sont les plus sûrs (délégation GPU et prise en charge des code
 la plus large). Tout navigateur Chromium devrait convenir. Firefox et Safari
 font tourner la détection mais sont plus restrictifs sur les codecs vidéo.
 
+## Trois façades
+
+Une seule idée, sous trois formes. La règle est la même partout — mêmes seuils,
+mêmes délais, même zone morte — et les phrases que lit l'enfant aussi. Ce qui
+change, c'est à qui appartient la vidéo.
+
+| | Où | Ce qui est joué | Installation |
+|---|---|---|---|
+| **Application web** | ce dossier | un dessin animé que vous lui donnez, par lien ou fichier | rien à installer — [servez-la](#démarrer) |
+| **Extension Firefox** | [`firefox-extension/`](firefox-extension/) | une vidéo déjà lancée sur la page de quelqu'un d'autre | [`firefox-extension/README.md`](firefox-extension/README.md) |
+| **Extension Chrome** | [`chrome-extension/`](chrome-extension/) | la même chose, dans Chrome | [`chrome-extension/README.md`](chrome-extension/README.md) |
+
+**L'application web** est le cinéma complet : vous lui donnez un lien YouTube
+ou un fichier de l'ordinateur, et elle le joue sur une scène à elle, avec une
+barre de lecture et un bouton plein écran. C'est celle à utiliser quand il
+s'agit de s'installer devant un film choisi.
+
+**Les deux extensions** appliquent la même règle à la page de quelqu'un
+d'autre. Vous en activez une, et ce que joue l'onglet — YouTube, un site de
+replay, une vidéo intégrée à un blog — ne tourne que si la bouche reste fermée.
+Les vidéos de *tous* les onglets ouverts sont surveillées, pas seulement celle
+qui est devant.
+
+Les deux extensions sont le même programme : à part `manifest.json` et les
+icônes, tous les fichiers sont identiques. Elles diffèrent de l'application web
+sur un point visible — la caméra vit dans une petite fenêtre à part, parce
+qu'aucun des deux navigateurs n'ouvre une caméra depuis une page d'arrière-plan
+ou depuis une popin qui se ferme dès qu'on clique ailleurs.
+
+Une modification de la règle vaut pour les trois.
+
 ## Organisation du projet
 
 ```
@@ -165,7 +196,17 @@ js/
   source-picker.js          accueil, barre rapide, sélecteur de fichier
 locales/
   en.json, fr.json          tout le texte visible par l'utilisateur
+
+firefox-extension/          l'extension Firefox — voir son propre README
+chrome-extension/           la même extension pour Chrome
 ```
+
+Les deux dossiers d'extension sont un seul programme en deux paquets : à part
+`manifest.json` et les icônes, tous les fichiers sont identiques, et
+`lib/api.js` absorbe la différence entre `browser` et `chrome`. Ils embarquent
+leurs propres copies des modules de l'application, sous les mêmes noms, parce
+qu'une extension ne peut pas importer depuis une page web — la règle vit donc
+à trois endroits, et toute modification vaut pour les trois.
 
 Les dépendances vont dans un seul sens — `config`/`dom`/`storage` → `i18n` →
 `ui`/`player`/`detector`/`settings` → `mouth-monitor` → `source-picker` →
