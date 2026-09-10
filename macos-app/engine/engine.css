@@ -1,0 +1,14 @@
+/* Nothing here is ever looked at: the window is opened hidden and stays that
+   way. It is styled only so that a developer who does show it — to see what
+   the camera sees — gets the picture rather than a scrollbar. */
+
+body {
+  margin: 0;
+  background: #0f0a24;
+}
+
+video {
+  display: block;
+  width: 100%;
+  transform: scaleX(-1);   /* a mirror is easier for a child to aim at */
+}

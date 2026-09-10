@@ -16,11 +16,13 @@ python3 -m http.server 8000   # then visit http://localhost:8000/
 
 First launch needs internet for the MediaPipe runtime and models (CDN); detection then runs locally.
 
-## Three front ends
+## Four front ends
 
-The repository holds one idea in three packages. The web app in the root plays
+The repository holds one idea in four packages. The web app in the root plays
 a cartoon you hand it. `firefox-extension/` and `chrome-extension/` apply the
-same rule to a video already playing on somebody else's page.
+same rule to a video already playing on somebody else's page. `macos-app/` is
+an Electron menu bar app that applies it to whatever is playing on the Mac, in
+whichever application is playing it.
 
 The two extensions are **one program in two packages**: every file but
 `manifest.json` and the icons is byte-identical, and `lib/api.js` is what
@@ -30,8 +32,11 @@ must print nothing.
 
 The extensions share no code with the app at runtime — an extension cannot
 import from a web page — but their `lib/` carries the app's modules with the
-same names, the same split, and the same detection constants. **A change to the
-rule belongs in all three.**
+same names, the same split, and the same detection constants. `macos-app/lib/`
+carries them a third time, for the same reason, with `bridge.js` where the
+extensions have `api.js`; its `mouth-monitor.js` is the extensions' file with
+nothing changed but the header comment, and it should stay that way. **A change
+to the rule belongs in all four.**
 
 ## Architecture
 
@@ -134,6 +139,72 @@ since `mascot-close` and its `transform-origin` are pinned to the geometry.
 Build the veil with DOM calls, never `innerHTML`: the add-on linter flags the
 latter, and an AMO reviewer is right to ask.
 
+## The macOS app
+
+`macos-app/README.md` covers installing and packaging it. It is a menu bar app:
+no dock icon, no window of its own that anybody sees. What differs from the
+extensions, each for a reason worth keeping:
+
+- **The camera lives in a window that is never shown.** The menu bar panel is
+  hidden — and its document destroyed — the moment it loses focus, which is the
+  first thing that happens when a child clicks the film, so nothing that must
+  keep running can live in `panel/`. `engine/engine.html` is opened with
+  `show: false`, `paintWhenInitiallyHidden: true` and
+  `backgroundThrottling: false`: that combination is what keeps Chromium
+  decoding a camera nobody is looking at. **Do not move `getUserMedia` into the
+  main process or the panel.** The panel is sent small JPEG stills instead
+  (`PREVIEW` in config) — a `MediaStream` cannot cross between documents.
+- **The pages are served over `app://`, never `file://`** — see
+  `main/protocol.js`. ES modules, `fetch` for the locale and the secure context
+  `getUserMedia` requires are all refused on `file://`. The handler also stamps
+  the CSP, which is why nothing in these pages may be inline.
+- **`main/media-control.js` is the whole macOS story.** There is no `pause()`
+  to call: either an Apple event goes to one named player (idempotent, needs
+  Automation, which macOS prompts for) or the keyboard's play/pause key is
+  posted (reaches anything, including Firefox, but needs Accessibility and is
+  a *toggle*, so the module tracks what it last asked for). The default target
+  is `auto`, which resolves per command — frontmost known player, else one
+  merely open, else the key — so the common case never touches Accessibility.
+  The frontmost app is read with `lsappinfo`, which costs no permission;
+  System Events would cost an Automation prompt to answer the same question.
+  There are two key channels: `mediakey` (the system-defined media event, goes
+  to whatever is playing) and `space` (a plain key event into the window in
+  front, which is how a person pauses Firefox). Same permission, different
+  route, so one can work where the other does not. `space` is refused when the
+  Finder or this app is in front — a space there opens Quick Look or presses a
+  button. A key press is **refused** when the app is not trusted rather than
+  sent into the void: `osascript` exits 0 either way, and a press that did
+  nothing would leave the belief inverted. The tracked state is why the panel carries a ▶/⏸ button — one
+  tap presses and flips the belief, which is how an adult re-syncs the two.
+  `arm()` is the other half of that bargain: the rule's opening park must
+  **not** reach the player, because pressing a toggle before anything is
+  playing leaves the belief inverted and swallows the first real pause
+  (measured — it is exactly what "the pause does nothing" looks like). `main.js`
+  holds `armed` for that first message.
+  Whether that player is open is asked of `pgrep`, never of AppleScript:
+  `if application "VLC" is running then tell application "VLC" …` reads as a
+  guard and is not one — compiling the `tell` block fetches the app's
+  terminology, which launches it (measured). Keep that check out of the
+  script.
+- **`main.js` is `background.js` in another costume.** It decides nothing about
+  mouths: it routes messages, owns the three windows, and turns the rule's
+  decisions into Apple events. `panel/` is a remote control and `overlay/`
+  holds no copy of its own — every sentence arrives translated from the engine,
+  as the extensions' content script is fed.
+- **A pause has to be held, not just given.** The state machine speaks on
+  transitions, which is enough for a video the app owns — a tab cannot restart
+  itself, a child can. So `main.js` repeats the order every `HOLD.INTERVAL`
+  while the rule says stop (`media.hold()`). Only Apple events can be repeated:
+  they are idempotent, and VLC's is conditional on `playing`. A key channel
+  refuses to repeat, because pressing a toggle we believe is stopped would
+  start the film — that limitation is real and belongs in the README, not in a
+  workaround.
+- **The watchdog parks the film instead of veiling it.** No page here belongs
+  to us, so a silent engine cannot be answered with a veil: the main process
+  pauses the player and says so in the panel and the overlay.
+- **Preferences live in `settings.json`** under the app's user-data folder, and
+  only preferences. Same `p4l.*` keys, same `numberInRange()` guard.
+
 ## Verifying changes
 
 There is no test suite. After edits, serve the app and check the browser console. These static checks catch most breakage in a multi-module refactor:
@@ -141,6 +212,13 @@ There is no test suite. After edits, serve the app and check the browser console
 - every `byId()` in `js/dom.js` matches an `id` in `index.html`
 - every named import exists as an export in the target module, and the graph stays acyclic
 - every key referenced via `t()` or `data-i18n*` exists in `locales/fr.json`
+
+For the macOS app, `cd macos-app && npm start`; renderer console output reaches
+the terminal with `--enable-logging`. The same three static checks apply, in
+each of `engine/`, `panel/` and `overlay/` against their own markup and
+`locales/fr.json`, plus one more: `main.js`, `main/` and `preload.cjs` may
+import from `lib/` only where the module is free of DOM — `config.js` is, the
+rest are not.
 
 The extension has no console of its own until it is loaded: check it from
 `about:debugging`, whose **Inspect** button opens a console per popup, per

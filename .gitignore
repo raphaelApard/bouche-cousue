@@ -54,7 +54,12 @@ desktop.ini
 *.m4v
 .vercel
 
-# ---------- Browser extensions ----------
+# ---------- Browser extensions and the Mac app ----------
 # The MediaPipe runtime and models, ~20 MB fetched by each fetch-vendor.sh.
 firefox-extension/vendor/
 chrome-extension/vendor/
+macos-app/vendor/
+
+# The icons make-icons.sh renders from the SVG sources are kept, since the
+# .app cannot be built without them; only the packaged output is ignored.
+macos-app/dist/
