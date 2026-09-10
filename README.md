@@ -133,9 +133,9 @@ Chrome and Edge are the safest choice (WebGPU/GPU delegate and the widest codec
 support). Any Chromium browser should work. Firefox and Safari can run the
 detection but are more restrictive about video codecs.
 
-## Three front ends
+## Four front ends
 
-One idea, in three shapes. The rule is the same in all of them — the same
+One idea, in four shapes. The rule is the same in all of them — the same
 thresholds, the same delays, the same dead band — and so is the copy the child
 reads. What changes is whose video it is.
 
@@ -144,6 +144,7 @@ reads. What changes is whose video it is.
 | **Web app** | this folder | a cartoon you give it, by link or file | nothing to install — [serve it](#getting-started) |
 | **Firefox add-on** | [`firefox-extension/`](firefox-extension/) | a video already playing on someone else's page | [`firefox-extension/README.md`](firefox-extension/README.md) |
 | **Chrome extension** | [`chrome-extension/`](chrome-extension/) | the same, in Chrome | [`chrome-extension/README.md`](chrome-extension/README.md) |
+| **macOS app** | [`macos-app/`](macos-app/) | whatever is playing on the Mac, in any application | [`macos-app/README.md`](macos-app/README.md) |
 
 **The web app** is the whole cinema: you hand it a YouTube link or a file from
 the computer, and it plays it on a stage of its own, with a playback bar and a
@@ -161,7 +162,13 @@ in one visible way — the camera lives in a small window of its own, because
 neither browser will open a camera from a background page or a toolbar popup
 that closes the moment you click away.
 
-A change to the rule belongs in all three.
+**The macOS app** steps back further still. It is an Electron app that lives in
+the menu bar and pauses whatever is playing on the Mac, whichever application
+is playing it — a browser, QuickTime, VLC, a streaming app — by posting the
+keyboard's play/pause key or by sending an Apple event to a named player. It is
+the one for a film that is not in a browser at all.
+
+A change to the rule belongs in all four.
 
 ## Project layout
 
@@ -190,14 +197,16 @@ locales/
 
 firefox-extension/          the Firefox add-on — see its own README
 chrome-extension/           the same add-on for Chrome
+macos-app/                  the menu bar app for macOS — see its own README
 ```
 
 The two extension folders are one program in two packages: every file but
 `manifest.json` and the icons is byte-identical, and `lib/api.js` is what
 absorbs `browser` versus `chrome`. They carry their own copies of the app's
 modules, under the same names, because an extension cannot import from a web
-page — so the rule lives in three places, and a change to it belongs in all of
-them.
+page. The macOS app carries the same modules again, for the same reason, with
+`lib/bridge.js` in the place of `lib/api.js` — so the rule lives in four
+places, and a change to it belongs in all of them.
 
 Dependencies flow one way — `config`/`dom`/`storage` → `i18n` → `ui`/`player`/
 `detector`/`settings` → `mouth-monitor` → `source-picker` → `main` — with no
