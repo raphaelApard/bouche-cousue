@@ -67,6 +67,38 @@ read: in colour while the mouth is being watched, grey when it is not.
   the app's mascot, closing its mouth over and over — the thing to copy, shown
   rather than explained.
 
+## Packaging it for a store
+
+```sh
+./chrome-extension/fetch-vendor.sh     # once — the models are not in the repository
+./chrome-extension/make-package.sh
+```
+
+Out comes `chrome-extension/dist/bouche-cousue-chrome-<version>.zip`, about 12 MB —
+the models are most of it. The two shell scripts, this README and the SVG
+sources are left out: none is used at runtime, and a loose `.sh` inside an
+extension is something a reviewer is right to ask about.
+
+The version in the file name is the `version` field of `manifest.json`. Bump it
+there before every upload; the Web Store refuses a package whose version it has
+already seen.
+
+**Chrome.** Upload the zip in the [Web Store developer
+dashboard](https://chrome.google.com/webstore/devconsole) — a one-off
+registration fee, then a review that takes anywhere from hours to days. There
+is no unlisted-and-signed halfway house as on AMO: either it is published (it
+can be **unlisted**, reachable only by link) or it is loaded unpacked from
+`chrome://extensions`, which lasts only as long as the folder does. A `.crx`
+signed by hand installs on nothing but an enterprise-managed browser.
+
+**What both stores will ask about is the camera.** The answer is short and
+true: frames are analysed on the device and dropped, nothing is recorded,
+nothing is uploaded, and the only thing stored is three slider positions. The
+Firefox manifest already declares it — `data_collection_permissions: none`;
+Chrome asks for the same thing in the dashboard's privacy section, along with a
+justification for `<all_urls>`, which the extension needs to reach the video on
+whatever page it is playing.
+
 ## Privacy
 
 Same promise as the app, and the same reason to believe it: the camera stream

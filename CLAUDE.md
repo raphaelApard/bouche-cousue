@@ -27,8 +27,10 @@ whichever application is playing it.
 The two extensions are **one program in two packages**: every file but
 `manifest.json` and the icons is byte-identical, and `lib/api.js` is what
 absorbs `browser` versus `chrome`. Keep them that way —
-`diff -r -x vendor -x README.md -x manifest.json firefox-extension chrome-extension`
-must print nothing.
+`diff -r -x vendor -x README.md -x manifest.json -x dist firefox-extension chrome-extension`
+must print nothing. `make-package.sh` obeys the same rule rather than escaping
+it: it reads which build it is from its own path, so both copies are the same
+file.
 
 The extensions share no code with the app at runtime — an extension cannot
 import from a web page — but their `lib/` carries the app's modules with the
@@ -226,6 +228,17 @@ background script, and per content script — the background console is the one
 that matters, since that is where the rule runs. The same three static checks
 apply to each extension, against `popup/popup.html` and its own
 `locales/fr.json`. `npx web-ext lint --source-dir=firefox-extension` catches
-manifest mistakes and should stay at zero errors; for Chrome, loading the
-unpacked folder from `chrome://extensions` reports manifest problems the same
-way.
+manifest mistakes and should stay at zero errors — pass the packaging script's
+own exclusions, or it also flags the `.sh` files that never reach the zip:
+
+```sh
+npx web-ext lint --source-dir=firefox-extension \
+  --ignore-files fetch-vendor.sh make-icons.sh make-package.sh README.md 'icons/*.svg'
+```
+
+Two warnings survive and are expected, both about `data_collection_permissions`
+being newer than `strict_min_version`. For Chrome, loading the unpacked folder
+from `chrome://extensions` reports manifest problems the same way.
+`make-package.sh` builds the store zip in either folder; it refuses to run
+without `vendor/`, since a package without the models installs fine and can
+never see anything.

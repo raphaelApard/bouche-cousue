@@ -48,18 +48,8 @@ be an unlisted add-on, visible to nobody but you.
 Firefox may also ask you to allow the extension on the sites you visit; it
 needs that to reach the video on the page.
 
-To build the package that gets signed — leaving the fetch script and this file
-behind, but keeping `vendor/`:
-
-```sh
-npx web-ext build --source-dir=firefox-extension \
-  --ignore-files fetch-vendor.sh make-icons.sh README.md
-```
-
-`web-ext lint` reports no errors. It warns that `data_collection_permissions`
-is newer than the declared `strict_min_version` of 115: the key is inert on
-older Firefox, and keeping 115 keeps ESR in range, so the warning is the
-cheaper of the two costs.
+Building the package that gets signed is one script — see
+[Packaging it for a store](#packaging-it-for-a-store) below.
 
 ## Using it
 
@@ -112,6 +102,46 @@ goes grey — the failure is visible and safe, never a video playing unwatched.
 An occluded window can have its timers throttled. That is survivable by
 design: the state machine reads the clock rather than counting ticks, so a
 slowed loop stays correct, only coarser.
+
+## Packaging it for a store
+
+```sh
+./firefox-extension/fetch-vendor.sh     # once — the models are not in the repository
+./firefox-extension/make-package.sh
+```
+
+Out comes `firefox-extension/dist/bouche-cousue-firefox-<version>.zip`, about 12 MB —
+the models are most of it. The two shell scripts, this README and the SVG
+sources are left out: none is used at runtime, and a loose `.sh` inside an
+extension is something a reviewer is right to ask about.
+
+The version in the file name is the `version` field of `manifest.json`. Bump it
+there before every upload; AMO refuses a package whose version it has
+already seen.
+
+**Firefox.** Upload the zip to
+[addons.mozilla.org](https://addons.mozilla.org/developers/) — as a **listed**
+add-on to publish it, or **unlisted** to keep it private and still get a signed
+`.xpi` you can install anywhere. Signing is what makes it permanent: an
+unsigned add-on loaded from `about:debugging` disappears when Firefox closes.
+Run the linter first — it should stay at zero errors:
+
+```sh
+npx web-ext lint --source-dir=firefox-extension \
+  --ignore-files fetch-vendor.sh make-icons.sh make-package.sh README.md 'icons/*.svg'
+```
+
+It reports two warnings and they are expected: `data_collection_permissions` is
+newer than the declared `strict_min_version` of 115, where the key is simply
+inert. Keeping 115 keeps ESR in range, which is the cheaper of the two costs.
+
+**What both stores will ask about is the camera.** The answer is short and
+true: frames are analysed on the device and dropped, nothing is recorded,
+nothing is uploaded, and the only thing stored is three slider positions. The
+Firefox manifest already declares it — `data_collection_permissions: none`;
+Chrome asks for the same thing in the dashboard's privacy section, along with a
+justification for `<all_urls>`, which the extension needs to reach the video on
+whatever page it is playing.
 
 ## Privacy
 
