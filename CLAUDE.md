@@ -40,6 +40,33 @@ extensions have `api.js`; its `mouth-monitor.js` is the extensions' file with
 nothing changed but the header comment, and it should stay that way. **A change
 to the rule belongs in all four.**
 
+## The v2 app
+
+`v2/` is the root app redrawn — same rule, same detection constants, a new
+interface (see `v2/README.md`). It sits beside v1 rather than replacing it, so
+both can be served and compared; it shares no files with the root app, and
+nothing outside `v2/` is involved in it.
+
+It differs from the root app in three ways that matter when editing it. It is
+**bilingual**, one language at a time: both locale files are loaded at startup so
+the FR/EN control can switch without a fetch, the choice is remembered under
+`p4l.locale`, and every key must exist in `locales/fr.json` *and*
+`locales/en.json`. The French build shows no English and the English build no
+French. And the mascot is drawn **once**, in `#mascotTemplate` in the markup;
+`js/mascot.js` stamps copies into slots and `css/mascot.css` alone decides which
+of the seven faces a copy shows. Last, the **breakpoints are CSS variables**:
+the three widths live in `--bp-narrow`, `--bp-short` and `--bp-phone` at the top
+of `css/base.css` and nowhere else. `js/layout.js` reads them and puts
+`is-narrow`, `is-short` or `is-phone` on `<body>`, which is what every rule keys
+off — a media query cannot read a custom property, so naming the state is what
+keeps each width a single copy. A width written into a v2 `@media` would be a
+second one, so there are none; the only media queries left are reduced motion.
+
+`v2/js/detector.js` is byte-identical to `js/detector.js`, and its
+`mouth-monitor.js` holds the same state machine, thresholds, dead band and
+delays. **A change to the rule belongs in all five** — the four front ends below
+and this one.
+
 ## Architecture
 
 `index.html` holds markup only. Styles live in `css/`, logic in `js/` as ES modules, and all user-facing text in `locales/`.

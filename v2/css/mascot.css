@@ -1,0 +1,176 @@
+/*
+  The cat.
+
+  One drawing in `#mascotTemplate`, seven faces. Which one shows is decided
+  here and nowhere else: js/mascot.js sets `data-expression` and every group
+  in the drawing is hidden until a rule below claims it.
+
+  Flat shapes, no gradients — it has to read at 52px in the corner of a full
+  screen as clearly as at 220px on the welcome screen.
+*/
+
+.mascot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: pc-breathe 4.6s ease-in-out infinite;
+}
+
+.mascot [data-face] { display: none; }
+
+.mascot:not([data-expression="gone"]) [data-face="base"] { display: block; }
+.mascot[data-expression="gone"]      [data-face="gone"]     { display: block; }
+.mascot[data-expression="neutral"]   [data-face="neutral"]  { display: block; }
+.mascot[data-expression="warning"]   [data-face="warning"]  { display: block; }
+.mascot[data-expression="paused"]    [data-face="paused"]   { display: block; }
+.mascot[data-expression="delighted"] [data-face="delighted"]{ display: block; }
+.mascot[data-expression="covered"]   [data-face="covered"]  { display: block; }
+.mascot[data-expression="pacifier"]  [data-face="pacifier"] { display: block; }
+
+/* ---------- Head ---------- */
+
+.mascot__ear {
+  fill: var(--cream);
+  stroke: #E3C79C;
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+.mascot__ear-inner { fill: var(--coral); opacity: .7; }
+
+.mascot__head {
+  fill: var(--cream);
+  stroke: #E3C79C;
+  stroke-width: 4;
+}
+
+.mascot__cheek { fill: var(--coral); opacity: .85; }
+.mascot__muzzle { fill: #FFF4E2; }
+
+.mascot__whiskers {
+  fill: none;
+  stroke: #E3C79C;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  opacity: .9;
+}
+
+.mascot__nose {
+  fill: var(--coral);
+  stroke: #E0705E;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+/* ---------- Features ---------- */
+
+.mascot__eye { fill: var(--paper-ink); }
+.mascot__glint { fill: #FFFFFF; opacity: .95; }
+
+.mascot__eye-arc,
+.mascot__brow {
+  fill: none;
+  stroke: var(--paper-ink);
+  stroke-linecap: round;
+}
+.mascot__eye-arc { stroke-width: 8; }
+.mascot__brow { stroke-width: 7; }
+.mascot__brow--soft { stroke-width: 6; opacity: .8; }
+
+.mascot__smile {
+  fill: none;
+  stroke: var(--paper-ink);
+  stroke-width: 7.5;
+  stroke-linecap: round;
+}
+
+.mascot__mouth-open,
+.mascot__grin { fill: var(--paper-ink); }
+.mascot__tongue { fill: var(--coral); opacity: .9; }
+
+.mascot__blink {
+  transform-origin: 100px 96px;
+  animation: pc-blink 6.2s ease-in-out infinite;
+}
+
+/* The mouth closing, over and over: the thing to copy, shown not explained. */
+.mascot__shut {
+  transform-origin: 100px 146px;
+  animation: pc-shut 2.6s cubic-bezier(.4, 0, .3, 1) infinite;
+}
+
+.mascot__wobble {
+  transform-origin: 100px 132px;
+  animation: pc-wob 1.1s ease-in-out infinite;
+}
+
+/* ---------- Paws over the mouth ---------- */
+
+.mascot__paw {
+  fill: #F3D0A4;
+  stroke: #D9A96F;
+  stroke-width: 3.5;
+}
+.mascot__paw--back { fill: #EFC694; }
+.mascot__toes {
+  fill: none;
+  stroke: #D9A96F;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: .85;
+}
+
+/* ---------- Dummy ---------- */
+
+.mascot__dummy {
+  fill: var(--sky);
+  stroke: #4FA9C9;
+  stroke-width: 3.5;
+}
+.mascot__dummy-hole {
+  fill: none;
+  stroke: #4FA9C9;
+  stroke-width: 4;
+}
+.mascot__dummy-ring {
+  fill: none;
+  stroke: var(--sky);
+  stroke-width: 6;
+}
+
+/* ---------- Gone: the cat's own outline, and nothing filling it ---------- */
+
+.mascot__ghost {
+  fill: none;
+  stroke: #B9AA9A;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 14 12;
+  opacity: .62;
+}
+.mascot__faded { fill: #B9AA9A; opacity: .45; }
+.mascot__faded-line {
+  stroke: #B9AA9A;
+  stroke-width: 8;
+  stroke-linecap: round;
+  opacity: .45;
+}
+
+@keyframes pc-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.025); }
+}
+@keyframes pc-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(.08); }
+}
+@keyframes pc-wob {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+@keyframes pc-shut {
+  0%, 32%   { transform: scale(1, 1); }
+  62%, 88%  { transform: scale(.72, .09); }
+  100%      { transform: scale(1, 1); }
+}

@@ -1,0 +1,475 @@
+/*
+  The adult's furniture: the top bar, the badges, the quick-change bar, the
+  settings panel and the mirror.
+
+  All of it sits at `--chrome-rest` over the film and rises to full opacity on
+  hover or keyboard focus. The child is meant to look past it; the adult is
+  meant to find it in one reach.
+*/
+
+.cinema {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--ground);
+}
+
+/* The lamp on the floor of the room. Only while no film is playing. */
+.cinema__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 78% at 50% 108%, rgba(242, 169, 59, .22), rgba(242, 169, 59, 0) 62%);
+  opacity: 0;
+  transition: opacity .5s;
+  pointer-events: none;
+}
+.cinema__vignette {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  opacity: 0;
+  transition: opacity .5s;
+  pointer-events: none;
+}
+.cinema__vignette--left  { left: 0;  background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,0)); }
+.cinema__vignette--right { right: 0; background: linear-gradient(270deg, rgba(0,0,0,.55), rgba(0,0,0,0)); }
+
+body.is-idle .cinema__glow,
+body.is-idle .cinema__vignette { opacity: 1; }
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  transition: opacity .3s;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.wordmark__lamp {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 12px rgba(242, 169, 59, .9);
+}
+.wordmark__name { font: 500 17px/1 var(--display); letter-spacing: .01em; }
+.wordmark__tagline { font: 400 11px/1 var(--text); color: var(--ink-muted); }
+
+.status-strip {
+  display: flex;
+  gap: 9px;
+  margin-left: 8px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  transition: background-color .25s, border-color .25s;
+}
+.badge__main { font: 500 12.5px/1 var(--text); }
+
+.badge.is-alert {
+  background: rgba(242, 169, 59, .16);
+  border-color: rgba(242, 169, 59, .5);
+}
+.badge.is-alert .badge__main { color: var(--amber); }
+
+.badge.is-ok {
+  background: rgba(111, 208, 140, .14);
+  border-color: rgba(111, 208, 140, .45);
+}
+.badge.is-ok .badge__main { color: var(--green); }
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* The FR/EN pair swaps which language leads; it leaves the bar for a film. */
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 34px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+.lang__option {
+  height: 26px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-muted);
+  font: 500 12px var(--text);
+  cursor: pointer;
+}
+.lang__option[aria-pressed="true"] {
+  background: var(--amber);
+  color: var(--ground);
+  font-weight: 600;
+}
+
+/*
+  Once a film is on, the whole bar recedes. It comes back for a pointer, for a
+  keyboard, and whenever a veil is up — an adult reading a pause needs it.
+*/
+body.is-watching .topbar { opacity: var(--chrome-rest); }
+
+/* The subtitle is an introduction. Once the film is running it has been made. */
+body.is-watching .wordmark__tagline { display: none; }
+
+/*
+  Once a film is on, the bar carries the way out where it carried the language:
+  only one of the two is ever on it. The FR/EN pair moves behind the gear, which
+  is where an adult is already sent for everything else a film hides.
+*/
+body.is-watching .topbar .lang { display: none; }
+body.is-watching .settings-panel__migrated { display: flex; }
+body.is-watching .topbar:hover,
+body.is-watching .topbar:focus-within,
+body.is-veiled .topbar { opacity: 1; }
+
+/* The gear says whether its panel is open, and becomes the way to close it. */
+#settingsButton.is-open {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--ground);
+}
+#settingsButton.is-open .button__knob { fill: var(--amber); }
+
+/* ---------- Quick change bar ---------- */
+
+.quick-bar {
+  position: absolute;
+  top: 66px;
+  right: 24px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(560px, calc(100% - 48px));
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: rgba(28, 23, 18, .96);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .55);
+  backdrop-filter: blur(14px);
+  animation: pc-rise .2s ease-out;
+}
+.quick-bar .field { flex: 1; height: 44px; }
+
+/* ---------- Settings panel ---------- */
+
+.settings-panel {
+  position: absolute;
+  top: 66px;
+  right: 24px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 340px;
+  max-width: calc(100% - 32px);
+  padding: 20px;
+  border: 1px solid rgba(245, 237, 226, .14);
+  border-radius: var(--radius-panel);
+  background: rgba(28, 23, 18, .96);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .55);
+  backdrop-filter: blur(14px);
+  animation: pc-rise .2s ease-out;
+
+  /*
+    On a short screen the panel is taller than the room under the bar, and the
+    reset button would sit off the bottom where nobody could reach it.
+  */
+  max-height: calc(100dvh - 92px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.settings-panel__head {
+  font: 500 15px var(--display);
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.setting input[type="range"] { width: 100%; }
+.setting__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.setting__name { font: 500 13px var(--text); }
+
+/* A row, not a stack: the tick sits beside its label like any checkbox. */
+.setting--check {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.setting--check input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+.setting__value {
+  padding: 3px 9px;
+  border-radius: 7px;
+  background: var(--fill);
+  color: var(--amber);
+  font: 500 11.5px var(--mono);
+}
+
+/*
+  Stacked, not side by side: the language pill takes the first line and hugs the
+  right, the way the top bar carries it on a wider screen; the link button takes
+  the second on its own.
+*/
+.settings-panel__migrated {
+  display: none; /* the top bar carries these until portrait takes them away */
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--fill);
+}
+.settings-panel__migrated .lang { align-self: flex-end; }
+.settings-panel__migrated .button { width: 100%; }
+
+.settings-panel__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 16px;
+  border-top: 1px solid var(--fill);
+}
+
+/* ---------- Mirror ---------- */
+
+.mirror {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 3;
+  width: 224px;
+  padding: 10px;
+  border: 1px solid rgba(242, 169, 59, .22);
+  border-radius: 22px;
+  background: rgba(23, 19, 15, .62);
+  backdrop-filter: blur(10px);
+  opacity: .85;
+  transition: opacity .3s;
+}
+.mirror:hover { opacity: 1; }
+
+.mirror__frame {
+  position: relative;
+  height: 140px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: repeating-linear-gradient(120deg, #2C241D 0 10px, #261F19 10px 20px);
+}
+.mirror__frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* It is a mirror: the child raises a hand and that hand rises on the same side. */
+  transform: scaleX(-1);
+}
+.mirror__label {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font: 500 10px var(--text);
+  color: var(--ink-soft);
+  opacity: .7;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+}
+
+.mirror__gauge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 4px 2px;
+}
+.mirror__lips { font-size: 15px; line-height: 1; }
+
+.gauge {
+  position: relative;
+  flex: 1;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--fill-track);
+}
+.gauge__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: var(--radius-pill);
+  background: var(--green);
+  transition: width .1s linear, background-color .2s;
+}
+/* The mark the lips must stay under. Openness is drawn against twice it. */
+.gauge__threshold {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(245, 237, 226, .55);
+}
+
+/* ---------- The top bar on a phone ---------- */
+
+/*
+  No room for branding on a phone: the wordmark goes, and the settings button
+  takes the left of the bar with its label intact — it is the one control an
+  adult goes looking for, so it should read as a word rather than a glyph.
+  `display: contents` dissolves the action group so its buttons become items of
+  the bar itself and can be ordered around the badges.
+*/
+/* --- is-narrow: --bp-narrow in base.css, via js/layout.js --- */
+body.is-narrow .wordmark { display: none; }
+
+body.is-narrow .topbar__actions { display: contents; }
+
+body.is-narrow #settingsButton { order: -1; }
+body.is-narrow .status-strip { order: 0; }
+body.is-narrow #quickBarButton { order: 1; }
+
+/*
+  Leaving the film and filling the screen with it are the two things an adult
+  reaches for while it plays, so they travel together at the right-hand end.
+  The auto margin belongs to whichever of them starts that group: the full
+  screen button while a film is on, the language pill before one is chosen —
+  they are never both on the bar, so the space is never split between them.
+*/
+body.is-narrow #fullscreenButton { order: 2; margin-left: auto; }
+body.is-narrow #closeFilmButton { order: 3; }
+body.is-narrow .topbar .lang { order: 3; margin-left: auto; }
+
+/* The label stays; only the icon-only buttons beside it collapse. */
+body.is-narrow #settingsButton { width: auto; height: 44px; padding: 0 14px; }
+body.is-narrow #settingsButton span { display: inline; }
+
+
+/* ---------- Full screen ---------- */
+
+/*
+  Nothing but the film. The lamp and the way out are the only two things that
+  survive, and both sit clear of the picture in the corners.
+*/
+.minimal {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+/*
+  Centred at the top and large enough to catch from across the room: in full
+  screen this lamp is the only thing still reporting on the rule.
+*/
+.minimal__led {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  opacity: .9;
+}
+
+/*
+  On a small screen there is no room to keep the middle of the top edge clear:
+  a notch or a camera cut-out usually has it, and what is left is narrow enough
+  that a lamp in the centre reads as sitting on the picture. So the lamp takes
+  the left corner and the way out keeps the right, level with each other —
+  `top: 26px` centres the 22px lamp against the 34px button opposite it.
+*/
+body.is-narrow .minimal__led {
+  top: 26px;
+  left: 20px;
+  margin-left: 0;
+}
+
+/*
+  Top right corner, level with the lamp: both clear of the picture. The layer
+  around it is invisible outside full screen but still laid over the whole
+  page, so this button only takes clicks once it can be seen — otherwise it
+  swallows every tap in that corner, which is where the top bar ends.
+*/
+.minimal__exit {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  opacity: .35;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+body.is-fullscreen .minimal__exit { pointer-events: auto; }
+.minimal__exit:hover,
+.minimal__exit:focus-visible { opacity: 1; }
+
+body.is-fullscreen .minimal { opacity: 1; }
+
+body.is-fullscreen .topbar,
+body.is-fullscreen .mirror,
+body.is-fullscreen .playback-bar,
+body.is-fullscreen .quick-bar,
+body.is-fullscreen .settings-panel { display: none; }
+
+/*
+  The adult's pause covers the film and nothing else — the bar sits above the
+  stage, the playback strip below it, and neither is under the paper. This is
+  also the one state where an adult is certainly the one holding the device, so
+  everything they might have paused the film in order to reach stays reachable:
+  the gear and the panel behind it, the language, the way home, the way to full
+  screen and back out of it.
+
+  The mirror is the exception. It is the child's own face, and the rule that
+  reads it is suspended here, so leaving it on would be reporting on something
+  that is not being watched.
+*/
+body.is-adult-paused .mirror { display: none; }
+
+/* Nothing to make full screen, and no rule running yet, before a film. */
+body.is-idle #fullscreenButton { display: none; }

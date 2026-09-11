@@ -1,0 +1,473 @@
+/*
+  The film, and the three things that are ever drawn over it.
+
+  The child's veil is dark and coral. The adult's pause is light and papery
+  with a padlock — the inversion is the point: a child can tell at a glance
+  that this one is not about them.
+*/
+
+.stage {
+  position: absolute;
+  inset: 0;
+  background: var(--ground);
+  transition: inset .25s ease-out;
+}
+
+/*
+  Watching in a window: inset the film so the chrome has room of its own. The
+  video is `object-fit: contain`, so this shrinks the picture rather than
+  cropping it. Full screen and the welcome screen both want the whole frame.
+*/
+body.is-watching:not(.is-fullscreen) .stage {
+  inset: var(--band-top) 0 var(--band-bottom);
+}
+
+.stage__video,
+.stage__embed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.stage__video { object-fit: contain; background: #000; }
+.stage__embed iframe { width: 100%; height: 100%; border: 0; }
+
+.stage__demo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: repeating-linear-gradient(135deg, #241D17 0 16px, #1E1813 16px 32px);
+}
+.stage__demo-label {
+  font: 500 12px var(--mono);
+  letter-spacing: .14em;
+  color: var(--ink-faint);
+}
+
+/* ---------- The child's veil ---------- */
+
+.veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 0 34px;
+  color: var(--ink);
+  text-align: left;
+}
+.veil.is-visible { display: flex; }
+
+/* Pause: the film has stopped, so the veil may cover it. */
+.veil--paused { background: rgba(23, 19, 15, .72); }
+
+/*
+  Warning: the film is still running underneath and must stay readable. The
+  amber frame is what catches the eye sideways without masking the picture, and
+  the cat and its words sit in the middle of it — the same place the pause puts
+  them, so the one becoming the other does not move anything.
+*/
+.veil--warning {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 34px;
+  background: rgba(23, 19, 15, .44);
+  backdrop-filter: blur(3px);
+  box-shadow: inset 0 0 0 6px rgba(242, 169, 59, .5),
+              inset 0 0 90px rgba(242, 169, 59, .22);
+  text-align: center;
+}
+
+.veil__figure {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  flex: none;
+}
+.veil__mascot {
+  position: absolute;
+  inset: 0;
+}
+.veil--warning .veil__mascot { inset: 16px; }
+
+/* The time left before the film actually stops. */
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  display: none;
+}
+.veil--warning .ring { display: block; }
+
+.ring__track { fill: none; stroke: rgba(245, 237, 226, .14); stroke-width: 5; }
+.ring__value {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 5;
+  stroke-linecap: round;
+  /* 2πr for r = 70. The offset runs 440 (none elapsed) to 0 (time up). */
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset .1s linear;
+}
+
+.veil__words { min-width: 0; }
+
+.veil__title {
+  margin: 0 0 8px;
+  font: 500 clamp(26px, 3.4vw, 34px)/1.15 var(--display);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .6);
+}
+.veil--paused .veil__title { font-size: clamp(26px, 3.6vw, 38px); }
+
+.veil__text {
+  margin: 0;
+  font: 400 14px/1.5 var(--text);
+  color: var(--ink-soft);
+}
+.veil--warning .veil__text { font-size: 14px; color: #D8C9B7; }
+
+/* The cause is for the adult reading over the child's shoulder. */
+.veil__cause {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 5px 11px;
+  border: 1px solid;
+  border-radius: var(--radius-pill);
+  font: 500 11.5px var(--text);
+}
+.veil__cause[data-reason="open"]     { background: rgba(245, 140, 123, .16); border-color: rgba(245, 140, 123, .42); color: var(--coral); }
+.veil__cause[data-reason="covered"]  { background: rgba(242, 169, 59, .14);  border-color: rgba(242, 169, 59, .42);  color: var(--amber); }
+.veil__cause[data-reason="pacifier"] { background: rgba(127, 211, 240, .14); border-color: rgba(127, 211, 240, .42); color: var(--sky); }
+.veil__cause[data-reason="away"]     { background: rgba(245, 237, 226, .10); border-color: rgba(245, 237, 226, .3);  color: var(--ink-soft); }
+
+/* ---------- The adult's pause ---------- */
+
+.adult-pause {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(243, 231, 211, .94);
+  color: var(--paper-ink);
+  text-align: center;
+}
+
+.adult-pause__badge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(43, 33, 27, .08);
+  font: 500 12px var(--text);
+  color: var(--paper-ink-soft);
+  letter-spacing: .02em;
+}
+.adult-pause__badge svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #5C4B3D;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.adult-pause__mascot { width: 104px; height: 104px; }
+
+.adult-pause__title {
+  margin: 18px 0 8px;
+  font: 500 clamp(26px, 3.4vw, 34px)/1.1 var(--display);
+}
+
+.adult-pause__text {
+  max-width: 460px;
+  margin: 0 0 28px;
+  font: 400 14px/1.6 var(--text);
+  color: var(--paper-ink-soft);
+}
+
+.adult-pause__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.adult-pause__hint { font: 400 13px var(--text); color: var(--paper-ink-faint); }
+.adult-pause :focus-visible { outline-color: #2B211B; }
+
+/* ---------- Reward ---------- */
+
+/*
+  Nothing covers the picture: the film is already running again and the
+  sparkles simply pass over it.
+*/
+.reward {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(85% 70% at 50% 55%, rgba(242, 169, 59, .20), rgba(242, 169, 59, 0) 70%);
+  transition: opacity .25s ease-out;
+}
+.reward.is-visible { opacity: 1; }
+
+.reward__spark {
+  position: absolute;
+  color: var(--amber);
+  animation: pc-sparkle 1.2s ease-in-out infinite;
+}
+.reward__spark::before { content: "✦"; }
+.reward__spark:nth-child(1) { left: 14%; top: 26%; font-size: 30px; }
+.reward__spark:nth-child(2) { left: 27%; top: 62%; font-size: 19px; color: var(--cream); animation-delay: .15s; }
+.reward__spark:nth-child(3) { left: 41%; top: 18%; font-size: 23px; animation-delay: .3s; }
+.reward__spark:nth-child(4) { left: 58%; top: 70%; font-size: 34px; color: var(--coral); animation-delay: .1s; }
+.reward__spark:nth-child(5) { left: 71%; top: 31%; font-size: 21px; color: var(--cream); animation-delay: .35s; }
+.reward__spark:nth-child(6) { left: 84%; top: 57%; font-size: 28px; animation-delay: .22s; }
+.reward__spark:nth-child(7) { left: 49%; top: 44%; font-size: 16px; color: var(--cream); animation-delay: .4s; }
+
+/* Centred on the film, where the veil it replaces had just been saying so. */
+.reward__note {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.reward__mascot { width: 84px; height: 84px; }
+.reward__text {
+  font: 500 30px/1 var(--display);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, .7);
+}
+
+/*
+  Without motion the sparkles say nothing, so the frame gives one amber pulse
+  instead — the same news, told by brightness rather than movement.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .reward.is-visible {
+    box-shadow: inset 0 0 0 6px rgba(242, 169, 59, .55), inset 0 0 90px rgba(242, 169, 59, .25);
+  }
+  .reward__spark { display: none; }
+}
+
+/* ---------- Playback bar ---------- */
+
+.playback-bar {
+  position: absolute;
+  left: 24px;
+  right: 270px;
+  bottom: 26px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 46px;
+  padding: 0 16px;
+  border: 1px solid rgba(245, 237, 226, .10);
+  border-radius: 16px;
+  background: rgba(23, 19, 15, .55);
+  backdrop-filter: blur(10px);
+  opacity: var(--chrome-rest);
+  transition: opacity .3s;
+}
+.playback-bar:hover,
+.playback-bar:focus-within { opacity: 1; }
+
+/* With the mirror hidden there is nothing to make room for. */
+body.is-mirrorless .playback-bar { right: 24px; }
+
+.icon-button {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(245, 237, 226, .12);
+  color: var(--ink);
+  cursor: pointer;
+}
+.icon-button--bare { background: none; color: var(--ink-soft); }
+.icon-button__glyph { width: 16px; height: 16px; fill: currentColor; }
+
+.glyph--play { display: none; }
+.icon-button.is-playing .glyph--pause { display: block; }
+.icon-button.is-playing .glyph--play  { display: none; }
+.icon-button:not(.is-playing) .glyph--pause { display: none; }
+.icon-button:not(.is-playing) .glyph--play  { display: block; }
+
+.icon-button__cone { fill: currentColor; stroke: none; }
+.icon-button__wave,
+.icon-button__cross {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+}
+.icon-button__cross { display: none; }
+.icon-button.is-quiet .icon-button__wave--outer { display: none; }
+.icon-button.is-muted .icon-button__wave { display: none; }
+.icon-button.is-muted .icon-button__cross { display: block; }
+
+.playback-bar__progress { flex: 1; min-width: 0; }
+/* Sound is not an action, so its run is neutral rather than amber. */
+.playback-bar__volume { width: 74px; flex: none; --range-tint: var(--ink-soft); }
+.playback-bar__time {
+  flex: none;
+  font: 500 11.5px var(--mono);
+  color: var(--ink-soft);
+}
+
+.playback-bar input[type="range"]::-webkit-slider-runnable-track { height: 5px; }
+.playback-bar input[type="range"]::-moz-range-track { height: 5px; }
+.playback-bar input[type="range"]::-webkit-slider-thumb {
+  width: 13px;
+  height: 13px;
+  margin-top: -4px;
+  border-width: 2px;
+  border-color: var(--ground);
+}
+.playback-bar input[type="range"]::-moz-range-thumb {
+  width: 9px;
+  height: 9px;
+  border-width: 2px;
+  border-color: var(--ground);
+}
+
+/* ---------- Portrait ----------
+   The child is holding the device: the film takes a band at the top and the
+   controls sit under it, rather than everything floating over a picture that
+   fills the screen. */
+
+/* --- is-phone: --bp-phone in base.css, via js/layout.js --- */
+/* Portrait stacks the film and its controls, so it sets its own band. */
+body.is-phone.is-watching:not(.is-fullscreen) .stage,
+body.is-phone .stage {
+  inset: 84px 0 auto;
+  height: 250px;
+}
+
+/*
+  The top bar keeps only what reports on the rule — the two badges and the
+  gear. Everything else an adult might want has moved into the panel behind
+  that gear, which is where the design puts it on a phone.
+*/
+body.is-phone .topbar { flex-wrap: nowrap; gap: 8px; padding: 18px; }
+body.is-phone .status-strip { margin-left: 0; min-width: 0; }
+body.is-phone .badge { padding: 0 11px; min-width: 0; }
+body.is-phone .badge__main { overflow: hidden; text-overflow: ellipsis; }
+body.is-phone .topbar__actions { gap: 8px; }
+
+/*
+  Once a film is running the bar carries the least it can: the gear, one lamp
+  for the mouth, and the way to full screen. The camera badge says nothing the
+  mouth lamp does not already imply, and the pasted-link and language controls
+  have moved behind the gear.
+*/
+body.is-phone.is-watching #cameraBadge,
+body.is-phone.is-watching #quickBarButton,
+body.is-phone.is-watching .topbar .lang { display: none; }
+
+body.is-phone.is-watching #mouthBadge {
+  width: 34px;
+  padding: 0;
+  justify-content: center;
+}
+/* The word stays for a screen reader; only the eye loses it. */
+body.is-phone.is-watching #mouthBadge .badge__main {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+body.is-phone .settings-panel__migrated { display: flex; }
+body.is-phone .settings-panel { top: 74px; right: 18px; left: 18px; width: auto; }
+body.is-phone .quick-bar { top: 74px; right: 18px; left: 18px; width: auto; flex-wrap: wrap; }
+body.is-phone .quick-bar .field { flex: 1 0 100%; }
+
+/* Touch targets, everywhere the adult is expected to aim. */
+body.is-phone .topbar__actions .button--quiet { width: 44px; height: 44px; padding: 0; }
+body.is-phone .topbar__actions .button--quiet span:not(.button__plus) { display: none; }
+body.is-phone .lang { height: 44px; }
+body.is-phone .lang__option { height: 36px; min-width: 44px; }
+body.is-phone .icon-button { width: 36px; height: 36px; }
+
+body.is-phone .playback-bar {
+  left: 18px;
+  right: 18px;
+  bottom: auto;
+  top: 350px;
+  height: 52px;
+  border-radius: 16px;
+}
+body.is-phone .playback-bar__time { font-size: 11px; }
+body.is-phone .playback-bar__volume,
+body.is-phone .playback-bar .icon-button--bare { display: none; }
+
+/*
+  The mirror keeps the size and the corner it has on a desktop: one shape to
+  recognise, whichever screen the child is in front of. It needs no rule of
+  its own here — the only thing to say is that the ones this block used to
+  carry are gone on purpose.
+*/
+
+/*
+  The child's veil still owns the whole screen — it is the message, not a
+  caption — and on a phone that has to mean *everything*: the bar, the
+  playback strip and the mirror all sit over the film here, and any of them
+  showing through the veil reads as a broken page rather than a rule. The way
+  back is the same as on a desktop: a tap on the veil hands control to the
+  adult, and the adult's pause leaves the bar reachable.
+*/
+body.is-phone .veil,
+body.is-phone .reward,
+body.is-phone .welcome { position: fixed; inset: 0; }
+body.is-phone .veil   { z-index: 8; }
+body.is-phone .reward { z-index: 7; }
+
+/* ---------- The adult's pause, on a phone ----------
+
+   It covers the film wherever the film is, and here the film is a 250px band —
+   which is all the room the message has. So the cat steps out, and the keyboard
+   hint goes with it: there is no space bar on a phone. */
+
+body.is-phone .adult-pause { padding: 14px 18px; }
+body.is-phone .adult-pause__badge { margin-bottom: 0; }
+body.is-phone .adult-pause__mascot { display: none; }
+body.is-phone .adult-pause__title { margin: 10px 0 6px; font-size: 21px; }
+body.is-phone .adult-pause__text { margin: 0 0 16px; font: 400 12.5px/1.45 var(--text); }
+body.is-phone .adult-pause__hint { display: none; }
+
+body.is-phone .veil--paused {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: 0 28px;
+  text-align: center;
+  background: rgba(23, 19, 15, .76);
+}
+body.is-phone .veil--paused .veil__figure { width: 180px; height: 180px; }
+body.is-phone .veil--paused .veil__title { margin: 24px 0 10px; }
+body.is-phone .veil--paused .veil__words { text-align: center; }
+

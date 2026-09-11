@@ -1,0 +1,154 @@
+{
+  "app": {
+    "title": "Petit Cinéma",
+    "name": "Petit Cinéma",
+    "tagline": "Bouche Cousue"
+  },
+  "lang": {
+    "label": "Langue",
+    "fr": "FR",
+    "en": "EN"
+  },
+  "badge": {
+    "camera": "Caméra"
+  },
+  "status": {
+    "waiting": "En attente…",
+    "loading": "Chargement…",
+    "ready": "Prêt !",
+    "error": "Erreur caméra ou réseau",
+    "paused": "Pause",
+    "away": "Visage absent",
+    "covered": "Bouche cachée",
+    "pacifier": "Tétine détectée",
+    "open": "Bouche ouverte",
+    "closed": "Bouche fermée"
+  },
+  "cause": {
+    "away": "visage absent",
+    "covered": "bouche cachée",
+    "pacifier": "tétine détectée",
+    "open": "bouche ouverte"
+  },
+  "welcome": {
+    "title": "Quel film aujourd'hui ?",
+    "subtitle": "Colle un lien YouTube ou ouvre un film de l'ordinateur.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=…",
+    "urlLabel": "Lien YouTube",
+    "openCinema": "Ouvrir la salle",
+    "or": "OU",
+    "chooseFile": "Choisir un fichier",
+    "demo": "Voir la démo sans vidéo",
+    "privacy": "Aucune vidéo n'est enregistrée, aucune donnée personnelle n'est collectée.",
+    "sourceBefore": "Le code source est disponible sur",
+    "sourceLink": "GitHub"
+  },
+  "quickBar": {
+    "open": "Choisir une vidéo",
+    "placeholder": "Coller un lien YouTube pour changer de film",
+    "label": "Nouveau lien YouTube",
+    "change": "Changer",
+    "file": "Fichier",
+    "fileLabel": "Ouvrir une vidéo de l'ordinateur"
+  },
+  "demo": {
+    "label": "DESSIN ANIMÉ"
+  },
+  "mirror": {
+    "label": "miroir",
+    "openness": "Ouverture de la bouche"
+  },
+  "veil": {
+    "start": {
+      "title": "Ferme la bouche",
+      "text": "Le film démarre dès que tes lèvres se touchent."
+    },
+    "manual": {
+      "badge": "PAUSE ADULTE",
+      "title": "Le film attend l'adulte",
+      "text": "Le contrôle de la bouche est suspendu. Personne n'a fait d'erreur.",
+      "resume": "Reprendre le film",
+      "orSpace": "ou barre d'espace"
+    }
+  },
+  "warning": {
+    "away": {
+      "title": "Reviens me voir 👀",
+      "text": "Assieds-toi devant la caméra."
+    },
+    "covered": {
+      "title": "Enlève tes mains 🙌",
+      "text": "Je dois voir ta bouche."
+    },
+    "pacifier": {
+      "title": "Range la tétine",
+      "text": "On s'entraîne sans elle."
+    },
+    "open": {
+      "title": "Ferme bien la bouche 👄",
+      "text": "Le film continue."
+    }
+  },
+  "paused": {
+    "away": {
+      "title": "Reviens me voir 👀",
+      "text": "Assieds-toi devant la caméra."
+    },
+    "covered": {
+      "title": "Enlève tes mains 🙌",
+      "text": "Je dois voir ta bouche."
+    },
+    "pacifier": {
+      "title": "Range la tétine",
+      "text": "On s'entraîne sans elle."
+    },
+    "open": {
+      "title": "Ferme la bouche",
+      "text": "Le film repart tout seul."
+    }
+  },
+  "reward": "Bravo ! 🌟",
+  "controls": {
+    "play": "Lancer le film",
+    "pause": "Mettre le film en pause",
+    "mute": "Couper le son",
+    "unmute": "Remettre le son",
+    "position": "Position dans la vidéo",
+    "volume": "Volume"
+  },
+  "settings": {
+    "title": "Réglages adulte",
+    "sensitivity": "Sensibilité",
+    "sensitivityLabel": "Sensibilité de détection",
+    "warning": "Avant l'avertissement",
+    "warningLabel": "Délai avant l'avertissement",
+    "pause": "Avant la pause",
+    "pauseLabel": "Délai avant la pause",
+    "secondsUnit": "s",
+    "mirror": "Afficher le miroir",
+    "reset": "Réinitialiser"
+  },
+  "buttons": {
+    "settings": "Réglages",
+    "close": "Fermer",
+    "closeLabel": "Fermer le film et revenir à l'accueil",
+    "fullscreen": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran"
+  },
+  "alerts": {
+    "invalidLink": "Lien YouTube non reconnu. Colle un lien de type https://www.youtube.com/watch?v=… ou https://youtu.be/…",
+    "needsServer": "YouTube ne peut pas lire les vidéos quand la page est ouverte en fichier local (file://).\n\nOuvre-la via un petit serveur local, par exemple :\n  python3 -m http.server 8000\npuis va sur http://localhost:8000/",
+    "youtubeFailed": "Impossible de charger la vidéo YouTube :",
+    "unplayableVideo": "Cette vidéo ne peut pas être lue par le navigateur.\n\nEssaie un fichier .mp4 (H.264 + audio AAC) ou .webm. Les .mkv sont souvent muets : leur piste audio (AC-3, DTS) n'est pas décodable par un navigateur.",
+    "startFailed": "Impossible de démarrer :",
+    "startFailedHint": "\n\nVérifie que la caméra est autorisée et que l'ordinateur est connecté à internet (nécessaire au premier chargement du modèle)."
+  },
+  "youtube": {
+    "invalidLink": "Lien YouTube invalide.",
+    "playerError": "Erreur du lecteur HTML5.",
+    "notFound": "Vidéo introuvable ou privée.",
+    "embeddingDenied": "Le propriétaire de cette vidéo interdit sa lecture en dehors de YouTube. Essaie une autre vidéo.",
+    "blockedHere": "Cette vidéo est bloquée à la lecture depuis cette page (restriction d'intégration ou d'origine). Essaie une autre vidéo, ou ouvre la page via http://localhost.",
+    "otherError": "Erreur YouTube"
+  }
+}

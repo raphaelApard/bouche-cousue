@@ -1,0 +1,154 @@
+{
+  "app": {
+    "title": "Petit Cinéma",
+    "name": "Petit Cinéma",
+    "tagline": "Bouche Cousue"
+  },
+  "lang": {
+    "label": "Language",
+    "fr": "FR",
+    "en": "EN"
+  },
+  "badge": {
+    "camera": "Camera on"
+  },
+  "status": {
+    "waiting": "Waiting…",
+    "loading": "Loading…",
+    "ready": "Ready!",
+    "error": "Camera or network error",
+    "paused": "Paused",
+    "away": "No face",
+    "covered": "Mouth covered",
+    "pacifier": "Dummy detected",
+    "open": "Mouth open",
+    "closed": "Mouth closed"
+  },
+  "cause": {
+    "away": "no face",
+    "covered": "mouth covered",
+    "pacifier": "dummy detected",
+    "open": "mouth open"
+  },
+  "welcome": {
+    "title": "What are we watching?",
+    "subtitle": "Paste a YouTube link, or open a file from this computer.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=…",
+    "urlLabel": "YouTube link",
+    "openCinema": "Open the cinema",
+    "or": "OR",
+    "chooseFile": "Choose a file",
+    "demo": "Try the demo without a film",
+    "privacy": "No video is recorded, and no personal data is collected.",
+    "sourceBefore": "The source code is available on",
+    "sourceLink": "GitHub"
+  },
+  "quickBar": {
+    "open": "Choose a video",
+    "placeholder": "Paste a YouTube link to change the film",
+    "label": "New YouTube link",
+    "change": "Change",
+    "file": "File",
+    "fileLabel": "Open a video from this computer"
+  },
+  "demo": {
+    "label": "CARTOON"
+  },
+  "mirror": {
+    "label": "mirror",
+    "openness": "Mouth openness"
+  },
+  "veil": {
+    "start": {
+      "title": "Close your mouth",
+      "text": "The film starts as soon as your lips touch."
+    },
+    "manual": {
+      "badge": "ADULT PAUSE",
+      "title": "The film is waiting for a grown-up",
+      "text": "Mouth control is suspended until you restart. Nobody did anything wrong.",
+      "resume": "Resume the film",
+      "orSpace": "or the space bar"
+    }
+  },
+  "warning": {
+    "away": {
+      "title": "Come back and see me 👀",
+      "text": "Sit down in front of the camera."
+    },
+    "covered": {
+      "title": "Hands away 🙌",
+      "text": "I need to see your mouth."
+    },
+    "pacifier": {
+      "title": "Put the dummy away",
+      "text": "Let's practise without it."
+    },
+    "open": {
+      "title": "Close your lips 👄",
+      "text": "The film keeps playing."
+    }
+  },
+  "paused": {
+    "away": {
+      "title": "Come back and see me 👀",
+      "text": "Sit down in front of the camera."
+    },
+    "covered": {
+      "title": "Hands away 🙌",
+      "text": "I need to see your mouth."
+    },
+    "pacifier": {
+      "title": "Put the dummy away",
+      "text": "Let's practise without it."
+    },
+    "open": {
+      "title": "Close your mouth",
+      "text": "The film restarts by itself."
+    }
+  },
+  "reward": "Well done! 🌟",
+  "controls": {
+    "play": "Start the film",
+    "pause": "Pause the film",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "position": "Position in the video",
+    "volume": "Volume"
+  },
+  "settings": {
+    "title": "Adult settings",
+    "sensitivity": "Sensitivity",
+    "sensitivityLabel": "Detection sensitivity",
+    "warning": "Before the warning",
+    "warningLabel": "Delay before the warning",
+    "pause": "Before the pause",
+    "pauseLabel": "Delay before the pause",
+    "secondsUnit": "s",
+    "mirror": "Show the mirror",
+    "reset": "Reset"
+  },
+  "buttons": {
+    "settings": "Parameters",
+    "close": "Close",
+    "closeLabel": "Close the film and go back home",
+    "fullscreen": "Full screen",
+    "exitFullscreen": "Leave full screen"
+  },
+  "alerts": {
+    "invalidLink": "That YouTube link was not recognised. Paste a link such as https://www.youtube.com/watch?v=… or https://youtu.be/…",
+    "needsServer": "YouTube cannot play videos when the page is opened as a local file (file://).\n\nOpen it through a small local server, for example:\n  python3 -m http.server 8000\nthen go to http://localhost:8000/",
+    "youtubeFailed": "The YouTube video could not be loaded:",
+    "unplayableVideo": "This video cannot be played by the browser.\n\nTry an .mp4 file (H.264 + AAC audio) or a .webm. .mkv files are often silent: their audio track (AC-3, DTS) cannot be decoded by a browser.",
+    "startFailed": "Could not start:",
+    "startFailedHint": "\n\nCheck that the camera is allowed and that the computer is online (needed the first time the model loads)."
+  },
+  "youtube": {
+    "invalidLink": "Invalid YouTube link.",
+    "playerError": "HTML5 player error.",
+    "notFound": "Video not found or private.",
+    "embeddingDenied": "The owner of this video does not allow it to play outside YouTube. Try another video.",
+    "blockedHere": "This video is blocked from playing on this page (embedding or origin restriction). Try another video, or open the page over http://localhost.",
+    "otherError": "YouTube error"
+  }
+}

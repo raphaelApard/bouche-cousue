@@ -1,0 +1,367 @@
+/*
+  Tokens and the primitives every other sheet builds on.
+
+  The palette is a cinema at night: a warm near-black ground, one amber light,
+  and the cat in coral. Each colour means one thing and only that —
+  amber = action, coral = the cat, green = all is well, sky = keyboard focus.
+*/
+
+:root {
+  --ground: #17130F;
+  --ground-deep: #0C0A08;
+  --panel: #221C17;
+  --panel-raised: #1C1712;
+
+  --ink: #F5EDE2;
+  --ink-soft: #C0B1A0;
+  --ink-muted: #9C8C7C;
+  --ink-faint: #8A7A6A;
+  --ink-faintest: #7E6F60;
+  --ink-warm: #A2907E;
+
+  --amber: #F2A93B;
+  --coral: #F58C7B;
+  --green: #6FD08C;
+  --sky: #7FD3F0;
+  --cream: #F6E2C0;
+
+  /* The adult's pause is paper, not cinema — the one light surface here. */
+  --paper: #F3E7D3;
+  --paper-ink: #2B211B;
+  --paper-ink-soft: #6B5A4A;
+  --paper-ink-faint: #8A7663;
+
+  --line: rgba(245, 237, 226, .13);
+  --line-strong: rgba(245, 237, 226, .28);
+  --fill: rgba(245, 237, 226, .10);
+  --fill-track: rgba(245, 237, 226, .16);
+  --glass: rgba(23, 19, 15, .68);
+
+  --display: Fredoka, system-ui, sans-serif;
+  --text: "Instrument Sans", system-ui, sans-serif;
+  --mono: ui-monospace, Menlo, monospace;
+
+  --radius-panel: 18px;
+  --radius-control: 14px;
+  --radius-pill: 999px;
+
+  /* Chrome the adult needs but the child should not be drawn to. */
+  --chrome-rest: .45;
+
+  /*
+    Bands kept clear of the picture while watching in a window, so the top bar
+    and the playback bar sit beside the film rather than on it. Full screen
+    gives them back — there is no chrome there to make room for.
+  */
+  --band-top: 74px;
+  --band-bottom: 96px;
+
+  /*
+    The breakpoints. `js/layout.js` reads these three and puts `is-narrow`,
+    `is-short` or `is-phone` on <body>; every rule in these sheets keys off
+    those classes, so a width is never written twice.
+
+    The class is not decoration: a media query cannot read a custom property —
+    there is no `@media (max-width: var(--bp-narrow))` — so naming the state is
+    the only way these numbers stay a single copy.
+  */
+  --bp-narrow: 1024px;   /* the top bar stops fitting its labels */
+  --bp-short: 620px;    /* the welcome screen stops fitting its small print */
+  --bp-phone: 1024px;    /* with portrait: a phone held upright */
+}
+
+* { box-sizing: border-box; }
+
+/*
+  A class that sets `display` outranks the `hidden` attribute, and most things
+  hidden here are hidden by JS setting `.hidden = true`. Settle it once, here,
+  rather than per component.
+*/
+[hidden] { display: none !important; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+p { margin: 0; }
+
+/* One focus style for every control in the app. */
+:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Buttons ---------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink);
+  font: 500 14.5px var(--text);
+  cursor: pointer;
+  transition: background-color .18s, border-color .18s, color .18s, transform .12s;
+}
+
+.button:active { transform: translateY(1px); }
+
+.button--primary {
+  background: var(--amber);
+  color: var(--ground);
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 6px 20px rgba(242, 169, 59, .28);
+}
+.button--primary:hover { background: #F7BC5C; }
+
+.button--outline {
+  border: 1.5px solid var(--line-strong);
+}
+.button--outline:hover {
+  border-color: var(--ink-soft);
+  background: rgba(245, 237, 226, .06);
+}
+
+.button--dark {
+  background: var(--paper-ink);
+  color: var(--cream);
+  font-weight: 600;
+  font-size: 15px;
+  height: 52px;
+  padding: 0 26px;
+}
+.button--dark:hover { background: #3B2E25; }
+
+.button--link {
+  height: auto;
+  padding: 4px 2px;
+  color: var(--amber);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.button--link:hover { color: var(--cream); }
+
+/* The adult's chrome over the film: quiet at rest, present when reached for. */
+.button--quiet {
+  height: 34px;
+  padding: 0 14px;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  color: var(--ink-soft);
+  font: 500 12.5px var(--text);
+  backdrop-filter: blur(10px);
+}
+.button--quiet:hover { color: var(--ink); border-color: var(--line-strong); }
+
+.button--icon {
+  width: 34px;
+  padding: 0;
+}
+
+.button--small {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  border-radius: 11px;
+}
+
+.button:disabled {
+  background: var(--fill);
+  color: var(--ink-faintest);
+  cursor: default;
+}
+
+.button__icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.button__icon--solid {
+  width: 13px;
+  height: 15px;
+  fill: currentColor;
+  stroke-width: 2.4;
+}
+.button__knob { fill: var(--ground); stroke: none; }
+.button__plus { font-size: 15px; line-height: 1; }
+
+/* ---------- Text field ---------- */
+
+/*
+  No `flex` here. The quick-change bar lays these out in a row and wants one to
+  grow; the welcome form is a column, where a flex-basis of 0 would collapse the
+  field to nothing. The row asks for the growth itself.
+*/
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  min-width: 0;
+  height: 54px;
+  padding: 0 18px;
+  border: 1px solid rgba(245, 237, 226, .14);
+  border-radius: var(--radius-control);
+  background: var(--panel);
+}
+.field:focus-within {
+  border-color: rgba(242, 169, 59, .55);
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+}
+
+.field__icon {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.field__input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 400 14.5px var(--text);
+}
+.field__input::placeholder { color: var(--ink-faintest); }
+.field__input:focus { outline: none; }
+
+/* ---------- Indicator lamp ---------- */
+
+.led {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ink-faintest);
+  transition: background-color .25s, box-shadow .25s;
+}
+.led.is-ok {
+  background: var(--green);
+  box-shadow: 0 0 9px rgba(111, 208, 140, .9);
+}
+.led.is-alert {
+  background: var(--amber);
+  box-shadow: 0 0 9px rgba(242, 169, 59, .9);
+  animation: pc-pulse 1s ease-in-out infinite;
+}
+
+/* The full-screen lamp is twice the size, so its halo is too. */
+.minimal__led.is-ok { box-shadow: 0 0 22px rgba(111, 208, 140, .95); }
+.minimal__led.is-alert { box-shadow: 0 0 22px rgba(242, 169, 59, .95); }
+
+/* ---------- Range inputs ---------- */
+
+/*
+  No width here on purpose. `input[type="range"]` carries attribute-level
+  specificity, so a width set here would outrank the layout classes that place
+  these sliders — each context sets its own instead.
+*/
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 22px;
+  background: none;
+  cursor: pointer;
+}
+/* `--range-fill` is set per input by js/range-fill.js. */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right,
+    var(--range-tint, var(--amber)) 0 var(--range-fill, 0%),
+    var(--fill-track) var(--range-fill, 0%));
+}
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right,
+    var(--range-tint, var(--amber)) 0 var(--range-fill, 0%),
+    var(--fill-track) var(--range-fill, 0%));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  border: 3px solid var(--panel-raised);
+  border-radius: 50%;
+  background: var(--cream);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--panel-raised);
+  border-radius: 50%;
+  background: var(--cream);
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes pc-pulse {
+  0%, 100% { opacity: .55; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.12); }
+}
+
+@keyframes pc-sparkle {
+  0%, 100% { opacity: .35; transform: scale(.86) rotate(0deg); }
+  50%      { opacity: 1;   transform: scale(1.14) rotate(12deg); }
+}
+
+@keyframes pc-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/*
+  Everything decorative stops. The veils, the badges and the gauge keep working
+  — they carry meaning, and a child who needs them is not helped by stillness.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+.boot-error {
+  margin: 0;
+  padding: 16px 20px;
+  background: var(--coral);
+  color: var(--ground);
+  font: 500 14px var(--text);
+}
