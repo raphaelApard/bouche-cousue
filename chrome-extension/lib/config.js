@@ -59,6 +59,12 @@ export const DETECTION = Object.freeze({
 
 /** Fixed timings, in milliseconds. The other two delays are user settings. */
 export const TIMING = Object.freeze({
+  /**
+   * A reading has to hold for this long before it displaces the current state.
+   * The dead band is hysteresis in value; this is hysteresis in time, and
+   * without it one jittery frame restarts the delay it flips to.
+   */
+  SETTLE: 250,
   RESUME: 700,          // mouth closed before the video resumes
   FACE_LOST: 1800,      // no face before the warning appears
   REWARD_COOLDOWN: 3000 // minimum gap between two "well done" flashes

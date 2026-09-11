@@ -29,6 +29,16 @@ let paused = false;
 let manuallyPaused = false;
 let running = false;
 let warningReason = null;
+
+/**
+ * How much evidence each state has, in milliseconds: a state gains while the
+ * reading says so and loses while the reading says anything else. Per state
+ * rather than one running candidate, because three-cornered flicker — an open
+ * mouth the pacifier heuristic keeps misreading — would otherwise have each
+ * contender wiping the other's score and none of them ever winning.
+ */
+const evidence = { [CLOSED]: 0, [REASON.OPEN]: 0, [REASON.AWAY]: 0, [REASON.COVERED]: 0, [REASON.PACIFIER]: 0 };
+let lastFrameAt = 0;
 let timer = null;
 let lastHeartbeat = 0;
 
@@ -111,17 +121,66 @@ export function togglePlayback() {
 function resetTimers() {
   const now = performance.now();
   for (const key of Object.keys(enteredAt)) enteredAt[key] = now;
+  for (const key of Object.keys(evidence)) evidence[key] = 0;
+  lastFrameAt = now;
 }
 
 /* ---------- Frame handling ---------- */
 
-/** Records entry into a state and returns how long we have been in it. */
-function timeInState(state, now) {
-  if (currentState !== state) {
-    currentState = state;
-    enteredAt[state] = now;
+/**
+ * What this frame says the mouth is doing — or `null` inside the dead band,
+ * between the two thresholds, where the reading is not decisive and whatever
+ * was decided last still stands.
+ */
+function classify(reading) {
+  if (!reading.faceVisible) return REASON.AWAY;
+  if (reading.handsOnMouth) return REASON.COVERED;
+  if (reading.pacifier) return REASON.PACIFIER;
+  if (reading.openness > settings.openThreshold) return REASON.OPEN;
+  if (reading.openness < settings.openThreshold * DETECTION.CLOSE_FACTOR) return CLOSED;
+  return null;
+}
+
+/**
+ * Hysteresis in time, laid over the dead band's hysteresis in value: a state
+ * has to be worth `TIMING.SETTLE` of evidence before it displaces the current
+ * one, and every frame that says otherwise gives some of that back.
+ *
+ * Without this a single contrary frame restarted the clock of whatever it
+ * flipped to — and the lip landmarks jitter, while the hand and pacifier
+ * heuristics are coarser still. A mouth held anywhere near the limit reset the
+ * warning delay several times a second, so the warning never arrived at all and
+ * the badge blinked between the two states saying so.
+ *
+ * Evidence rather than an unbroken run, because an unbroken run is exactly what
+ * a jittering reading never gives: at fourteen flips a second neither side ever
+ * holds for long enough, and the machine would sit frozen on whichever state it
+ * happened to be in. What decides it here is which reading is in the majority.
+ *
+ * Promotion dates the clock back over the evidence that earned it, so the
+ * delays stay the length they claim to be.
+ */
+function settle(state, now) {
+  // Frames arrive irregularly — in some front ends the loop is a timer that can
+  // be throttled — so evidence is weighed in milliseconds, never in frames. A
+  // long gap means we know nothing, so it counts for no more than a whole
+  // settling and the fresh reading wins.
+  const step = Math.min(now - lastFrameAt, TIMING.SETTLE);
+  lastFrameAt = now;
+
+  for (const key of Object.keys(evidence)) {
+    evidence[key] = key === state
+      ? Math.min(evidence[key] + step, TIMING.SETTLE)
+      : Math.max(evidence[key] - step, 0);
   }
-  return now - enteredAt[state];
+
+  // `null` is the dead band, where the reading is not decisive: every state
+  // alike loses ground and whatever is current simply stays.
+  if (state === null || state === currentState) return;
+  if (evidence[state] < TIMING.SETTLE) return;
+
+  currentState = state;
+  enteredAt[state] = now - evidence[state];
 }
 
 /** Warn once the delay passes, pause once the warning has had its time. */
@@ -131,38 +190,35 @@ function applyDelays(elapsed, reason, delay) {
 }
 
 function handleReading(reading, now) {
-  if (!reading.faceVisible) {
+  settle(classify(reading), now);
+  const elapsed = now - enteredAt[currentState];
+
+  if (currentState === REASON.AWAY) {
     sink.ui.setStatus(`status.${REASON.AWAY}`, false);
     sink.ui.resetGauge();
-    applyDelays(timeInState(REASON.AWAY, now), REASON.AWAY, TIMING.FACE_LOST);
+    applyDelays(elapsed, REASON.AWAY, TIMING.FACE_LOST);
     return;
   }
-  if (warningReason === REASON.AWAY) clearWarning();
 
-  const { openness } = reading;
-  sink.ui.setGauge(openness / (settings.openThreshold * 2), openness > settings.openThreshold);
+  // The gauge follows the raw reading rather than the settled state: it is a
+  // meter to read, not a decision. A frame with no face leaves it where it was.
+  if (reading.faceVisible) {
+    const ratio = reading.openness / (settings.openThreshold * 2);
+    sink.ui.setGauge(ratio, reading.openness > settings.openThreshold);
+  }
 
-  if (reading.handsOnMouth) {
-    sink.ui.setStatus(`status.${REASON.COVERED}`, false);
-    applyDelays(timeInState(REASON.COVERED, now), REASON.COVERED, settings.warningDelay);
-
-  } else if (reading.pacifier) {
-    sink.ui.setStatus(`status.${REASON.PACIFIER}`, false);
-    if (warningReason === REASON.COVERED) clearWarning();
-    applyDelays(timeInState(REASON.PACIFIER, now), REASON.PACIFIER, settings.warningDelay);
-
-  } else if (openness > settings.openThreshold) {
-    sink.ui.setStatus(`status.${REASON.OPEN}`, false);
-    if (warningReason === REASON.COVERED || warningReason === REASON.PACIFIER) clearWarning();
-    applyDelays(timeInState(REASON.OPEN, now), REASON.OPEN, settings.warningDelay);
-
-  } else if (openness < settings.openThreshold * DETECTION.CLOSE_FACTOR) {
-    // Between the two thresholds the previous state is kept: that dead band is
+  if (currentState === CLOSED) {
+    // Between the two thresholds the previous state is held: that dead band is
     // what stops the video flickering when the lips hover at the limit.
     sink.ui.setStatus("status.closed", true);
     if (warningReason) clearWarning();
-    if (paused && timeInState(CLOSED, now) > TIMING.RESUME) resumeVideo();
+    if (paused && elapsed > TIMING.RESUME) resumeVideo();
+    return;
   }
+
+  sink.ui.setStatus(`status.${currentState}`, false);
+  if (warningReason && warningReason !== currentState) clearWarning();
+  applyDelays(elapsed, currentState, settings.warningDelay);
 }
 
 /**
