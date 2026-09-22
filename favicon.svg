@@ -1,0 +1,41 @@
+<!--
+  The tab icon: the cat's head, on the ground colour of the room.
+
+  It is the same drawing as the `base` and `neutral` faces of `#mascotTemplate`
+  in index.html, trimmed to what survives at 16 pixels: the whiskers and the
+  muzzle go, the silhouette and the face stay. Redraw the cat there and this
+  follows; the two are meant to be the same animal.
+
+  The colours are written out rather than read from the custom properties the
+  app uses, because a favicon is fetched on its own, with no page and so no
+  custom properties to read. They are the values in css/base.css and
+  css/mascot.css and must be changed in step with them.
+
+  (No double hyphen anywhere in here: XML forbids one inside a comment, which
+  is why the property names are described rather than quoted.)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Petit Cinéma">
+  <rect width="200" height="200" rx="44" fill="#17130F"/>
+
+  <g transform="translate(100 100) scale(.84) translate(-100 -100)">
+    <!-- Ears -->
+    <path d="M44 62 L34 14 L80 38 Z" fill="#F6E2C0" stroke="#E3C79C" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M156 62 L166 14 L120 38 Z" fill="#F6E2C0" stroke="#E3C79C" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M50 52 L42 26 L68 40 Z" fill="#F58C7B" opacity=".7"/>
+    <path d="M150 52 L158 26 L132 40 Z" fill="#F58C7B" opacity=".7"/>
+
+    <!-- Head -->
+    <circle cx="100" cy="106" r="80" fill="#F6E2C0" stroke="#E3C79C" stroke-width="4"/>
+    <ellipse cx="42" cy="128" rx="18" ry="12" fill="#F58C7B" opacity=".85"/>
+    <ellipse cx="158" cy="128" rx="18" ry="12" fill="#F58C7B" opacity=".85"/>
+
+    <!-- Face -->
+    <ellipse cx="72" cy="96" rx="12" ry="15.5" fill="#2B211B"/>
+    <ellipse cx="128" cy="96" rx="12" ry="15.5" fill="#2B211B"/>
+    <circle cx="76.5" cy="90" r="4.6" fill="#FFFFFF" opacity=".95"/>
+    <circle cx="132.5" cy="90" r="4.6" fill="#FFFFFF" opacity=".95"/>
+    <path d="M100 130 L90 120 Q100 115 110 120 Z" fill="#F58C7B" stroke="#E0705E" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M100 132 Q100 146 86 143 M100 132 Q100 146 114 143"
+          fill="none" stroke="#2B211B" stroke-width="7.5" stroke-linecap="round"/>
+  </g>
+</svg>

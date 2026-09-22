@@ -60,6 +60,7 @@ function releaseFile() {
 
 export function loadFile(file) {
   destroyYoutube();
+  hideDemo();
   releaseFile();
 
   objectUrl = URL.createObjectURL(file);
@@ -134,6 +135,7 @@ export async function loadYoutube(videoId) {
   }
 
   stopFile();
+  hideDemo();
   await loadYoutubeApi();
   destroyYoutube();
   el.youtubeWrap.hidden = false;
@@ -162,9 +164,18 @@ export async function loadYoutube(videoId) {
 
 /* ---------- Demo ---------- */
 
+/**
+ * A striped backdrop standing in for a film, so the rule can be shown to a
+ * parent — or rehearsed with a child — before any video is chosen.
+ */
+function hideDemo() {
+  el.demoBackdrop.hidden = true;
+}
+
 export function startDemo() {
   stopFile();
   destroyYoutube();
+  el.demoBackdrop.hidden = false;
   source = SOURCE.DEMO;
 }
 
@@ -172,5 +183,6 @@ export function startDemo() {
 export function clearSource() {
   stopFile();
   destroyYoutube();
+  hideDemo();
   source = null;
 }

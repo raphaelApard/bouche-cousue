@@ -54,9 +54,15 @@ body.is-idle .cinema__vignette { opacity: 1; }
   transition: opacity .3s;
 }
 
+/*
+  Baseline, not centre: the name and the tagline are set at different sizes, and
+  centring two such lines leaves neither sitting on the other's line. The lamp
+  is a flex item with no text of its own, so its baseline is its bottom edge —
+  it rests on the type rather than floating beside it.
+*/
 .wordmark {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 10px;
   flex: none;
 }
@@ -365,14 +371,14 @@ body.is-veiled .topbar { opacity: 1; }
   `display: contents` dissolves the action group so its buttons become items of
   the bar itself and can be ordered around the badges.
 */
-/* --- is-narrow: --bp-narrow in base.css, via js/layout.js --- */
-body.is-narrow .wordmark { display: none; }
+/* --- is-mobile: --bp-mobile in base.css, via js/layout.js --- */
+body.is-mobile .wordmark { display: none; }
 
-body.is-narrow .topbar__actions { display: contents; }
+body.is-mobile .topbar__actions { display: contents; }
 
-body.is-narrow #settingsButton { order: -1; }
-body.is-narrow .status-strip { order: 0; }
-body.is-narrow #quickBarButton { order: 1; }
+body.is-mobile #settingsButton { order: -1; }
+body.is-mobile .status-strip { order: 0; }
+body.is-mobile #quickBarButton { order: 1; }
 
 /*
   Leaving the film and filling the screen with it are the two things an adult
@@ -381,13 +387,13 @@ body.is-narrow #quickBarButton { order: 1; }
   screen button while a film is on, the language pill before one is chosen —
   they are never both on the bar, so the space is never split between them.
 */
-body.is-narrow #fullscreenButton { order: 2; margin-left: auto; }
-body.is-narrow #closeFilmButton { order: 3; }
-body.is-narrow .topbar .lang { order: 3; margin-left: auto; }
+body.is-mobile #fullscreenButton { order: 2; margin-left: auto; }
+body.is-mobile #closeFilmButton { order: 3; }
+body.is-mobile .topbar .lang { order: 3; margin-left: auto; }
 
 /* The label stays; only the icon-only buttons beside it collapse. */
-body.is-narrow #settingsButton { width: auto; height: 44px; padding: 0 14px; }
-body.is-narrow #settingsButton span { display: inline; }
+body.is-mobile #settingsButton { width: auto; height: 44px; padding: 0 14px; }
+body.is-mobile #settingsButton span { display: inline; }
 
 
 /* ---------- Full screen ---------- */
@@ -425,7 +431,7 @@ body.is-narrow #settingsButton span { display: inline; }
   the left corner and the way out keeps the right, level with each other —
   `top: 26px` centres the 22px lamp against the 34px button opposite it.
 */
-body.is-narrow .minimal__led {
+body.is-mobile .minimal__led {
   top: 26px;
   left: 20px;
   margin-left: 0;

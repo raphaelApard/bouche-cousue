@@ -3,11 +3,15 @@
  *
  * Runs one detection per animation frame, decides what the mouth is doing, and
  * turns that into a warning, a pause, or a resume. Every side effect goes
- * through `ui` (what is shown) and `player` (what is played).
+ * through `ui` (what is shown) and `player` (what is played) — this module
+ * measures nothing and draws nothing.
+ *
+ * The thresholds, the dead band between them and the delays are exactly the
+ * ones the other front ends carry. Only the surfaces they drive are new.
  */
 
 import { DETECTION, REASON, TIMING } from "./config.js";
-import { initDetector, isReady, readFrame, startCamera } from "./detector.js";
+import { initDetector, isReady, readFrame, startCamera, stopCamera } from "./detector.js";
 import { settings } from "./settings.js";
 import { t } from "./i18n.js";
 import * as player from "./player.js";
@@ -54,7 +58,7 @@ export function isPlaying() {
 function showWarning(reason) {
   if (paused || warningReason === reason) return;
   warningReason = reason;
-  ui.showVeil(`warning.${reason}`, { warning: true });
+  ui.showWarning(reason);
 }
 
 function clearWarning() {
@@ -68,7 +72,7 @@ function pauseFilm(reason) {
   paused = true;
   warningReason = null;
   player.pause();
-  ui.showVeil(`paused.${reason}`, { lost: reason === REASON.AWAY });
+  ui.showPause(reason);
   notifyPlaybackChange();
 }
 
@@ -77,8 +81,8 @@ function resumeFilm() {
   paused = false;
   warningReason = null;
   ui.hideVeil();
-  ui.flashReward();
   player.play();
+  ui.flashReward(); // over a film that is already running again
   notifyPlaybackChange();
 }
 
@@ -94,6 +98,7 @@ export function togglePlayback() {
     paused = false;
     warningReason = null;
     ui.hideVeil();
+    ui.hideAdultPause();
     resetTimers(); // fresh delays, so an open mouth is not punished instantly
     player.play();
   } else {
@@ -102,7 +107,8 @@ export function togglePlayback() {
     warningReason = null;
     player.pause();
     ui.setStatus("status.paused");
-    ui.showVeil("veil.manual");
+    ui.hideVeil();
+    ui.showAdultPause();
   }
 
   notifyPlaybackChange();
@@ -123,7 +129,8 @@ export function armForNewFilm() {
   manuallyPaused = false;
   warningReason = null;
   paused = true;
-  ui.showVeil("veil.start");
+  ui.hideAdultPause();
+  ui.showStartVeil();
   notifyPlaybackChange();
 }
 
@@ -185,10 +192,20 @@ function settle(state, now) {
   enteredAt[state] = now - evidence[state];
 }
 
-/** Warn once the delay passes, pause once the warning has had its time. */
+/**
+ * Warn once the delay passes, pause once the warning has had its time, and
+ * while warning, report how much of that time is gone so the ring can show it.
+ */
 function applyDelays(elapsed, reason, delay) {
-  if (elapsed > delay + settings.pauseDelay) pauseFilm(reason);
-  else if (elapsed > delay) showWarning(reason);
+  if (elapsed > delay + settings.pauseDelay) {
+    pauseFilm(reason);
+    return;
+  }
+  if (elapsed <= delay) return;
+
+  showWarning(reason);
+  // A pause delay of zero means the pause lands with the warning: a full ring.
+  ui.setWarningProgress(settings.pauseDelay > 0 ? (elapsed - delay) / settings.pauseDelay : 1);
 }
 
 function handleReading(reading, now) {
@@ -206,7 +223,7 @@ function handleReading(reading, now) {
   // meter to read, not a decision. A frame with no face leaves it where it was.
   if (reading.faceVisible) {
     const ratio = reading.openness / (settings.openThreshold * 2);
-    ui.setGauge(ratio, reading.openness > settings.openThreshold);
+    ui.setGauge(ratio);
   }
 
   if (currentState === CLOSED) {
@@ -264,10 +281,11 @@ export async function startMonitoring() {
 
   ui.setStatus("status.ready");
   ui.markCameraReady();
+  ui.markMonitoring();
 
   // The film starts the way every resume does: by closing the mouth.
   paused = true;
-  ui.showVeil("veil.start");
+  ui.showStartVeil();
   notifyPlaybackChange();
 
   requestAnimationFrame(tick);
@@ -275,10 +293,28 @@ export async function startMonitoring() {
 }
 
 /** Returns to the idle state after a source is dropped. */
-export function reset() {
+function reset() {
   paused = false;
   manuallyPaused = false;
   warningReason = null;
   ui.hideVeil();
+  ui.hideAdultPause();
   notifyPlaybackChange();
+}
+
+/**
+ * Closes the session: the loop stops, the camera closes, and the interface
+ * goes back to the state it had before any film was chosen. Leaving the loop
+ * running would draw veils over the welcome screen, and leaving the camera open
+ * would contradict the one promise that screen makes.
+ *
+ * `startMonitoring()` may be called again afterwards; the models stay loaded.
+ */
+export function stopMonitoring() {
+  running = false;
+  currentState = CLOSED;
+  resetTimers();
+  stopCamera();
+  reset();
+  ui.markIdle();
 }

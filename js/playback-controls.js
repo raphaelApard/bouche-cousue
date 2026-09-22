@@ -1,5 +1,5 @@
 /**
- * The playback bar under the stage: play/pause, position, sound.
+ * The playback bar over the film: play/pause, position, sound.
  *
  * Shown for local files only — a YouTube embed keeps its own controls, and
  * driving its volume from here would hide a remembered mute behind a control
@@ -13,21 +13,29 @@ import { el } from "./dom.js";
 import { SOURCE, STORAGE_KEYS } from "./config.js";
 import { readBoolean, readNumberInRange, writeBoolean, writeRaw } from "./storage.js";
 import { t, onLocaleChange } from "./i18n.js";
+import { bindRangeFill, paintRange } from "./range-fill.js";
 import * as player from "./player.js";
 import { isPlaying, onPlaybackChange, togglePlayback } from "./mouth-monitor.js";
 
 const sound = { volume: 100, muted: false };
 let scrubbing = false; // the user is dragging: do not fight their handle
 
+/**
+ * Every button on this bar is an icon, so each has to say what it does twice:
+ * once to a screen reader and once to a pointer resting on it. Both change
+ * with the state and with the language, so they are written together.
+ */
+function describe(button, text) {
+  button.setAttribute("aria-label", text);
+  button.title = text;
+}
+
 /* ---------- Play / pause ---------- */
 
 function refreshPlayButton() {
   const playing = isPlaying();
-  el.playButton.textContent = playing ? "⏸" : "▶";
-
-  const label = playing ? t("controls.pause") : t("controls.play");
-  el.playButton.setAttribute("aria-label", label);
-  el.playButton.title = label;
+  el.playButton.classList.toggle("is-playing", playing);
+  describe(el.playButton, playing ? t("controls.pause") : t("controls.play"));
 }
 
 /* ---------- Position ---------- */
@@ -41,6 +49,7 @@ function formatTime(seconds) {
 function refreshTime() {
   el.timeLabel.textContent =
     `${formatTime(el.video.currentTime)} / ${formatTime(el.video.duration)}`;
+  paintRange(el.progress); // the film moves the handle, not the user
 }
 
 function wirePosition() {
@@ -55,6 +64,7 @@ function wirePosition() {
     refreshTime();
   });
 
+  bindRangeFill(el.progress);
   el.progress.addEventListener("pointerdown", () => { scrubbing = true; });
   el.progress.addEventListener("pointerup", () => { scrubbing = false; });
   el.progress.addEventListener("change", () => { scrubbing = false; });
@@ -68,13 +78,13 @@ function wirePosition() {
 
 function refreshSoundButton() {
   el.volume.value = sound.volume;
+  paintRange(el.volume);
 
   const silent = sound.muted || sound.volume === 0;
-  el.muteButton.textContent = silent ? "🔇" : sound.volume < 50 ? "🔉" : "🔊";
+  el.muteButton.classList.toggle("is-muted", silent);
+  el.muteButton.classList.toggle("is-quiet", !silent && sound.volume < 50);
 
-  const label = sound.muted ? t("controls.unmute") : t("controls.mute");
-  el.muteButton.setAttribute("aria-label", label);
-  el.muteButton.title = label;
+  describe(el.muteButton, sound.muted ? t("controls.unmute") : t("controls.mute"));
 }
 
 function applySound() {
@@ -109,7 +119,7 @@ function restoreSound() {
 
 /** Call whenever the source changes. */
 export function refreshPlaybackBar() {
-  el.playbackBar.classList.toggle("is-visible", player.getSource() === SOURCE.FILE);
+  el.playbackBar.hidden = player.getSource() !== SOURCE.FILE;
   refreshPlayButton();
 }
 
@@ -120,6 +130,7 @@ export function getSoundSettings() {
 export function initPlaybackControls() {
   wirePosition();
   wireSound();
+  bindRangeFill(el.volume);
   restoreSound();
 
   el.playButton.addEventListener("click", togglePlayback);

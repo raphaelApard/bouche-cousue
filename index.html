@@ -2,171 +2,472 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Petit Cinéma</title>
 <meta name="description" content="A cartoon that only plays while the child's mouth stays closed. Lip-closure practice, made playful.">
 <meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#17130F">
+
+<!--
+  The cat's head. The SVG is the drawing; the PNGs were rasterised from it for
+  Safari before 17 and for the iOS home screen, neither of which takes an SVG.
+  Edit the SVG and the PNGs have to be re-rendered by hand to match.
+-->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="favicon-180.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/layout.css">
-<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/mascot.css">
+<link rel="stylesheet" href="css/chrome.css">
+<link rel="stylesheet" href="css/welcome.css">
 <link rel="stylesheet" href="css/stage.css">
+
+<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["setExcludedQueryParams", ["account","accountnum","address","address1","address2","address3","addressline1","addressline2","adres","adresse","adresse1","adresse2","adresse3","adresse_email","adresseemail","adressepostale","age","alter","auth","authpw","bic","billingaddress","billingaddress1","billingaddress2","calle","cardnumber","carte","cartebancaire","carteidentite","cb","cc","ccc","cccsc","cccvc","cccvv","ccexpiry","ccexpmonth","ccexpyear","ccname","ccnumber","cctype","cell","cellphone","city","civilite","civilit\u00e9","cle","clientid","clientsecret","cl\u00e9","codepostal","company","consumerkey","consumersecret","contrasenya","contrase\u00f1a","courriel","cp","creditcard","creditcardnumber","cvc","cvv","datedenaissance","dateexpiration","datenaissance","dateofbirth","debitcard","departement","direcci\u00f3n","dob","domain","d\u00e9partement","ebost","email","emailaddress","emailadresse","entreprise","epos","epost","eposta","exp","expiration","familyname","firma","firstname","formlogin","fullname","gender","genre","geschlecht","gst","gstnumber","handynummer","has\u0142o","heslo","iban","ibanaccountnum","ibanaccountnumber","id","identifiant","identifier","identitenationale","indirizzo","kartakredytowa","kennwort","keyconsumerkey","keyconsumersecret","konto","kontonr","kontonummer","kredietkaart","kreditkarte","kreditkort","lastname","login","mail","mdp","mobiili","mobile","mobilne","mot_de_passe","motdepasse","nachname","name","nationalite","nickname","nom","nomcomplet","nomdefamille","nomfamille","nss","numero_fiscal","numerocarte","numerocarteidentite","numerocompte","numerodecarte","numerofiscal","numeroidentite","numeromobile","numeropasseport","numerosecuritesociale","numerotelephone","numerotva","numfiscal","numsecu","numtva","osoite","parole","pass","passeport","passord","password","passwort","pasword","paswort","paword","pays","phone","pin","plz","portable","postalcode","postcode","postleitzahl","prenom","privatekey","pr\u00e9nom","publickey","pw","pwd","pword","pwrd","questionsecrete","region","reponsesecrete","rib","rue","secret","secretcl\u00e9","secretq","secretquestion","securitesociale","sexe","shippingaddress","shippingaddress1","shippingaddress2","signature","siren","siret","socialsec","socialsecuritynumber","societe","socsec","sokak","ssn","steuernummer","strasse","street","surname","swift","tax","taxnumber","tel","telefon","telefonnr","telefonnummer","telefono","telephone","titre","token","token_auth","tokenauth","tva","t\u00e9l\u00e9phone","ulica","user","username","utilisateur","vat","vatnumber","via","ville","voie","vorname","wachtwoord","wagwoord","webhooksecret","website","zip","zipcode"]]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://stats.acolad.net/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '6']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
 </head>
 
 <body>
 
-<div class="marquee" id="marquee" aria-hidden="true"></div>
+<!--
+  The cat, drawn once. js/mascot.js stamps a copy of this into every slot and
+  sets data-expression; css/mascot.css decides which face that shows.
+-->
+<template id="mascotTemplate">
+  <svg class="mascot" viewBox="0 0 200 200" data-expression="neutral" aria-hidden="true">
 
-<header class="masthead">
-  <p class="wordmark">
-    Petit Cinéma
-    <small class="wordmark__tagline" data-i18n="app.tagline">Bouche fermée · film qui tourne</small>
-  </p>
+    <g data-face="gone">
+      <g class="mascot__ghost">
+        <path d="M44 60 L34 16 L78 36"></path>
+        <path d="M156 60 L166 16 L122 36"></path>
+        <circle cx="100" cy="106" r="80"></circle>
+      </g>
+      <ellipse class="mascot__faded" cx="76" cy="98" rx="9" ry="9"></ellipse>
+      <ellipse class="mascot__faded" cx="124" cy="98" rx="9" ry="9"></ellipse>
+      <path class="mascot__faded-line" d="M80 142 H120"></path>
+    </g>
 
-  <div class="status-strip">
-    <p class="badge">
-      <span class="led" id="cameraLed"></span>
-      <span data-i18n="badge.camera">Caméra</span>
-    </p>
-    <p class="badge">
-      <span class="led" id="mouthLed"></span>
-      <span id="mouthStatus">En attente…</span>
-    </p>
+    <g data-face="base">
+      <path class="mascot__ear" d="M44 62 L34 14 L80 38 Z"></path>
+      <path class="mascot__ear" d="M156 62 L166 14 L120 38 Z"></path>
+      <path class="mascot__ear-inner" d="M50 52 L42 26 L68 40 Z"></path>
+      <path class="mascot__ear-inner" d="M150 52 L158 26 L132 40 Z"></path>
+      <circle class="mascot__head" cx="100" cy="106" r="80"></circle>
+      <ellipse class="mascot__cheek" cx="42" cy="128" rx="18" ry="12"></ellipse>
+      <ellipse class="mascot__cheek" cx="158" cy="128" rx="18" ry="12"></ellipse>
+      <ellipse class="mascot__muzzle" cx="86" cy="142" rx="22" ry="16"></ellipse>
+      <ellipse class="mascot__muzzle" cx="114" cy="142" rx="22" ry="16"></ellipse>
+      <g class="mascot__whiskers">
+        <path d="M66 132 H48 M66 142 H46 M67 152 H50"></path>
+        <path d="M134 132 H152 M134 142 H154 M133 152 H150"></path>
+      </g>
+      <path class="mascot__nose" d="M100 130 L90 120 Q100 115 110 120 Z"></path>
+    </g>
+
+    <g data-face="neutral">
+      <g class="mascot__blink">
+        <ellipse class="mascot__eye" cx="72" cy="96" rx="12" ry="15.5"></ellipse>
+        <ellipse class="mascot__eye" cx="128" cy="96" rx="12" ry="15.5"></ellipse>
+        <circle class="mascot__glint" cx="76.5" cy="90" r="4.6"></circle>
+        <circle class="mascot__glint" cx="132.5" cy="90" r="4.6"></circle>
+      </g>
+      <path class="mascot__smile" d="M100 132 Q100 146 86 143 M100 132 Q100 146 114 143"></path>
+    </g>
+
+    <g data-face="warning">
+      <path class="mascot__brow" d="M56 68 Q72 59 86 66"></path>
+      <path class="mascot__brow" d="M144 68 Q128 59 114 66"></path>
+      <ellipse class="mascot__eye" cx="72" cy="98" rx="13" ry="17"></ellipse>
+      <ellipse class="mascot__eye" cx="128" cy="98" rx="13" ry="17"></ellipse>
+      <circle class="mascot__glint" cx="77" cy="91" r="5"></circle>
+      <circle class="mascot__glint" cx="133" cy="91" r="5"></circle>
+      <ellipse class="mascot__mouth-open" cx="100" cy="143" rx="12" ry="9.5"></ellipse>
+    </g>
+
+    <g data-face="paused">
+      <path class="mascot__brow mascot__brow--soft" d="M58 72 Q72 66 86 70"></path>
+      <path class="mascot__brow mascot__brow--soft" d="M142 72 Q128 66 114 70"></path>
+      <ellipse class="mascot__eye" cx="72" cy="100" rx="11.5" ry="14"></ellipse>
+      <ellipse class="mascot__eye" cx="128" cy="100" rx="11.5" ry="14"></ellipse>
+      <circle class="mascot__glint" cx="76" cy="94" r="4.2"></circle>
+      <circle class="mascot__glint" cx="132" cy="94" r="4.2"></circle>
+      <g class="mascot__shut">
+        <ellipse class="mascot__mouth-open" cx="100" cy="146" rx="17" ry="20"></ellipse>
+        <ellipse class="mascot__tongue" cx="100" cy="157" rx="10" ry="7"></ellipse>
+      </g>
+    </g>
+
+    <g data-face="delighted">
+      <path class="mascot__eye-arc" d="M60 100 Q72 84 84 100"></path>
+      <path class="mascot__eye-arc" d="M116 100 Q128 84 140 100"></path>
+      <g class="mascot__wobble">
+        <path class="mascot__grin" d="M82 134 Q100 158 118 134 Z"></path>
+        <ellipse class="mascot__tongue" cx="100" cy="148" rx="9" ry="6"></ellipse>
+      </g>
+    </g>
+
+    <g data-face="covered">
+      <ellipse class="mascot__eye" cx="72" cy="96" rx="12" ry="15.5"></ellipse>
+      <ellipse class="mascot__eye" cx="128" cy="96" rx="12" ry="15.5"></ellipse>
+      <circle class="mascot__glint" cx="76.5" cy="90" r="4.6"></circle>
+      <circle class="mascot__glint" cx="132.5" cy="90" r="4.6"></circle>
+      <ellipse class="mascot__paw mascot__paw--back" cx="78" cy="148" rx="31" ry="21"></ellipse>
+      <ellipse class="mascot__paw" cx="122" cy="152" rx="31" ry="21"></ellipse>
+      <path class="mascot__toes" d="M112 141 V163 M126 140 V164 M140 142 V161"></path>
+    </g>
+
+    <g data-face="pacifier">
+      <ellipse class="mascot__eye" cx="72" cy="96" rx="13" ry="16.5"></ellipse>
+      <ellipse class="mascot__eye" cx="128" cy="96" rx="13" ry="16.5"></ellipse>
+      <circle class="mascot__glint" cx="77" cy="89" r="5"></circle>
+      <circle class="mascot__glint" cx="133" cy="89" r="5"></circle>
+      <ellipse class="mascot__dummy" cx="100" cy="150" rx="26" ry="16"></ellipse>
+      <circle class="mascot__dummy-hole" cx="100" cy="150" r="7.5"></circle>
+      <circle class="mascot__dummy-ring" cx="100" cy="130" r="10"></circle>
+    </g>
+
+  </svg>
+</template>
+
+
+<div class="cinema" id="cinema">
+
+  <div class="cinema__glow" aria-hidden="true"></div>
+  <div class="cinema__vignette cinema__vignette--left" aria-hidden="true"></div>
+  <div class="cinema__vignette cinema__vignette--right" aria-hidden="true"></div>
+
+  <!-- ---------- The film and everything drawn over it ---------- -->
+  <div class="stage" id="stage">
+    <video class="stage__video" id="localVideo" playsinline hidden></video>
+    <div class="stage__embed" id="youtubeWrap" hidden><div id="youtubeFrame"></div></div>
+    <div class="stage__demo" id="demoBackdrop" hidden aria-hidden="true">
+      <span class="stage__demo-label" data-i18n="demo.label">DESSIN ANIMÉ</span>
+    </div>
+
+    <!-- Welcome: choose what to watch. The camera is still off here. -->
+    <section class="welcome" id="welcome">
+      <div class="welcome__body">
+        <div class="welcome__mascot" id="welcomeMascot" aria-hidden="true"></div>
+
+        <div class="welcome__panel">
+          <h1 class="welcome__title" data-i18n="welcome.title">Quel film aujourd'hui ?</h1>
+          <p class="welcome__subtitle" data-i18n="welcome.subtitle">Colle un lien YouTube ou ouvre un film de l'ordinateur.</p>
+
+          <form class="welcome__form" id="welcomeForm">
+            <span class="field">
+              <svg class="field__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10 13a4 4 0 0 0 6 .5l2-2a4 4 0 0 0-5.7-5.7l-1 1"></path>
+                <path d="M14 11a4 4 0 0 0-6-.5l-2 2a4 4 0 0 0 5.7 5.7l1-1"></path>
+              </svg>
+              <input type="url" class="field__input" id="welcomeUrl" required
+                     data-i18n-placeholder="welcome.urlPlaceholder"
+                     data-i18n-aria-label="welcome.urlLabel"
+                     placeholder="https://www.youtube.com/watch?v=…" aria-label="Lien YouTube">
+            </span>
+            <button type="submit" class="button button--primary" data-i18n="welcome.openCinema">Ouvrir la salle</button>
+          </form>
+
+          <p class="welcome__or"><span data-i18n="welcome.or">OU</span></p>
+
+          <div class="welcome__choices">
+            <button type="button" class="button button--outline" id="chooseFileButton">
+              <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.5h9A1.5 1.5 0 0 1 21 10v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z"></path>
+              </svg>
+              <span data-i18n="welcome.chooseFile">Choisir un fichier</span>
+            </button>
+            <button type="button" class="button button--link" id="demoButton" data-i18n="welcome.demo">Voir la démo sans vidéo</button>
+          </div>
+
+          <input type="file" id="filePicker" accept="video/*" hidden>
+        </div>
+      </div>
+
+      <footer class="welcome__foot">
+        <p data-i18n="welcome.privacy">Aucune vidéo n'est enregistrée, aucune donnée personnelle n'est collectée.</p>
+        <p>
+          <span data-i18n="welcome.sourceBefore">Le code source est disponible sur</span>
+          <a href="https://github.com/raphaelApard/bouche-cousue" target="_blank" rel="noopener" data-i18n="welcome.sourceLink">GitHub</a>.
+        </p>
+      </footer>
+    </section>
+
+    <!-- The child's veil: warning (film keeps playing) and pause (film stopped) -->
+    <div class="veil" id="veil" role="status" aria-live="polite">
+      <div class="veil__figure">
+        <svg class="ring" viewBox="0 0 150 150" aria-hidden="true">
+          <circle class="ring__track" cx="75" cy="75" r="70"></circle>
+          <circle class="ring__value" id="warningRing" cx="75" cy="75" r="70"></circle>
+        </svg>
+        <div class="veil__mascot" id="veilMascot" aria-hidden="true"></div>
+      </div>
+      <div class="veil__words">
+        <p class="veil__title" id="veilTitle">Ferme la bouche</p>
+        <p class="veil__text" id="veilText">Le film repart tout seul.</p>
+        <p class="veil__cause" id="veilCause" hidden>bouche ouverte</p>
+      </div>
+    </div>
+
+    <!-- The adult's pause: light, papery, locked — never the child's dark veil -->
+    <div class="adult-pause" id="adultPause" role="status" aria-live="polite" hidden>
+      <p class="adult-pause__badge">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="10.5" width="16" height="10" rx="2.5"></rect>
+          <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path>
+        </svg>
+        <span data-i18n="veil.manual.badge">PAUSE ADULTE</span>
+      </p>
+      <div class="adult-pause__mascot" id="adultMascot" aria-hidden="true"></div>
+      <p class="adult-pause__title" data-i18n="veil.manual.title">Le film attend l'adulte</p>
+      <p class="adult-pause__text" data-i18n="veil.manual.text">Le contrôle de la bouche est suspendu. Personne n'a fait d'erreur.</p>
+      <p class="adult-pause__actions">
+        <button type="button" class="button button--dark" id="resumeButton">
+          <svg class="button__icon button__icon--solid" viewBox="0 0 13 15" aria-hidden="true">
+            <path d="M1.5 1.6 11.5 7.5 1.5 13.4Z"></path>
+          </svg>
+          <span data-i18n="veil.manual.resume">Reprendre le film</span>
+        </button>
+        <span class="adult-pause__hint" data-i18n="veil.manual.orSpace">ou barre d'espace</span>
+      </p>
+    </div>
+
+    <!-- Reward: sparkles over a film that is already playing again -->
+    <div class="reward" id="reward">
+      <span class="reward__spark" aria-hidden="true"></span>
+      <span class="reward__spark" aria-hidden="true"></span>
+      <span class="reward__spark" aria-hidden="true"></span>
+      <span class="reward__spark" aria-hidden="true"></span>
+      <span class="reward__spark" aria-hidden="true"></span>
+      <span class="reward__spark" aria-hidden="true"></span>
+      <span class="reward__spark" aria-hidden="true"></span>
+      <p class="reward__note">
+        <span class="reward__mascot" id="rewardMascot" aria-hidden="true"></span>
+        <span class="reward__text" id="rewardText" role="status" aria-live="polite">Bravo ! 🌟</span>
+      </p>
+    </div>
   </div>
-</header>
 
-<main class="stage-area">
-  <div class="scene">
+  <!-- ---------- Floating chrome ---------- -->
+  <header class="topbar" id="topbar">
+    <p class="wordmark">
+      <span class="wordmark__lamp" aria-hidden="true"></span>
+      <span class="wordmark__name" data-i18n="app.name">Petit Cinéma</span>
+      <span class="wordmark__tagline" data-i18n="app.tagline">Bouche Cousue</span>
+    </p>
 
-    <!-- Quick change bar, revealed once a film is playing -->
-    <form class="link-bar" id="quickBar">
-      <input type="url" class="link-bar__input" id="quickUrl"
+    <div class="status-strip" id="statusStrip" hidden>
+      <p class="badge" id="cameraBadge">
+        <span class="led" id="cameraLed" aria-hidden="true"></span>
+        <span class="badge__main" data-i18n="badge.camera">Caméra</span>
+      </p>
+      <p class="badge" id="mouthBadge">
+        <span class="led" id="mouthLed" aria-hidden="true"></span>
+        <span class="badge__main" id="mouthStatus">En attente…</span>
+      </p>
+    </div>
+
+    <div class="topbar__actions">
+      <button type="button" class="button button--quiet" id="settingsButton"
+              aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsPanel">
+        <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 8h16M4 16h16"></path>
+          <circle class="button__knob" cx="9" cy="8" r="2.4"></circle>
+          <circle class="button__knob" cx="15" cy="16" r="2.4"></circle>
+        </svg>
+        <span data-i18n="buttons.settings">Réglages</span>
+      </button>
+
+      <button type="button" class="button button--quiet" id="quickBarButton" hidden>
+        <span class="button__plus" aria-hidden="true">+</span>
+        <span data-i18n="quickBar.open">Choisir une vidéo</span>
+      </button>
+
+      <button type="button" class="button button--quiet" id="fullscreenButton">
+        <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path>
+        </svg>
+        <span id="fullscreenLabel">Plein écran</span>
+      </button>
+
+      <div class="lang" role="group" data-i18n-aria-label="lang.label" aria-label="Langue">
+        <button type="button" class="lang__option" data-locale="fr" data-i18n="lang.fr">FR</button>
+        <button type="button" class="lang__option" data-locale="en" data-i18n="lang.en">EN</button>
+      </div>
+
+      <!--
+        The way back to the welcome screen. It stands where the language pill
+        stands while nothing is playing: only one of the two is ever on the bar.
+      -->
+      <button type="button" class="button button--quiet" id="closeFilmButton" hidden
+              data-i18n-aria-label="buttons.closeLabel" aria-label="Fermer le film et revenir à l'accueil">
+        <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+        <span data-i18n="buttons.close">Fermer</span>
+      </button>
+    </div>
+  </header>
+
+  <form class="quick-bar" id="quickBar" hidden>
+    <span class="field">
+      <svg class="field__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M10 13a4 4 0 0 0 6 .5l2-2a4 4 0 0 0-5.7-5.7l-1 1"></path>
+        <path d="M14 11a4 4 0 0 0-6-.5l-2 2a4 4 0 0 0 5.7 5.7l1-1"></path>
+      </svg>
+      <input type="url" class="field__input" id="quickUrl"
              data-i18n-placeholder="quickBar.placeholder"
              data-i18n-aria-label="quickBar.label"
-             placeholder="🔗 Coller un lien YouTube pour changer de dessin animé"
-             aria-label="Nouveau lien YouTube">
-      <button type="submit" class="button-primary" data-i18n="quickBar.change">Changer</button>
-      <button type="button" class="link-bar__file" id="quickFileButton"
-              data-i18n="quickBar.file"
-              data-i18n-aria-label="quickBar.fileLabel"
-              aria-label="Ouvrir une vidéo de l'ordinateur">📁 Fichier</button>
-    </form>
+             placeholder="Coller un lien YouTube pour changer de film" aria-label="Nouveau lien YouTube">
+    </span>
+    <button type="submit" class="button button--primary button--small" data-i18n="quickBar.change">Changer</button>
+    <button type="button" class="button button--outline button--small" id="quickFileButton"
+            data-i18n-aria-label="quickBar.fileLabel" aria-label="Ouvrir une vidéo de l'ordinateur">
+      <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.5h9A1.5 1.5 0 0 1 21 10v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z"></path>
+      </svg>
+      <span data-i18n="quickBar.file">Fichier</span>
+    </button>
+  </form>
 
-    <div class="stage" id="stage">
-      <video class="stage__video" id="localVideo" playsinline hidden></video>
-      <div class="stage__embed" id="youtubeWrap" hidden><div id="youtubeFrame"></div></div>
+  <!-- The adult panel. Opens on a long press of the gear, so a child does not. -->
+  <div class="settings-panel" id="settingsPanel" role="dialog" aria-modal="false"
+       aria-labelledby="settingsTitle" hidden>
+    <p class="settings-panel__head" id="settingsTitle" data-i18n="settings.title">Réglages adulte</p>
 
-      <!-- Welcome panel: pick a source -->
-      <section class="welcome" id="welcome">
-        <p class="welcome__curtain" aria-hidden="true">🎬</p>
-        <h1 class="welcome__title" data-i18n="welcome.title">
-          Le film tourne tant que la bouche reste fermée.
-        </h1>
-        <p class="welcome__subtitle" data-i18n="welcome.subtitle">
-          Bouche ouverte, mains dessus, tétine ou visage qui s'en va — le film t'attend gentiment.
-        </p>
-
-        <form class="welcome__form" id="welcomeForm">
-          <input type="url" id="welcomeUrl" required
-                 value="https://www.youtube.com/watch?v=s0aqyAUiF70"
-                 data-i18n-placeholder="welcome.urlPlaceholder"
-                 data-i18n-aria-label="welcome.urlLabel"
-                 placeholder="Colle un lien YouTube ici" aria-label="Lien YouTube">
-          <button type="submit" class="button-primary" data-i18n="welcome.openCinema">🍿 Ouvrir la salle</button>
-        </form>
-
-        <div class="welcome__local">
-          <span class="welcome__separator" data-i18n="welcome.or">ou</span>
-          <button type="button" class="button-outline" id="chooseFileButton" data-i18n="welcome.chooseFile">
-            📁 Choisir une vidéo sur l'ordinateur
-          </button>
-          <button type="button" class="button-link" id="demoButton" data-i18n="welcome.demo">
-            ou tester en démo, sans vidéo
-          </button>
-        </div>
-
-        <input type="file" id="filePicker" accept="video/*" hidden>
-      </section>
-
-      <!-- Warning / pause veil -->
-      <div class="veil" id="veil" role="status" aria-live="polite">
-        <svg class="mascot" viewBox="0 0 200 200" aria-hidden="true">
-          <circle cx="100" cy="100" r="86" fill="#FFD23F"/>
-          <circle cx="70" cy="82" r="10" fill="#0F0A24"/>
-          <circle cx="130" cy="82" r="10" fill="#0F0A24"/>
-          <circle cx="73" cy="79" r="3" fill="#fff"/>
-          <circle cx="133" cy="79" r="3" fill="#fff"/>
-          <ellipse cx="55" cy="112" rx="12" ry="7" fill="#FF9F7A" opacity=".7"/>
-          <ellipse cx="145" cy="112" rx="12" ry="7" fill="#FF9F7A" opacity=".7"/>
-          <g class="mascot__mouth">
-            <ellipse cx="100" cy="128" rx="26" ry="18" fill="#0F0A24"/>
-            <ellipse cx="100" cy="134" rx="14" ry="7" fill="#FF6B6B"/>
-          </g>
-        </svg>
-        <h2 class="veil__title" id="veilTitle">Ferme la bouche pour lancer le film</h2>
-        <p class="veil__text" id="veilText">Le film joue tant que tes lèvres se touchent.</p>
+    <!--
+      Controls that leave the top bar reappear here, behind the gear: the
+      language as soon as a film is running, the video picker in portrait. They
+      sit above the tuning because they are what an adult reaches for most.
+    -->
+    <div class="settings-panel__migrated">
+      <div class="lang" role="group" data-i18n-aria-label="lang.label" aria-label="Langue">
+        <button type="button" class="lang__option" data-locale="fr" data-i18n="lang.fr">FR</button>
+        <button type="button" class="lang__option" data-locale="en" data-i18n="lang.en">EN</button>
       </div>
-
-      <div class="reward" id="reward" aria-hidden="true"><span data-i18n="reward">Bravo ! 🌟</span></div>
+      <button type="button" class="button button--outline button--small" id="panelLinkButton">
+        <span class="button__plus" aria-hidden="true">+</span>
+        <span data-i18n="quickBar.open">Choisir une vidéo</span>
+      </button>
     </div>
 
-    <!-- Playback bar, local files only -->
-    <div class="playback-bar" id="playbackBar">
-      <button type="button" class="icon-button" id="playButton"
-              aria-label="Lancer le film" title="Lancer le film">▶</button>
+    <label class="setting">
+      <span class="setting__row">
+        <span class="setting__name" data-i18n="settings.sensitivity">Sensibilité</span>
+        <span class="setting__value" id="sensitivityValue">0,43</span>
+      </span>
+      <input type="range" id="sensitivity" min="15" max="90" value="47"
+             data-i18n-aria-label="settings.sensitivityLabel" aria-label="Sensibilité de détection">
+    </label>
 
-      <div class="playback-bar__group playback-bar__group--position">
-        <input type="range" class="playback-bar__progress" id="progress"
-               min="0" max="0" step="0.1" value="0"
-               data-i18n-aria-label="controls.position" aria-label="Position dans la vidéo">
-        <span class="playback-bar__time" id="timeLabel">0:00 / 0:00</span>
-      </div>
+    <label class="setting">
+      <span class="setting__row">
+        <span class="setting__name" data-i18n="settings.warning">Avant l'avertissement</span>
+        <span class="setting__value" id="warningDelayValue">1,5 s</span>
+      </span>
+      <input type="range" id="warningDelay" min="300" max="5000" step="100" value="1500"
+             data-i18n-aria-label="settings.warningLabel" aria-label="Délai avant l'avertissement">
+    </label>
 
-      <div class="playback-bar__group">
-        <button type="button" class="icon-button" id="muteButton"
-                aria-label="Couper le son" title="Couper le son">🔊</button>
-        <input type="range" class="playback-bar__volume" id="volume"
-               min="0" max="100" step="1" value="100"
-               data-i18n-aria-label="controls.volume" aria-label="Volume">
-      </div>
+    <label class="setting">
+      <span class="setting__row">
+        <span class="setting__name" data-i18n="settings.pause">Avant la pause</span>
+        <span class="setting__value" id="pauseDelayValue">3,0 s</span>
+      </span>
+      <input type="range" id="pauseDelay" min="0" max="5000" step="100" value="3000"
+             data-i18n-aria-label="settings.pauseLabel" aria-label="Délai avant la pause">
+    </label>
+
+    <label class="setting setting--check">
+      <input type="checkbox" id="mirrorToggle" checked>
+      <span class="setting__name" data-i18n="settings.mirror">Afficher le miroir</span>
+    </label>
+
+    <div class="settings-panel__foot">
+      <button type="button" class="button button--link button--small" id="resetButton" data-i18n="settings.reset">Réinitialiser</button>
     </div>
-
   </div>
-</main>
 
-<footer class="controls-bar">
-  <label class="setting">
-    <span data-i18n="settings.sensitivity">Sensibilité</span>
-    <input type="range" id="sensitivity" min="15" max="90" value="90"
-           data-i18n-aria-label="settings.sensitivityLabel" aria-label="Sensibilité de détection">
-  </label>
+  <!-- The mirror: the child's own face, and how open the mouth is -->
+  <aside class="mirror" id="mirror" hidden>
+    <div class="mirror__frame">
+      <video id="cameraVideo" playsinline muted></video>
+      <span class="mirror__label" data-i18n="mirror.label">miroir</span>
+    </div>
+    <p class="mirror__gauge">
+      <span class="mirror__lips" aria-hidden="true">👄</span>
+      <span class="gauge" id="gaugeTrack" role="img"
+            data-i18n-aria-label="mirror.openness" aria-label="Ouverture de la bouche">
+        <span class="gauge__fill" id="gauge"></span>
+        <span class="gauge__threshold" aria-hidden="true"></span>
+      </span>
+    </p>
+  </aside>
 
-  <label class="setting">
-    <span data-i18n="settings.warning">Avertissement</span>
-    <input type="range" id="warningDelay" min="300" max="5000" step="100" value="1500"
-           data-i18n-aria-label="settings.warningLabel" aria-label="Délai avant l'avertissement">
-    <span class="setting__value" id="warningDelayValue">1,5 s</span>
-  </label>
+  <!-- Playback bar, local files only -->
+  <div class="playback-bar" id="playbackBar" hidden>
+    <button type="button" class="icon-button" id="playButton"
+            data-i18n-aria-label="controls.play" aria-label="Lancer le film">
+      <svg class="icon-button__glyph" viewBox="0 0 14 14" aria-hidden="true">
+        <g class="glyph glyph--pause">
+          <rect x="1.5" y="1" width="3.4" height="12" rx="1.2"></rect>
+          <rect x="9.1" y="1" width="3.4" height="12" rx="1.2"></rect>
+        </g>
+        <path class="glyph glyph--play" d="M2.4 1.3 12.2 7 2.4 12.7Z"></path>
+      </svg>
+    </button>
 
-  <label class="setting">
-    <span data-i18n="settings.pause">Pause</span>
-    <input type="range" id="pauseDelay" min="0" max="5000" step="100" value="5000"
-           data-i18n-aria-label="settings.pauseLabel" aria-label="Délai avant la pause">
-    <span class="setting__value" id="pauseDelayValue">5,0 s</span>
-  </label>
+    <input type="range" class="playback-bar__progress" id="progress"
+           min="0" max="0" step="0.1" value="0"
+           data-i18n-aria-label="controls.position" aria-label="Position dans la vidéo">
+    <span class="playback-bar__time" id="timeLabel">0:00 / 0:00</span>
 
-  <button type="button" class="button-quiet button-quiet--accent" id="fullscreenButton">⛶ Plein écran</button>
+    <button type="button" class="icon-button icon-button--bare" id="muteButton"
+            data-i18n-aria-label="controls.mute" aria-label="Couper le son">
+      <svg class="icon-button__glyph" viewBox="0 0 24 24" aria-hidden="true">
+        <path class="icon-button__cone" d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"></path>
+        <path class="icon-button__wave icon-button__wave--inner" d="M16 9.5a3.6 3.6 0 0 1 0 5"></path>
+        <path class="icon-button__wave icon-button__wave--outer" d="M18.6 7a7 7 0 0 1 0 10"></path>
+        <path class="icon-button__cross" d="M16.5 10 21 14.5M21 10l-4.5 4.5"></path>
+      </svg>
+    </button>
+    <input type="range" class="playback-bar__volume" id="volume"
+           min="0" max="100" step="1" value="100"
+           data-i18n-aria-label="controls.volume" aria-label="Volume">
+  </div>
 
-  <button type="button" class="button-quiet" id="cameraButton">Masquer la caméra</button>
-</footer>
+  <!--
+    Full screen: the film, and nothing else. The lamp says whether the rule is
+    happy, and the one button is the way back out.
+  -->
+  <div class="minimal" id="minimal">
+    <span class="led minimal__led" id="minimalLed" aria-hidden="true"></span>
+    <button type="button" class="button button--quiet minimal__exit" id="exitFullscreenButton">
+      <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"></path>
+      </svg>
+      <span data-i18n="buttons.exitFullscreen">Quitter le plein écran</span>
+    </button>
+  </div>
 
-<div class="camera-preview" id="cameraBox">
-  <video id="cameraVideo" playsinline muted></video>
-  <div class="gauge"><div class="gauge__fill" id="gauge"></div></div>
 </div>
 
 <script type="module" src="js/main.js"></script>

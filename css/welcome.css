@@ -6,22 +6,29 @@
   parent wants to know.
 */
 
+/*
+  The screen scrolls at every size. `1 0 auto` on the body below lets it grow
+  into any spare height, which pushes the foot to the bottom, but never lets it
+  shrink under its content — so a window too short to hold the question, the
+  form and the small print at once scrolls them instead of clipping them.
+*/
 .welcome {
   position: absolute;
   inset: 0;
   z-index: 3;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--ground);
 }
 
 .welcome__body {
-  flex: 1;
+  flex: 1 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 64px;
-  min-height: 0;
   padding: 90px 78px 20px;
 }
 
@@ -95,44 +102,29 @@
 }
 .welcome__foot a:hover { color: var(--amber); }
 
-/* ---------- Narrow and portrait ---------- */
+/* ---------- Mobile ---------- */
 
-/* --- is-narrow / is-short: --bp-narrow, --bp-short in base.css --- */
-body:is(.is-narrow, .is-short) .welcome__body {
+/*
+  The cat stops standing beside the panel and sits above it, and the title goes
+  — the cat and the field already say what this screen is for. The small print
+  is ranged left, where it reads as a note rather than as a banner.
+*/
+
+/* --- is-mobile: --bp-mobile in base.css, via js/layout.js --- */
+body.is-mobile .welcome__body {
   flex-direction: column;
   justify-content: center;
   gap: 20px;
   padding: 84px 24px 16px;
 }
-body:is(.is-narrow, .is-short) .welcome__mascot { width: 128px; height: 128px; }
-body:is(.is-narrow, .is-short) .welcome__panel { width: 100%; max-width: 420px; text-align: center; }
-body:is(.is-narrow, .is-short) .welcome__title { font-size: 27px; }
-body:is(.is-narrow, .is-short) .welcome__subtitle { margin-bottom: 20px; }
-body:is(.is-narrow, .is-short) .welcome__choices { flex-direction: column; align-items: stretch; }
-body:is(.is-narrow, .is-short) .welcome__choices .button--outline { height: 52px; justify-content: center; }
+body.is-mobile .welcome__mascot { width: 128px; height: 128px; }
+body.is-mobile .welcome__panel { width: 100%; max-width: 420px; text-align: center; }
+body.is-mobile .welcome__title { display: none; }
+body.is-mobile .welcome__subtitle { margin-bottom: 20px; }
+body.is-mobile .welcome__choices { flex-direction: column; align-items: stretch; }
+body.is-mobile .welcome__choices .button--outline { height: 52px; justify-content: center; }
 
-
-/*
-  On a phone the screen is too short to hold the question, the form and the
-  small print at once, so the title goes — the cat and the field already say
-  what this screen is for — and the small print is ranged left, where it reads
-  as a note rather than a banner.
-
-  The foot sits at the bottom of the page: `1 0 auto` lets the body grow into
-  any spare height, which pushes the foot down, but never lets it shrink below
-  its content, so on a short screen the whole panel scrolls and the foot simply
-  follows the form instead of covering it.
-*/
-/* --- is-narrow: --bp-narrow in base.css --- */
-body.is-narrow .welcome {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-body.is-narrow .welcome__body { flex: 1 0 auto; }
-
-body.is-narrow .welcome__title { display: none; }
-
-body.is-narrow .welcome__foot {
+body.is-mobile .welcome__foot {
   align-items: flex-start;
   padding: 20px 24px 24px;
   text-align: left;

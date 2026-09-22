@@ -1,84 +1,110 @@
 {
   "app": {
     "title": "Petit Cinéma",
-    "tagline": "Bouche fermée · film qui tourne"
+    "name": "Petit Cinéma",
+    "tagline": "Bouche Cousue"
+  },
+  "lang": {
+    "label": "Langue",
+    "fr": "FR",
+    "en": "EN"
   },
   "badge": {
     "camera": "Caméra"
   },
   "status": {
     "waiting": "En attente…",
-    "loading": "Chargement de l'IA…",
+    "loading": "Chargement…",
     "ready": "Prêt !",
     "error": "Erreur caméra ou réseau",
-    "paused": "Pause ⏸",
-    "away": "Visage non détecté",
-    "covered": "Bouche cachée 🙌",
-    "pacifier": "Tétine détectée 🍼",
+    "paused": "Pause",
+    "away": "Visage absent",
+    "covered": "Bouche cachée",
+    "pacifier": "Tétine détectée",
     "open": "Bouche ouverte",
-    "closed": "Bouche fermée 👍"
+    "closed": "Bouche fermée"
+  },
+  "cause": {
+    "away": "visage absent",
+    "covered": "bouche cachée",
+    "pacifier": "tétine détectée",
+    "open": "bouche ouverte"
   },
   "welcome": {
-    "title": "Le film tourne tant que la bouche reste fermée.",
-    "subtitle": "Bouche ouverte, mains dessus, tétine ou visage qui s'en va — le film t'attend gentiment.",
-    "urlPlaceholder": "Colle un lien YouTube ici",
+    "title": "Quel film aujourd'hui ?",
+    "subtitle": "Colle un lien YouTube ou ouvre un film de l'ordinateur.",
+    "urlPlaceholder": "https://www.youtube.com/watch?v=…",
     "urlLabel": "Lien YouTube",
-    "openCinema": "🍿 Ouvrir la salle",
-    "or": "ou",
-    "chooseFile": "📁 Choisir une vidéo sur l'ordinateur",
-    "demo": "ou tester en démo, sans vidéo"
+    "openCinema": "Ouvrir la salle",
+    "or": "OU",
+    "chooseFile": "Choisir un fichier",
+    "demo": "Voir la démo sans vidéo",
+    "privacy": "Aucune vidéo n'est enregistrée, aucune donnée personnelle n'est collectée.",
+    "sourceBefore": "Le code source est disponible sur",
+    "sourceLink": "GitHub"
   },
   "quickBar": {
-    "placeholder": "🔗 Coller un lien YouTube pour changer de dessin animé",
+    "open": "Choisir une vidéo",
+    "placeholder": "Coller un lien YouTube pour changer de film",
     "label": "Nouveau lien YouTube",
     "change": "Changer",
-    "file": "📁 Fichier",
+    "file": "Fichier",
     "fileLabel": "Ouvrir une vidéo de l'ordinateur"
+  },
+  "demo": {
+    "label": "DESSIN ANIMÉ"
+  },
+  "mirror": {
+    "label": "miroir",
+    "openness": "Ouverture de la bouche"
   },
   "veil": {
     "start": {
-      "title": "Ferme la bouche pour lancer le film ! 🤫",
-      "text": "Le film joue tant que tes lèvres se touchent."
+      "title": "Ferme la bouche",
+      "text": "Le film démarre dès que tes lèvres se touchent."
     },
     "manual": {
-      "title": "Pause ⏸",
-      "text": "Appuie sur ▶ ou sur la barre d'espace pour reprendre."
+      "badge": "PAUSE ADULTE",
+      "title": "Le film attend l'adulte",
+      "text": "Le contrôle de la bouche est suspendu. Personne n'a fait d'erreur.",
+      "resume": "Reprendre le film",
+      "orSpace": "ou barre d'espace"
     }
   },
   "warning": {
     "away": {
-      "title": "Reviens vite… 👀",
-      "text": "Sinon le film va faire une pause."
+      "title": "Reviens me voir 👀",
+      "text": "Assieds-toi devant la caméra."
     },
     "covered": {
-      "title": "Découvre ta bouche 🙌",
-      "text": "Enlève tes mains pour que le film continue."
+      "title": "Enlève tes mains 🙌",
+      "text": "Je dois voir ta bouche."
     },
     "pacifier": {
-      "title": "La tétine, s'il te plaît 🍼",
-      "text": "Enlève ta tétine pour que le film continue."
+      "title": "Range la tétine",
+      "text": "On s'entraîne sans elle."
     },
     "open": {
-      "title": "Les lèvres qui se touchent…",
-      "text": "Ferme la bouche pour ne pas mettre le film en pause."
+      "title": "Ferme bien la bouche 👄",
+      "text": "Le film continue."
     }
   },
   "paused": {
     "away": {
-      "title": "Où es-tu ? 👀",
-      "text": "Reviens devant l'écran pour continuer le film."
+      "title": "Reviens me voir 👀",
+      "text": "Assieds-toi devant la caméra."
     },
     "covered": {
-      "title": "Bouche cachée 🙌",
-      "text": "Découvre ta bouche pour reprendre le film."
+      "title": "Enlève tes mains 🙌",
+      "text": "Je dois voir ta bouche."
     },
     "pacifier": {
-      "title": "Tétine détectée 🍼",
-      "text": "Enlève ta tétine pour reprendre le film."
+      "title": "Range la tétine",
+      "text": "On s'entraîne sans elle."
     },
     "open": {
-      "title": "On ferme la bouche…",
-      "text": "Dès que tes lèvres se touchent, le film continue !"
+      "title": "Ferme la bouche",
+      "text": "Le film repart tout seul."
     }
   },
   "reward": "Bravo ! 🌟",
@@ -91,19 +117,23 @@
     "volume": "Volume"
   },
   "settings": {
+    "title": "Réglages adulte",
     "sensitivity": "Sensibilité",
     "sensitivityLabel": "Sensibilité de détection",
-    "warning": "Avertissement",
+    "warning": "Avant l'avertissement",
     "warningLabel": "Délai avant l'avertissement",
-    "pause": "Pause",
+    "pause": "Avant la pause",
     "pauseLabel": "Délai avant la pause",
-    "secondsUnit": "s"
+    "secondsUnit": "s",
+    "mirror": "Afficher le miroir",
+    "reset": "Réinitialiser"
   },
   "buttons": {
-    "fullscreen": "⛶ Plein écran",
-    "exitFullscreen": "⛶ Quitter le plein écran",
-    "hideCamera": "Masquer la caméra",
-    "showCamera": "Afficher la caméra"
+    "settings": "Réglages",
+    "close": "Fermer",
+    "closeLabel": "Fermer le film et revenir à l'accueil",
+    "fullscreen": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran"
   },
   "alerts": {
     "invalidLink": "Lien YouTube non reconnu. Colle un lien de type https://www.youtube.com/watch?v=… ou https://youtu.be/…",
