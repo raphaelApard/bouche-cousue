@@ -31,6 +31,14 @@ a directory it can mirror with `--delete`. A failing check deletes `dist/`, so
 a broken build cannot be uploaded by the next command that happens to run. Add a file to the site and it must go in `SITE_FILES` or
 `SITE_DIRS`, or it will not ship.
 
+`pnpm run deploy` uploads the site, and `pnpm run deploy:dry` shows what it
+would change without transferring anything. Both go through
+`scripts/run-deploy.sh`, whose only job is the error message: the real script
+is absent from a fresh clone, and a bare "No such file or directory" would say
+nothing about the template beside it. Note `pnpm run`, not `pnpm deploy` —
+`deploy` is a built-in pnpm command, so the bare form never reaches this
+script.
+
 The deploy script itself is **not committed**: it holds the server coordinates,
 and nothing naming the host belongs in a public repo. `scripts/deploy.sh` is
 gitignored; `scripts/deploy-sample.sh` is the committed template — the same

@@ -23,6 +23,13 @@
 #   deploy.sh                build, show what would change, ask, upload
 #   deploy.sh --dry-run      show what would change, transfer nothing
 #   deploy.sh --yes          skip the confirmation prompt
+#
+# Or through the package scripts, which explain themselves when this file has
+# not been created yet. `pnpm run`, not `pnpm deploy`: deploy is a built-in
+# pnpm command and the bare form never reaches this script.
+#
+#   pnpm run deploy
+#   pnpm run deploy:dry
 
 set -euo pipefail
 
@@ -57,7 +64,7 @@ for arg in "$@"; do
     --dry-run) dry_run=true ;;
     --yes|-y)  assume_yes=true ;;
     -h|--help)
-      sed -n '/^# Usage/,/--yes/p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '/^# Usage/,/deploy:dry/p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     *)
