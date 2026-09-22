@@ -63,3 +63,8 @@ macos-app/vendor/
 # The icons make-icons.sh renders from the SVG sources are kept, since the
 # .app cannot be built without them; only the packaged output is ignored.
 macos-app/dist/
+
+# ---------- Deploy ----------
+# The filled-in deploy script carries the server coordinates; the committed
+# template is scripts/deploy-sample.sh.
+scripts/deploy.sh
