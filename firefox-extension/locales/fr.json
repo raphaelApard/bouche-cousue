@@ -1,0 +1,93 @@
+{
+  "app": {
+    "title": "Bouche Cousue"
+  },
+  "status": {
+    "waiting": "En attente…",
+    "loading": "Chargement de l'IA…",
+    "ready": "Prêt !",
+    "error": "Erreur caméra ou réseau",
+    "paused": "Pause ⏸",
+    "away": "Visage non détecté",
+    "covered": "Bouche cachée 🙌",
+    "pacifier": "Tétine détectée 🍼",
+    "open": "Bouche ouverte",
+    "closed": "Bouche fermée 👍"
+  },
+  "veil": {
+    "start": {
+      "title": "Ferme la bouche pour lancer la vidéo ! 🤫",
+      "text": "La vidéo joue tant que tes lèvres se touchent."
+    },
+    "manual": {
+      "title": "Pause ⏸",
+      "text": "Un adulte remettra la vidéo en marche."
+    }
+  },
+  "warning": {
+    "away": {
+      "title": "Reviens vite… 👀",
+      "text": "Sinon la vidéo va faire une pause."
+    },
+    "covered": {
+      "title": "Découvre ta bouche 🙌",
+      "text": "Enlève tes mains pour que la vidéo continue."
+    },
+    "pacifier": {
+      "title": "La tétine, s'il te plaît 🍼",
+      "text": "Enlève ta tétine pour que la vidéo continue."
+    },
+    "open": {
+      "title": "Les lèvres qui se touchent…",
+      "text": "Ferme la bouche pour ne pas mettre la vidéo en pause."
+    }
+  },
+  "paused": {
+    "away": {
+      "title": "Où es-tu ? 👀",
+      "text": "Reviens devant l'écran pour continuer la vidéo."
+    },
+    "covered": {
+      "title": "Bouche cachée 🙌",
+      "text": "Découvre ta bouche pour reprendre la vidéo."
+    },
+    "pacifier": {
+      "title": "Tétine détectée 🍼",
+      "text": "Enlève ta tétine pour reprendre la vidéo."
+    },
+    "open": {
+      "title": "On ferme la bouche…",
+      "text": "Dès que tes lèvres se touchent, la vidéo continue !"
+    }
+  },
+  "reward": "Bravo ! 🌟",
+  "settings": {
+    "sensitivity": "Sensibilité",
+    "sensitivityLabel": "Sensibilité de détection",
+    "warning": "Avertissement",
+    "warningLabel": "Délai avant l'avertissement",
+    "pause": "Pause",
+    "pauseLabel": "Délai avant la pause",
+    "secondsUnit": "s"
+  },
+  "ext": {
+    "start": "🎬 Activer",
+    "stop": "⏹ Désactiver",
+    "startLabel": "Activer la surveillance de la bouche",
+    "stopLabel": "Désactiver la surveillance de la bouche",
+    "cameraLabel": "Aperçu de la caméra",
+    "idleHint": "Active la surveillance : les vidéos des onglets ne joueront que si la bouche reste fermée.",
+    "hint": "Les vidéos des onglets ouverts se mettent en pause dès que la bouche s'ouvre.",
+    "error": "Impossible de démarrer :",
+    "errorHint": "Regarde la fenêtre Bouche Cousue pour en savoir plus.",
+    "silent": {
+      "title": "Surveillance interrompue ⏸",
+      "text": "Rouvre Bouche Cousue depuis la barre d'outils pour continuer la vidéo."
+    }
+  },
+  "engine": {
+    "retry": "🔄 Réessayer",
+    "errorHint": "Autorise la caméra pour Bouche Cousue, puis réessaie. Coche « Retenir cette décision » pour ne plus avoir à le refaire.",
+    "note": "Garde cette fenêtre ouverte : c'est elle qui surveille. La fermer arrête la surveillance."
+  }
+}

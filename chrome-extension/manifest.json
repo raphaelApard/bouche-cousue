@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Bouche Cousue",
+  "version": "1.0",
+  "description": "La vidéo de la page joue tant que la bouche reste fermée.",
+
+  "minimum_chrome_version": "102",
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_title": "Bouche Cousue",
+    "default_icon": {
+      "16": "icons/icon-off-16.png",
+      "32": "icons/icon-off-32.png",
+      "48": "icons/icon-off-48.png",
+      "128": "icons/icon-off-128.png"
+    },
+    "default_popup": "popup/popup.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "all_frames": true,
+      "run_at": "document_idle",
+      "js": ["content/content.js"]
+    }
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

@@ -52,3 +52,14 @@ desktop.ini
 *.avi
 *.mov
 *.m4v
+.vercel
+
+# ---------- Browser extensions ----------
+# The MediaPipe runtime and models, ~20 MB fetched by each fetch-vendor.sh.
+firefox-extension/vendor/
+chrome-extension/vendor/
+
+# ---------- Deploy ----------
+# The filled-in deploy script carries the server coordinates; the committed
+# template is scripts/deploy-sample.sh.
+scripts/deploy.sh

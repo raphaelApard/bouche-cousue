@@ -11,7 +11,8 @@ import { SOURCE } from "./config.js";
 import { t } from "./i18n.js";
 import * as player from "./player.js";
 import * as ui from "./ui.js";
-import { armForNewFilm, isRunning, reset, startMonitoring } from "./mouth-monitor.js";
+import { closePanel } from "./settings.js";
+import { armForNewFilm, isRunning, startMonitoring, stopMonitoring } from "./mouth-monitor.js";
 import { getSoundSettings, refreshPlaybackBar } from "./playback-controls.js";
 
 /**
@@ -25,8 +26,88 @@ async function enterCinema() {
   }
 
   const started = await startMonitoring();
-  if (started) ui.showFullscreenCoach();
-  else backToWelcome();   // no camera, no cinema
+  if (!started) leaveFilm();   // no camera, no cinema
+}
+
+/* ---------- Browser history ----------
+
+   Watching is an entry of its own, pushed the moment the welcome screen is
+   left. The back button then closes the film instead of leaving the site —
+   which is what a child pressing it, or a parent swiping back on a phone,
+   means by it. Swapping films while watching pushes nothing: it is the same
+   entry, showing something else.
+*/
+
+const HOME = "home";
+const WATCHING = "watching";
+
+/** Whether the entry we are on is the one we pushed for a running film. */
+function onWatchingEntry() {
+  return history.state?.p4l === WATCHING;
+}
+
+/** Leaves the welcome screen, and records that in the history. */
+function enterWatchingEntry() {
+  ui.hideWelcome();
+  if (!onWatchingEntry()) history.pushState({ p4l: WATCHING }, "");
+}
+
+/**
+ * The one way back to the welcome screen. It goes through the history when the
+ * film has an entry of its own, so the button, the close control and the
+ * failure paths all leave exactly one entry behind — the home one.
+ */
+function leaveFilm() {
+  if (onWatchingEntry()) history.back(); // `popstate` does the rest
+  else backToWelcome();
+}
+
+function wireHistory() {
+  history.replaceState({ p4l: HOME }, "");
+
+  window.addEventListener("popstate", () => {
+    if (!onWatchingEntry()) {
+      backToWelcome();
+      return;
+    }
+    // Forward, onto a film that was closed and cannot be brought back: keep
+    // the welcome screen and stop the entry claiming otherwise.
+    if (!player.isPlayable()) history.replaceState({ p4l: HOME }, "");
+  });
+}
+
+/* ---------- The quick-change bar ---------- */
+
+function openQuickBar() {
+  closePanel();
+  el.quickBar.hidden = false;
+  el.quickUrl.focus();
+}
+
+function closeQuickBar() {
+  el.quickBar.hidden = true;
+}
+
+/**
+ * Anything that opens the bar has to be excluded from the outside-click check,
+ * or the closing press and the reopening click would cancel each other out.
+ */
+function opensQuickBar(node) {
+  return el.quickBarButton.contains(node) || el.panelLinkButton.contains(node);
+}
+
+function wireQuickBarDismissal() {
+  document.addEventListener("pointerdown", event => {
+    if (el.quickBar.hidden) return;
+    const target = event.target;
+    if (target instanceof Node && !el.quickBar.contains(target) && !opensQuickBar(target)) {
+      closeQuickBar();
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !el.quickBar.hidden) closeQuickBar();
+  });
 }
 
 /* ---------- Local file ---------- */
@@ -38,7 +119,8 @@ function openFilePicker() {
 function handleChosenFile(file) {
   player.loadFile(file);
   player.applySound(getSoundSettings());
-  ui.hideWelcome();
+  enterWatchingEntry();
+  closeQuickBar();
   refreshPlaybackBar();
   enterCinema();
 }
@@ -62,14 +144,14 @@ async function openYoutube(rawLink, afterSuccess = () => {}) {
   }
 
   const wasRunning = isRunning();
-  ui.hideWelcome();
+  enterWatchingEntry();
 
   try {
     await player.loadYoutube(videoId);
   } catch (error) {
     console.error(error);
     alert(`${t("alerts.youtubeFailed")}\n${error.message}`);
-    backToWelcome();
+    leaveFilm();
     return;
   }
 
@@ -80,9 +162,12 @@ async function openYoutube(rawLink, afterSuccess = () => {}) {
   if (!wasRunning) enterCinema();
 }
 
+/** Tears the session down: no film, no camera, back to the first screen. */
 function backToWelcome() {
   player.clearSource();
-  reset();
+  stopMonitoring();
+  closeQuickBar();
+  closePanel();
   ui.showWelcome();
   refreshPlaybackBar();
 }
@@ -97,8 +182,23 @@ export function initSourcePicker() {
 
   el.quickBar.addEventListener("submit", event => {
     event.preventDefault();
-    openYoutube(el.quickUrl.value, () => el.quickUrl.blur());
+    openYoutube(el.quickUrl.value, () => {
+      el.quickUrl.blur();
+      closeQuickBar();
+    });
   });
+
+  for (const button of [el.quickBarButton, el.panelLinkButton]) {
+    button.addEventListener("click", () => {
+      if (el.quickBar.hidden) openQuickBar();
+      else closeQuickBar();
+    });
+  }
+
+  wireQuickBarDismissal();
+  wireHistory();
+
+  el.closeFilmButton.addEventListener("click", leaveFilm);
 
   el.chooseFileButton.addEventListener("click", openFilePicker);
   el.quickFileButton.addEventListener("click", openFilePicker);
@@ -115,7 +215,7 @@ export function initSourcePicker() {
 
   el.demoButton.addEventListener("click", () => {
     player.startDemo();
-    ui.hideWelcome();
+    enterWatchingEntry();
     refreshPlaybackBar();
     enterCinema();
   });

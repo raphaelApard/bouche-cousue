@@ -1,0 +1,133 @@
+/*
+  The welcome screen: a room being opened, not a form being filled.
+
+  The cat greets before any sentence does, and the camera is still off — which
+  the green line at the foot says plainly, because it is the first thing a
+  parent wants to know.
+*/
+
+/*
+  The screen scrolls at every size. `1 0 auto` on the body below lets it grow
+  into any spare height, which pushes the foot to the bottom, but never lets it
+  shrink under its content — so a window too short to hold the question, the
+  form and the small print at once scrolls them instead of clipping them.
+*/
+.welcome {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--ground);
+}
+
+.welcome__body {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  padding: 90px 78px 20px;
+}
+
+.welcome__mascot {
+  width: 220px;
+  height: 220px;
+  flex: none;
+}
+
+.welcome__panel { width: 470px; max-width: 100%; }
+
+.welcome__title {
+  margin: 0 0 8px;
+  font: 500 40px/1.1 var(--display);
+  letter-spacing: -.01em;
+}
+
+.welcome__subtitle {
+  margin: 0 0 26px;
+  font: 400 14px/1.5 var(--text);
+  color: var(--ink-soft);
+}
+
+.welcome__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.welcome__form .button--primary { height: 54px; }
+
+.welcome__or {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0;
+  font: 400 11.5px var(--text);
+  color: var(--ink-faintest);
+  letter-spacing: .08em;
+}
+.welcome__or::before,
+.welcome__or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(245, 237, 226, .12);
+}
+
+.welcome__choices {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Every line in the foot is the same line: same size, same tone, same spacing. */
+.welcome__foot {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 20px 20px;
+  text-align: center;
+  font: 400 11.5px/1.6 var(--text);
+  color: var(--ink-faintest);
+}
+
+.welcome__foot a {
+  color: var(--ink-warm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.welcome__foot a:hover { color: var(--amber); }
+
+/* ---------- Mobile ---------- */
+
+/*
+  The cat stops standing beside the panel and sits above it, and the title goes
+  — the cat and the field already say what this screen is for. The small print
+  is ranged left, where it reads as a note rather than as a banner.
+*/
+
+/* --- is-mobile: --bp-mobile in base.css, via js/layout.js --- */
+body.is-mobile .welcome__body {
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 84px 24px 16px;
+}
+body.is-mobile .welcome__mascot { width: 128px; height: 128px; }
+body.is-mobile .welcome__panel { width: 100%; max-width: 420px; text-align: center; }
+body.is-mobile .welcome__title { display: none; }
+body.is-mobile .welcome__subtitle { margin-bottom: 20px; }
+body.is-mobile .welcome__choices { flex-direction: column; align-items: stretch; }
+body.is-mobile .welcome__choices .button--outline { height: 52px; justify-content: center; }
+
+body.is-mobile .welcome__foot {
+  align-items: flex-start;
+  padding: 20px 24px 24px;
+  text-align: left;
+  font-size: 10.5px;
+}
+

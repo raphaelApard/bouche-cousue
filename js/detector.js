@@ -30,6 +30,8 @@ const samplerContext = sampler.getContext("2d", { willReadFrequently: true });
  */
 
 export async function initDetector() {
+  if (faceLandmarker) return; // the models outlive a closed camera
+
   const fileset = await FilesetResolver.forVisionTasks(MEDIAPIPE.VISION_WASM);
 
   faceLandmarker = await FaceLandmarker.createFromOptions(fileset, {
@@ -59,6 +61,18 @@ export async function startCamera() {
   el.cameraVideo.srcObject = stream;
   await el.cameraVideo.play();
   cameraReady = true;
+}
+
+/**
+ * Closes the camera and lets go of its frames. The models stay loaded, so
+ * opening the camera again costs only the permission the browser remembers.
+ */
+export function stopCamera() {
+  const stream = el.cameraVideo.srcObject;
+  if (stream) for (const track of stream.getTracks()) track.stop();
+  el.cameraVideo.srcObject = null;
+  cameraReady = false;
+  lastFrameTime = -1; // a reopened camera starts its clock over
 }
 
 export function isReady() {

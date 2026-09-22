@@ -1,20 +1,17 @@
 /**
  * Translation loading and DOM binding.
  *
- * Locale files are plain JSON under `locales/`, so adding a language is a data
- * change: copy a file, translate the values, list the code in
- * `config.I18N.SUPPORTED`, and add a button to the header.
+ * Both locales are loaded at startup, but only one is ever on screen: `t()`
+ * returns the current language and the FR/EN control calls `setLocale()`, which
+ * switches it and re-renders the whole document.
  *
  * User-facing strings are never written inline anywhere else in the codebase.
  * Static markup binds them with `data-i18n` attributes; dynamic text calls
  * `t(key)` and re-renders through the listeners registered here.
  */
 
-import { CONTACT_EMAIL, I18N, REPO_URL, STORAGE_KEYS } from "./config.js";
-import { readRaw, writeRaw } from "./storage.js";
-
-/** Values available to every string, written as `{name}` in the locale files. */
-const GLOBAL_PLACEHOLDERS = { repo: REPO_URL, email: CONTACT_EMAIL };
+import { I18N, STORAGE_KEYS } from "./config.js";
+import { readOneOf, writeRaw } from "./storage.js";
 
 /**
  * Resolved against this module's own URL rather than the page's, so the app
@@ -23,28 +20,12 @@ const GLOBAL_PLACEHOLDERS = { repo: REPO_URL, email: CONTACT_EMAIL };
  */
 const LOCALES_URL = new URL(`../${I18N.PATH}/`, import.meta.url);
 
-let locale = I18N.FALLBACK;
-let messages = {};
-let fallbackMessages = {};
+/** @type {Map<string, object>} locale code to its loaded messages. */
+const bundles = new Map();
+
+let primary = I18N.DEFAULT;
 
 const listeners = new Set();
-
-/**
- * Picks the initial language: a remembered choice first, then the browser's
- * preferences, then the fallback.
- */
-function detectLocale() {
-  const remembered = readRaw(STORAGE_KEYS.locale);
-  if (remembered && I18N.SUPPORTED.includes(remembered)) return remembered;
-
-  const preferences = navigator.languages?.length ? navigator.languages : [navigator.language];
-  for (const tag of preferences) {
-    const code = String(tag ?? "").slice(0, 2).toLowerCase();
-    if (I18N.SUPPORTED.includes(code)) return code;
-  }
-
-  return I18N.FALLBACK;
-}
 
 async function fetchLocale(code) {
   const response = await fetch(new URL(`${code}.json`, LOCALES_URL));
@@ -57,28 +38,49 @@ function lookup(source, key) {
   return key.split(".").reduce((node, part) => (node == null ? undefined : node[part]), source);
 }
 
+function substitute(text, placeholders) {
+  return Object.entries(placeholders)
+    .reduce((result, [name, replacement]) => result.replaceAll(`{${name}}`, replacement), text);
+}
+
 /**
- * Translates a key, falling back to the default locale and finally to the key
- * itself, so a missing translation degrades visibly instead of crashing.
+ * Resolves a key in one locale, falling back to the default locale and then to
+ * the key itself, so a missing translation degrades visibly instead of
+ * crashing.
+ */
+function translate(code, key, placeholders) {
+  const direct = lookup(bundles.get(code), key);
+  if (typeof direct === "string") return substitute(direct, placeholders);
+
+  const fallback = lookup(bundles.get(I18N.DEFAULT), key);
+  return typeof fallback === "string" ? substitute(fallback, placeholders) : key;
+}
+
+/**
+ * Translates a key into the primary language.
  *
  * @param {string} key            dotted path, e.g. `warning.open.title`
- * @param {object} [placeholders] extra `{name}` values to substitute
+ * @param {object} [placeholders] `{name}` values to substitute
  */
 export function t(key, placeholders = {}) {
-  const value = lookup(messages, key) ?? lookup(fallbackMessages, key);
-  if (typeof value !== "string") return key;
-
-  return Object.entries({ ...GLOBAL_PLACEHOLDERS, ...placeholders })
-    .reduce((text, [name, replacement]) => text.replaceAll(`{${name}}`, replacement), value);
+  return translate(primary, key, placeholders);
 }
 
 export function getLocale() {
-  return locale;
+  return primary;
+}
+
+/** Formats a plain number with the locale's decimal separator. */
+export function formatDecimal(value, digits = 2) {
+  return new Intl.NumberFormat(primary, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  }).format(value);
 }
 
 /** Formats a millisecond duration as seconds, using the locale's separator. */
 export function formatSeconds(milliseconds) {
-  const formatter = new Intl.NumberFormat(locale, {
+  const formatter = new Intl.NumberFormat(primary, {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1
   });
@@ -86,8 +88,10 @@ export function formatSeconds(milliseconds) {
 }
 
 /**
- * Registers a callback fired whenever the language changes, for text that
- * cannot be expressed as a static `data-i18n` binding.
+ * Registers a callback for text that cannot be expressed as a static
+ * `data-i18n` binding. Fired by `translateDocument()`, which runs once at
+ * startup — so these callbacks are also the first-render path for the veil,
+ * the status badge and the settings labels.
  */
 export function onLocaleChange(listener) {
   listeners.add(listener);
@@ -95,14 +99,11 @@ export function onLocaleChange(listener) {
 
 /** Rewrites everything bound through `data-i18n*` attributes, then notifies listeners. */
 export function translateDocument() {
-  document.documentElement.lang = locale;
+  document.documentElement.lang = primary;
   document.title = t("app.title");
 
   for (const node of document.querySelectorAll("[data-i18n]")) {
     node.textContent = t(node.dataset.i18n);
-  }
-  for (const node of document.querySelectorAll("[data-i18n-html]")) {
-    node.innerHTML = t(node.dataset.i18nHtml);
   }
   for (const node of document.querySelectorAll("[data-i18n-placeholder]")) {
     node.placeholder = t(node.dataset.i18nPlaceholder);
@@ -114,20 +115,18 @@ export function translateDocument() {
   for (const listener of listeners) listener();
 }
 
-export async function setLocale(code) {
-  if (!I18N.SUPPORTED.includes(code) || code === locale) return;
-
-  messages = code === I18N.FALLBACK ? fallbackMessages : await fetchLocale(code);
-  locale = code;
+/** Promotes one of the loaded locales to primary and re-renders everything. */
+export function setLocale(code) {
+  if (!I18N.LOCALES.includes(code) || code === primary) return;
+  primary = code;
   writeRaw(STORAGE_KEYS.locale, code);
   translateDocument();
 }
 
-/** Loads the fallback locale plus the detected one. Call before rendering. */
+/** Loads every locale file and restores the stored choice. Call before rendering. */
 export async function initI18n() {
-  fallbackMessages = await fetchLocale(I18N.FALLBACK);
+  const loaded = await Promise.all(I18N.LOCALES.map(fetchLocale));
+  I18N.LOCALES.forEach((code, index) => bundles.set(code, loaded[index]));
 
-  const detected = detectLocale();
-  messages = detected === I18N.FALLBACK ? fallbackMessages : await fetchLocale(detected);
-  locale = detected;
+  primary = readOneOf(STORAGE_KEYS.locale, I18N.LOCALES) ?? I18N.DEFAULT;
 }
