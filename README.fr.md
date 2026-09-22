@@ -57,6 +57,12 @@ local, hors ligne.
 Il reste à coller un lien YouTube, choisir une vidéo sur l'ordinateur, ou tester
 le mode démo sans vidéo.
 
+Le dépôt embarque aussi quelques scripts `pnpm`, dont aucun n'est nécessaire
+pour utiliser l'app : `pnpm serve` est la commande ci-dessus, `pnpm check`
+lance les vérifications statiques qui tiennent lieu de tests, et `pnpm build`
+prépare le site dans `dist/` en vue d'une publication. Il n'y a aucune
+dépendance : `pnpm install` n'a rien à télécharger.
+
 ## Utilisation
 
 | Action | Effet |
@@ -64,10 +70,26 @@ le mode démo sans vidéo.
 | **Barre d'espace**, ou **clic sur la vidéo** | Lecture / pause à la main |
 | **Bouton ▶ / ⏸** | Idem, depuis la barre de lecture (fichiers locaux) |
 | **⛶ Plein écran** | Utiliser *ce* bouton — celui de YouTube casse la détection |
+| **Réglages** | Ouvrir le panneau adulte ; il se referme au second clic, sur Échap, ou sur un clic à l'extérieur |
+| **Fermer** | Quitter le film et revenir à l'accueil ; la caméra se ferme avec lui |
 | **FR / EN** | Changer de langue ; le choix est mémorisé |
 
+Le sélecteur de langue et le bouton de fermeture partagent une place sur la
+barre du haut : la pastille FR / EN cède la sienne à **Fermer** pendant qu'un
+film joue, si bien que les deux n'y sont jamais ensemble. Regarder un film est
+une entrée d'historique à part entière : le bouton « précédent » du navigateur —
+et le balayage qui en tient lieu sur téléphone — ferme donc le film au lieu de
+quitter le site.
+
 Une pause manuelle suspend complètement la détection : le film reste arrêté tant
-qu'un adulte ne l'a pas relancé, quoi que fassent les lèvres de l'enfant.
+qu'un adulte ne l'a pas relancé, quoi que fassent les lèvres de l'enfant. Cette
+pause-là est dessinée sur du papier plutôt que dans le noir — un panneau clair
+avec un cadenas — pour qu'un enfant voie d'un coup d'œil qu'elle ne parle pas
+de lui.
+
+En plein écran, il ne reste que le film : ni barre du haut, ni miroir, ni barre
+de lecture, seulement une grande lampe — verte tant que la bouche est fermée,
+ambre sinon — et un bouton nommé pour en sortir.
 
 ### Réglages
 
@@ -76,9 +98,17 @@ qu'un adulte ne l'a pas relancé, quoi que fassent les lèvres de l'enfant.
 | **Sensibilité** | Ouverture nécessaire pour compter comme « bouche ouverte ». Plus haut = plus strict. |
 | **Avertissement** | Durée bouche ouverte avant l'apparition de l'avertissement. |
 | **Pause** | Durée de l'avertissement avant la mise en pause réelle. |
+| **Miroir** | Afficher ou masquer le retour caméra et sa jauge d'ouverture. |
 
-Les réglages, ainsi que le volume et la langue, sont mémorisés dans le
-navigateur d'une session à l'autre.
+Ils sont livrés à une sensibilité de **47** sur le curseur 15–90 (soit un seuil
+de `0,048`), **1,5 s** avant l'avertissement et **3,0 s** avant la pause. Tous,
+ainsi que le volume, le miroir et la langue, sont mémorisés dans le navigateur
+d'une session à l'autre.
+
+Le miroir est le visage de l'enfant, avec la jauge d'ouverture en dessous et un
+repère à l'endroit exact où le film s'arrête. Il garde la même taille et le même
+coin en bas à droite à toutes les largeurs : une seule forme à reconnaître, quel
+que soit l'écran devant lequel l'enfant se trouve.
 
 ## Fonctionnement
 
@@ -125,12 +155,19 @@ vrai ré-encodage (`-c:v libx264 -crf 20 -preset fast`).
 
 - Le flux caméra est analysé image par image dans la page, puis aussitôt oublié.
   **Rien n'est enregistré, aucune image ne quitte la machine.**
-- Pas de compte, pas de traceur, pas de statistiques, pas de télémétrie.
+- Pas de compte, et rien qui concerne l'enfant — ni visage, ni mesure, ni
+  degré d'ouverture, ni titre de vidéo — n'est envoyé où que ce soit.
 - Les vidéos locales sont lues directement par le navigateur, jamais envoyées.
 - Les seules données conservées sont vos réglages (sensibilité, délais, volume,
-  langue), dans le `localStorage` de ce navigateur.
-- Une seule exception : choisir une vidéo YouTube la charge depuis
-  `youtube-nocookie.com`, qui applique alors ses propres règles.
+  miroir, langue), dans le `localStorage` de ce navigateur.
+- Deux choses passent tout de même par le réseau. Des statistiques de
+  fréquentation anonymes sont envoyées à un **Matomo auto-hébergé** sur
+  `stats.acolad.net` — visites et clics sur les liens, pour savoir si l'outil
+  sert à quelque chose ; c'est notre propre instance, pas une régie publicitaire,
+  et elle ne reçoit rien de la caméra. Supprimer le bloc `<!-- Matomo -->` en
+  haut de `index.html` la désactive ; rien d'autre n'en dépend.
+- Et choisir une vidéo YouTube la charge depuis `youtube-nocookie.com`, qui
+  applique alors ses propres règles.
 
 Il n'y a aucune étape de compilation et rien n'est minifié : tout ce qui
 précède se vérifie en lisant le code de ce dépôt.
@@ -141,9 +178,9 @@ Chrome et Edge sont les plus sûrs (délégation GPU et prise en charge des code
 la plus large). Tout navigateur Chromium devrait convenir. Firefox et Safari
 font tourner la détection mais sont plus restrictifs sur les codecs vidéo.
 
-## Quatre façades
+## Trois façades
 
-Une seule idée, sous quatre formes. La règle est la même partout — mêmes
+Une seule idée, sous trois formes. La règle est la même partout — mêmes
 seuils, mêmes délais, même zone morte — et les phrases que lit l'enfant aussi.
 Ce qui change, c'est à qui appartient la vidéo.
 
@@ -152,7 +189,6 @@ Ce qui change, c'est à qui appartient la vidéo.
 | **Application web** | ce dossier | un dessin animé que vous lui donnez, par lien ou fichier | rien à installer — [servez-la](#démarrer) |
 | **Extension Firefox** | [`firefox-extension/`](firefox-extension/) | une vidéo déjà lancée sur la page de quelqu'un d'autre | [`firefox-extension/README.md`](firefox-extension/README.md) |
 | **Extension Chrome** | [`chrome-extension/`](chrome-extension/) | la même chose, dans Chrome | [`chrome-extension/README.md`](chrome-extension/README.md) |
-| **Application macOS** | [`macos-app/`](macos-app/) | ce qui joue sur le Mac, dans n'importe quelle application | [`macos-app/README.md`](macos-app/README.md) |
 
 **L'application web** est le cinéma complet : vous lui donnez un lien YouTube
 ou un fichier de l'ordinateur, et elle le joue sur une scène à elle, avec une
@@ -171,32 +207,29 @@ sur un point visible — la caméra vit dans une petite fenêtre à part, parce
 qu'aucun des deux navigateurs n'ouvre une caméra depuis une page d'arrière-plan
 ou depuis une popin qui se ferme dès qu'on clique ailleurs.
 
-**L'application macOS** prend encore un pas de recul. C'est une application
-Electron qui vit dans la barre des menus et met en pause ce qui joue sur le
-Mac, quelle que soit l'application qui le joue — un navigateur, QuickTime, VLC,
-une application de streaming — en envoyant la touche lecture/pause du clavier
-ou un Apple event à un lecteur nommé. C'est celle pour un film qui n'est pas
-dans un navigateur.
-
-Une modification de la règle vaut pour les quatre.
+Une modification de la règle vaut pour les trois.
 
 ## Organisation du projet
 
 ```
 index.html                  balisage seul — aucun style ni script en ligne
 css/
-  base.css                  variables de design, reset, valeurs par défaut
-  layout.css                guirlande, en-tête, colonne principale, pied de page
-  components.css            badges, boutons, curseurs, barres de lien, bulle
-  stage.css                 surfaces vidéo, accueil, voile, retour caméra
+  base.css                  variables de design, reset, l'unique point de rupture
+  mascot.css                le chat, et laquelle de ses sept têtes s'affiche
+  chrome.css                barre du haut, badges, barre rapide, panneau, miroir
+  welcome.css               l'écran d'accueil
+  stage.css                 surface vidéo, les voiles, le plein écran
 js/
   main.js                   point d'entrée : démarre et relie le tout
   config.js                 constantes — délais, seuils, repères, clés
   dom.js                    tous les éléments, résolus une fois
   storage.js                accès protégé au localStorage
+  layout.js                 lit le point de rupture, nomme l'état sur <body>
+  mascot.js                 duplique le gabarit du chat dans ses emplacements
+  range-fill.js             la portion remplie à gauche du curseur
   i18n.js                   chargement des langues, traduction, liaison au DOM
   ui.js                     voile, badge d'état, jauge, récompense, plein écran
-  settings.js               les trois curseurs de détection
+  settings.js               le panneau adulte et ses réglages
   detector.js               caméra + MediaPipe ; produit des mesures, rien d'autre
   mouth-monitor.js          la machine à états et la boucle de détection
   player.js                 lecture des fichiers locaux et de YouTube
@@ -207,21 +240,18 @@ locales/
 
 firefox-extension/          l'extension Firefox — voir son propre README
 chrome-extension/           la même extension pour Chrome
-macos-app/                  l'application barre des menus — voir son README
 ```
 
 Les deux dossiers d'extension sont un seul programme en deux paquets : à part
 `manifest.json` et les icônes, tous les fichiers sont identiques, et
 `lib/api.js` absorbe la différence entre `browser` et `chrome`. Ils embarquent
 leurs propres copies des modules de l'application, sous les mêmes noms, parce
-qu'une extension ne peut pas importer depuis une page web. L'application macOS
-embarque les mêmes modules pour la même raison, avec `lib/bridge.js` à la place
-de `lib/api.js` — la règle vit donc à quatre endroits, et toute modification
-vaut pour les quatre.
+qu'une extension ne peut pas importer depuis une page web — la règle vit donc à
+trois endroits, et toute modification vaut pour les trois.
 
-Les dépendances vont dans un seul sens — `config`/`dom`/`storage` → `i18n` →
-`ui`/`player`/`detector`/`settings` → `mouth-monitor` → `source-picker` →
-`main` — sans aucun cycle. `detector.js` se contente de mesurer,
+Les dépendances vont dans un seul sens — `config`/`dom`/`storage`/`mascot`/
+`range-fill`/`layout` → `i18n` → `ui`/`player`/`detector`/`settings` →
+`mouth-monitor` → `source-picker` → `main` — sans aucun cycle. `detector.js` se contente de mesurer,
 `mouth-monitor.js` de décider, et `player.js` de lire : c'est cette séparation
 qui rend la règle du jeu facile à suivre dans le code.
 
@@ -230,13 +260,15 @@ qui rend la règle du jeu facile à suivre dans le code.
 1. Copier `locales/fr.json`, le nommer d'après le code de la langue, et
    traduire les valeurs. Toutes les clés doivent être présentes — celles qui
    manquent retombent sur le français.
-2. Ajouter le code à `I18N.SUPPORTED` dans `js/config.js`.
-3. Ajouter un bouton au sélecteur de langue dans `index.html`, avec l'attribut
-   `data-locale` correspondant.
+2. Ajouter le code à `I18N.LOCALES` dans `js/config.js`.
+3. Ajouter un bouton portant l'attribut `data-locale` correspondant aux **deux**
+   sélecteurs de langue de `index.html` — celui de l'accueil et celui de la
+   barre du haut.
 
 Aucune modification de JavaScript n'est nécessaire : l'interface lit son texte
-depuis le JSON. La langue initiale vient des préférences du navigateur, à
-défaut le français.
+depuis le JSON. Chaque langue déclarée est chargée une fois au démarrage, si
+bien que changer de langue ne coûte aucune requête. La langue initiale est
+celle mémorisée sous `p4l.locale`, à défaut le français.
 
 ## Contribuer
 

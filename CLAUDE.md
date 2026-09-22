@@ -4,25 +4,54 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A French browser app — "Bouche Cousue" — that plays a chosen cartoon only while the child's mouth stays closed, using webcam face landmark detection. It is aimed at children with facial hypotonia, turning lip-closure practice into a game. Everything is client-side: no build system, no package manager, no server code, no dependencies to install.
+A bilingual (French/English) browser app — "Bouche Cousue" — that plays a chosen cartoon only while the child's mouth stays closed, using webcam face landmark detection. It is aimed at children with facial hypotonia, turning lip-closure practice into a game. Everything is client-side: no server code, no framework, and nothing to install — the repository has no dependencies, so `pnpm install` has no work to do. The app runs from the sources it ships; the build exists only to select and verify what gets published, and never to compile anything (see **Building and deploying**).
 
 ## Running
 
 Must be served over `http://localhost` or HTTPS. Opening `index.html` with `file://` fails twice over: camera access needs a secure context, and the ES modules plus `locales/*.json` are fetched over HTTP.
 
 ```sh
-python3 -m http.server 8000   # then visit http://localhost:8000/
+python3 -m http.server 8000   # or: pnpm serve — then visit http://localhost:8000/
 ```
 
 First launch needs internet for the MediaPipe runtime and models (CDN); detection then runs locally.
 
-## Four front ends
+## Building and deploying
 
-The repository holds one idea in four packages. The web app in the root plays
+`pnpm build` runs `scripts/build.mjs`, which copies the site — `index.html`,
+`css/`, `js/`, `locales/` and the three favicons — into `dist/`, then runs the
+checks under **Verifying changes** against that copy. Nothing is compiled,
+bundled or minified: what ships is what you read.
+
+What the build is really for is **selection**. The repository holds three front
+ends and only one of them is the site; a web root that received the repository
+root would be serving the extensions' sources. Naming the files that make up
+the site, in one list, is what keeps that from happening — and gives the deploy
+a directory it can mirror with `--delete`. A failing check deletes `dist/`, so
+a broken build cannot be uploaded by the next command that happens to run. Add a file to the site and it must go in `SITE_FILES` or
+`SITE_DIRS`, or it will not ship.
+
+The deploy script itself is **not committed**: it holds the server coordinates,
+and nothing naming the host belongs in a public repo. `scripts/deploy.sh` is
+gitignored; `scripts/deploy-sample.sh` is the committed template — the same
+file with its Configuration block blanked out. Copy the template to
+`scripts/deploy.sh`, fill in the four values, and keep the two in step when
+editing the logic. It builds, asks the server that the remote path exists
+(rsync would otherwise create the wrong directory and report success while the
+site stayed as it was), shows what would change, asks, mirrors, then checks
+that the site answers 200.
+
+Two remote paths are excluded from both the transfer and the delete pass, and
+the list belongs in the script rather than in anyone's memory: `.well-known/`,
+which Let's Encrypt writes into to renew the certificate — and without HTTPS
+there is no camera at all — and `.htaccess`, the host's HTTP-to-HTTPS redirect,
+which is not in the repository and which a plain mirror would delete.
+
+## Three front ends
+
+The repository holds one idea in three packages. The web app in the root plays
 a cartoon you hand it. `firefox-extension/` and `chrome-extension/` apply the
-same rule to a video already playing on somebody else's page. `macos-app/` is
-an Electron menu bar app that applies it to whatever is playing on the Mac, in
-whichever application is playing it.
+same rule to a video already playing on somebody else's page.
 
 The two extensions are **one program in two packages**: every file but
 `manifest.json` and the icons is byte-identical, and `lib/api.js` is what
@@ -34,51 +63,40 @@ file.
 
 The extensions share no code with the app at runtime — an extension cannot
 import from a web page — but their `lib/` carries the app's modules with the
-same names, the same split, and the same detection constants. `macos-app/lib/`
-carries them a third time, for the same reason, with `bridge.js` where the
-extensions have `api.js`; its `mouth-monitor.js` is the extensions' file with
-nothing changed but the header comment, and it should stay that way. **A change
-to the rule belongs in all four.**
-
-## The v2 app
-
-`v2/` is the root app redrawn — same rule, same detection constants, a new
-interface (see `v2/README.md`). It sits beside v1 rather than replacing it, so
-both can be served and compared; it shares no files with the root app, and
-nothing outside `v2/` is involved in it.
-
-It differs from the root app in three ways that matter when editing it. It is
-**bilingual**, one language at a time: both locale files are loaded at startup so
-the FR/EN control can switch without a fetch, the choice is remembered under
-`p4l.locale`, and every key must exist in `locales/fr.json` *and*
-`locales/en.json`. The French build shows no English and the English build no
-French. And the mascot is drawn **once**, in `#mascotTemplate` in the markup;
-`js/mascot.js` stamps copies into slots and `css/mascot.css` alone decides which
-of the seven faces a copy shows. Last, the **breakpoints are CSS variables**:
-the three widths live in `--bp-narrow`, `--bp-short` and `--bp-phone` at the top
-of `css/base.css` and nowhere else. `js/layout.js` reads them and puts
-`is-narrow`, `is-short` or `is-phone` on `<body>`, which is what every rule keys
-off — a media query cannot read a custom property, so naming the state is what
-keeps each width a single copy. A width written into a v2 `@media` would be a
-second one, so there are none; the only media queries left are reduced motion.
-
-`v2/js/detector.js` is byte-identical to `js/detector.js`, and its
-`mouth-monitor.js` holds the same state machine, thresholds, dead band and
-delays. **A change to the rule belongs in all five** — the four front ends below
-and this one.
+same names, the same split, and the same detection constants. **A change to the
+rule belongs in all three.**
 
 ## Architecture
 
-`index.html` holds markup only. Styles live in `css/`, logic in `js/` as ES modules, and all user-facing text in `locales/`.
+`index.html` holds markup only. Styles live in `css/`, logic in `js/` as ES modules, and all user-facing text in `locales/`. The one inline script is the `<!-- Matomo -->` block in the head — self-hosted page-view statistics on `stats.acolad.net`, which the Privacy section of both READMEs declares. It receives nothing from the camera, nothing else depends on it, and deleting the block is the whole of switching it off. Do not add a second inline script.
 
 Dependencies flow one way, with no cycles:
 
 ```
-config / dom / storage  →  i18n  →  ui / player / detector / settings
-                                 →  mouth-monitor  →  source-picker  →  main
+config / dom / storage / mascot / range-fill / layout  →  i18n
+                            →  ui / player / detector / settings
+                            →  mouth-monitor  →  source-picker  →  main
 ```
 
 The three-way split is the point of the design and worth preserving: **`detector.js` only measures** (camera frames in, readings out — it never touches the DOM), **`mouth-monitor.js` only decides** (readings in, warnings/pauses/resumes out), and **`player.js` only plays** (it knows nothing about mouths). `ui.js` owns everything visible except the playback bar.
+
+Three things about the interface matter when editing it. It is **bilingual**,
+one language at a time: both locale files are loaded at startup so the FR/EN
+control can switch without a fetch, the choice is remembered under `p4l.locale`,
+and every key must exist in `locales/fr.json` *and* `locales/en.json`. The French
+build shows no English and the English build no French. The mascot is drawn
+**once**, in `#mascotTemplate` in the markup; `js/mascot.js` stamps copies into
+slots and `css/mascot.css` alone decides which of the seven faces a copy shows.
+And there is **one breakpoint**, carried as a CSS variable: `--bp-mobile`,
+1024px, at the top of `css/base.css` and nowhere else. `js/layout.js` reads it
+and puts `is-mobile` or `is-desktop` on `<body>` — one or the other, never both —
+and that is what every rule keys off. A media query cannot read a custom
+property, so naming the state is what keeps the width a single copy; one written
+into an `@media` would be a second, so there are none and the only media queries
+left are reduced motion.
+
+`range-fill.js` paints the amber run to the left of a slider's thumb, which a
+native range input cannot draw by itself.
 
 **Detection.** `detector.js` loads `FaceLandmarker` (GPU delegate, `VIDEO` mode) plus an optional `HandLandmarker`; if the hand model fails it is left null and the rest keeps working. `readFrame()` returns `null` when the camera frame has not advanced, so the caller skips a tick. Mouth openness is `dist(13, 14) / dist(10, 152)` — lip gap over face height, so it is scale-invariant. `detectPacifier()` is a saturation heuristic over a box around the mouth.
 
@@ -90,17 +108,17 @@ The sensitivity slider maps 15–90 → threshold 0.080–0.005 via `SENSITIVITY
 
 ## Conventions
 
-Code, comments, and identifiers are **English**. User-facing strings are **never** written inline — they belong in `locales/fr.json` and are read via `t(key)`, or bound in markup with `data-i18n`, `data-i18n-placeholder`, `data-i18n-aria-label`.
+Code, comments, and identifiers are **English**. User-facing strings are **never** written inline — they belong in `locales/fr.json` and `locales/en.json` and are read via `t(key)`, or bound in markup with `data-i18n`, `data-i18n-placeholder`, `data-i18n-aria-label`. Every key must be present in both files.
 
-Anything rendered dynamically registers a callback with `onLocaleChange()` and re-renders from state. `translateDocument()` fires those callbacks once at startup, so they are also the first-render path — and the veil tracking *translation keys* (`veilKeys`) rather than printed sentences is what would let a language switch be restored cheaply.
+Anything rendered dynamically registers a callback with `onLocaleChange()` and re-renders from state. `translateDocument()` fires those callbacks once at startup, so they are also the first-render path — and the veil tracking *translation keys* (`veilKeys`) rather than printed sentences is what lets a language switch rewrite a pause that is already on screen.
 
-The values in `REASON` double as translation key segments (`warning.<reason>.title`, `status.<reason>`) — renaming one means renaming it in `locales/fr.json` too.
+The values in `REASON` double as translation key segments (`warning.<reason>.title`, `status.<reason>`) — renaming one means renaming it in both locale files too.
 
 UI copy targets young children: keep it short, warm, and reassuring.
 
 Landmark indices in `LANDMARK` come from the MediaPipe FaceLandmarker topology; changing them requires consulting that spec.
 
-`localStorage` holds only preferences, under the `p4l.*` keys in `STORAGE_KEYS`. Always read numbers through `readNumberInRange()` — a missing key reads back as `null`, and `Number(null)` is `0`, which silently looks valid for any slider whose minimum is 0. If you ever store more than preferences, update the Privacy section of both READMEs to stay truthful.
+`localStorage` holds only preferences, under the `p4l.*` keys in `STORAGE_KEYS` — now including `p4l.locale` and `p4l.mirror`. Always read numbers through `readNumberInRange()` and the rest through `readOneOf()`: a missing key reads back as `null`, and neither `Number(null)` — which is `0`, silently valid for any slider whose minimum is 0 — nor `readBoolean()` can tell that apart from a real value. If you ever store more than preferences, update the Privacy section of both READMEs to stay truthful.
 
 ## The extensions
 
@@ -168,86 +186,24 @@ since `mascot-close` and its `transform-origin` are pinned to the geometry.
 Build the veil with DOM calls, never `innerHTML`: the add-on linter flags the
 latter, and an AMO reviewer is right to ask.
 
-## The macOS app
-
-`macos-app/README.md` covers installing and packaging it. It is a menu bar app:
-no dock icon, no window of its own that anybody sees. What differs from the
-extensions, each for a reason worth keeping:
-
-- **The camera lives in a window that is never shown.** The menu bar panel is
-  hidden — and its document destroyed — the moment it loses focus, which is the
-  first thing that happens when a child clicks the film, so nothing that must
-  keep running can live in `panel/`. `engine/engine.html` is opened with
-  `show: false`, `paintWhenInitiallyHidden: true` and
-  `backgroundThrottling: false`: that combination is what keeps Chromium
-  decoding a camera nobody is looking at. **Do not move `getUserMedia` into the
-  main process or the panel.** The panel is sent small JPEG stills instead
-  (`PREVIEW` in config) — a `MediaStream` cannot cross between documents.
-- **The pages are served over `app://`, never `file://`** — see
-  `main/protocol.js`. ES modules, `fetch` for the locale and the secure context
-  `getUserMedia` requires are all refused on `file://`. The handler also stamps
-  the CSP, which is why nothing in these pages may be inline.
-- **`main/media-control.js` is the whole macOS story.** There is no `pause()`
-  to call: either an Apple event goes to one named player (idempotent, needs
-  Automation, which macOS prompts for) or the keyboard's play/pause key is
-  posted (reaches anything, including Firefox, but needs Accessibility and is
-  a *toggle*, so the module tracks what it last asked for). The default target
-  is `auto`, which resolves per command — frontmost known player, else one
-  merely open, else the key — so the common case never touches Accessibility.
-  The frontmost app is read with `lsappinfo`, which costs no permission;
-  System Events would cost an Automation prompt to answer the same question.
-  There are two key channels: `mediakey` (the system-defined media event, goes
-  to whatever is playing) and `space` (a plain key event into the window in
-  front, which is how a person pauses Firefox). Same permission, different
-  route, so one can work where the other does not. `space` is refused when the
-  Finder or this app is in front — a space there opens Quick Look or presses a
-  button. A key press is **refused** when the app is not trusted rather than
-  sent into the void: `osascript` exits 0 either way, and a press that did
-  nothing would leave the belief inverted. The tracked state is why the panel carries a ▶/⏸ button — one
-  tap presses and flips the belief, which is how an adult re-syncs the two.
-  `arm()` is the other half of that bargain: the rule's opening park must
-  **not** reach the player, because pressing a toggle before anything is
-  playing leaves the belief inverted and swallows the first real pause
-  (measured — it is exactly what "the pause does nothing" looks like). `main.js`
-  holds `armed` for that first message.
-  Whether that player is open is asked of `pgrep`, never of AppleScript:
-  `if application "VLC" is running then tell application "VLC" …` reads as a
-  guard and is not one — compiling the `tell` block fetches the app's
-  terminology, which launches it (measured). Keep that check out of the
-  script.
-- **`main.js` is `background.js` in another costume.** It decides nothing about
-  mouths: it routes messages, owns the three windows, and turns the rule's
-  decisions into Apple events. `panel/` is a remote control and `overlay/`
-  holds no copy of its own — every sentence arrives translated from the engine,
-  as the extensions' content script is fed.
-- **A pause has to be held, not just given.** The state machine speaks on
-  transitions, which is enough for a video the app owns — a tab cannot restart
-  itself, a child can. So `main.js` repeats the order every `HOLD.INTERVAL`
-  while the rule says stop (`media.hold()`). Only Apple events can be repeated:
-  they are idempotent, and VLC's is conditional on `playing`. A key channel
-  refuses to repeat, because pressing a toggle we believe is stopped would
-  start the film — that limitation is real and belongs in the README, not in a
-  workaround.
-- **The watchdog parks the film instead of veiling it.** No page here belongs
-  to us, so a silent engine cannot be answered with a veil: the main process
-  pauses the player and says so in the panel and the overlay.
-- **Preferences live in `settings.json`** under the app's user-data folder, and
-  only preferences. Same `p4l.*` keys, same `numberInRange()` guard.
-
 ## Verifying changes
 
-There is no test suite. After edits, serve the app and check the browser console. These static checks catch most breakage in a multi-module refactor:
+There is no test suite. `pnpm check` is what stands in for one: it runs the
+static checks below against the working tree, and `pnpm build` runs the same
+ones against `dist/`, so what is verified is what would ship. They catch most
+breakage in a multi-module refactor:
 
+- every local `src`/`href` in `index.html` resolves to a file that was built
 - every `byId()` in `js/dom.js` matches an `id` in `index.html`
 - every named import exists as an export in the target module, and the graph stays acyclic
-- every key referenced via `t()` or `data-i18n*` exists in `locales/fr.json`
+- every key referenced via `t()` or `data-i18n*` exists in **both** locale files
 
-For the macOS app, `cd macos-app && npm start`; renderer console output reaches
-the terminal with `--enable-logging`. The same three static checks apply, in
-each of `engine/`, `panel/` and `overlay/` against their own markup and
-`locales/fr.json`, plus one more: `main.js`, `main/` and `preload.cjs` may
-import from `lib/` only where the module is free of DOM — `config.js` is, the
-rest are not.
+A key built from a variable — ``t(`cause.${...}`)`` — cannot be resolved
+statically and is not looked for; those are the ones `REASON` names, and why
+renaming a value there means renaming it in both locale files by hand.
+
+Neither command opens a browser, so after edits still serve the app and read
+the console.
 
 The extension has no console of its own until it is loaded: check it from
 `about:debugging`, whose **Inspect** button opens a console per popup, per

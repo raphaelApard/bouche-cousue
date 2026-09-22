@@ -49,6 +49,12 @@ from a CDN. After that, detection runs entirely offline and locally.
 Then either paste a YouTube link, pick a video file from the computer, or try
 the demo mode with no video at all.
 
+The repository also carries a few `pnpm` scripts, none of which you need in
+order to use the app: `pnpm serve` is the command above, `pnpm check` runs the
+static checks that stand in for a test suite, and `pnpm build` stages the site
+into `dist/` for publishing. There are no dependencies, so `pnpm install` has
+nothing to fetch.
+
 ## Using it
 
 | Action | What it does |
@@ -56,10 +62,24 @@ the demo mode with no video at all.
 | **Space bar**, or **click the video** | Play / pause by hand |
 | **▶ / ⏸ button** | Same, from the playback bar (local files) |
 | **⛶ Fullscreen** | Use *this* button — YouTube's own fullscreen breaks detection |
+| **Settings** | Open the adult panel; closes on a second click, on Escape, or on a click outside |
+| **Close** | Leave the film and go back to the welcome screen; the camera closes with it |
 | **FR / EN** | Switch language; the choice is remembered |
 
+The language switch and the close button share one place on the top bar: the
+FR / EN pill gives way to **Close** while a film is playing, so the two are
+never both on the bar. Watching is a history entry of its own, so the browser's
+back button — and the swipe that stands for it on a phone — closes the film
+rather than leaving the site.
+
 A manual pause suspends the mouth detection entirely: the film stays put until
-an adult starts it again, whatever the child's lips do.
+an adult starts it again, whatever the child's lips do. That pause is drawn on
+paper rather than in the dark — a light panel with a padlock — so a child can
+tell at a glance that this one is not about them.
+
+In full screen the film is all that is left: no top bar, no mirror, no playback
+bar, only a large lamp that is green while the mouth is closed and amber while
+it is not, and a labelled button that leaves full screen.
 
 ### Settings
 
@@ -68,9 +88,17 @@ an adult starts it again, whatever the child's lips do.
 | **Sensitivity** | How wide the mouth must open to count as open. Higher = stricter. |
 | **Warning** | How long the mouth stays open before the gentle warning appears. |
 | **Pause** | How long the warning shows before the film actually pauses. |
+| **Mirror** | Show or hide the camera preview and its openness gauge. |
 
-All settings, plus volume and language, are remembered in the browser between
+They ship at sensitivity **47** on the 15–90 slider (a threshold of `0.048`),
+**1.5 s** before the warning and **3.0 s** before the pause. All of them, plus
+volume, the mirror and the language, are remembered in the browser between
 sessions.
+
+The mirror is the child's own face, with the openness gauge below it and a mark
+at the exact point the film stops. It keeps the same size and the same
+bottom-right corner at every width, so there is one shape to recognise whichever
+screen the child is in front of.
 
 ## How it works
 
@@ -117,12 +145,19 @@ re-encode (`-c:v libx264 -crf 20 -preset fast`).
 
 - The camera feed is analysed frame by frame in the page and immediately
   discarded. **Nothing is recorded, and no image ever leaves the machine.**
-- No account, no tracker, no analytics, no telemetry.
+- No account, and nothing about the child — no face, no measurement, no
+  openness reading, no video title — is ever sent anywhere.
 - Local video files are read directly by the browser and never uploaded.
-- The only stored data is your settings (sensitivity, delays, volume, language),
-  in this browser's `localStorage`.
-- One exception: choosing a YouTube video loads it from `youtube-nocookie.com`,
-  which then applies its own rules.
+- The only stored data is your settings (sensitivity, delays, volume, mirror,
+  language), in this browser's `localStorage`.
+- Two things do reach the network. Anonymous page-view statistics go to a
+  **self-hosted Matomo** at `stats.acolad.net` — visits and link clicks, so we
+  know whether the thing is used at all; it is the instance's own data, not a
+  third-party ad network, and it carries nothing from the camera. Remove the
+  `<!-- Matomo -->` block at the top of `index.html` to switch it off; nothing
+  else depends on it.
+- And choosing a YouTube video loads it from `youtube-nocookie.com`, which then
+  applies its own rules.
 
 There is no build step and nothing is minified — all of the above can be
 checked by reading the source in this repository.
@@ -133,9 +168,9 @@ Chrome and Edge are the safest choice (WebGPU/GPU delegate and the widest codec
 support). Any Chromium browser should work. Firefox and Safari can run the
 detection but are more restrictive about video codecs.
 
-## Four front ends
+## Three front ends
 
-One idea, in four shapes. The rule is the same in all of them — the same
+One idea, in three shapes. The rule is the same in all of them — the same
 thresholds, the same delays, the same dead band — and so is the copy the child
 reads. What changes is whose video it is.
 
@@ -144,7 +179,6 @@ reads. What changes is whose video it is.
 | **Web app** | this folder | a cartoon you give it, by link or file | nothing to install — [serve it](#getting-started) |
 | **Firefox add-on** | [`firefox-extension/`](firefox-extension/) | a video already playing on someone else's page | [`firefox-extension/README.md`](firefox-extension/README.md) |
 | **Chrome extension** | [`chrome-extension/`](chrome-extension/) | the same, in Chrome | [`chrome-extension/README.md`](chrome-extension/README.md) |
-| **macOS app** | [`macos-app/`](macos-app/) | whatever is playing on the Mac, in any application | [`macos-app/README.md`](macos-app/README.md) |
 
 **The web app** is the whole cinema: you hand it a YouTube link or a file from
 the computer, and it plays it on a stage of its own, with a playback bar and a
@@ -162,31 +196,29 @@ in one visible way — the camera lives in a small window of its own, because
 neither browser will open a camera from a background page or a toolbar popup
 that closes the moment you click away.
 
-**The macOS app** steps back further still. It is an Electron app that lives in
-the menu bar and pauses whatever is playing on the Mac, whichever application
-is playing it — a browser, QuickTime, VLC, a streaming app — by posting the
-keyboard's play/pause key or by sending an Apple event to a named player. It is
-the one for a film that is not in a browser at all.
-
-A change to the rule belongs in all four.
+A change to the rule belongs in all three.
 
 ## Project layout
 
 ```
 index.html                  markup only — no inline styles or scripts
 css/
-  base.css                  design tokens, reset, page defaults
-  layout.css                marquee, header, main column, footer
-  components.css            badges, buttons, sliders, link bars, coach mark
-  stage.css                 video surfaces, welcome panel, veil, camera preview
+  base.css                  design tokens, reset, the single breakpoint
+  mascot.css                the cat, and which of its seven faces shows
+  chrome.css                top bar, badges, quick bar, settings panel, mirror
+  welcome.css               the welcome screen
+  stage.css                 video surface, the veils, full screen
 js/
   main.js                   entry point: boots and wires everything
   config.js                 constants — timings, thresholds, landmarks, keys
   dom.js                    every element handle, resolved once
   storage.js                guarded localStorage access
+  layout.js                 reads the breakpoint, names the state on <body>
+  mascot.js                 stamps the cat template into its slots
+  range-fill.js             the filled run to the left of a slider's thumb
   i18n.js                   locale loading, translation, DOM binding
   ui.js                     veil, status badge, gauge, reward, fullscreen
-  settings.js               the three detection sliders
+  settings.js               the adult panel and its controls
   detector.js               camera + MediaPipe; produces readings only
   mouth-monitor.js          the state machine and detection loop
   player.js                 media control for local files and YouTube
@@ -197,20 +229,18 @@ locales/
 
 firefox-extension/          the Firefox add-on — see its own README
 chrome-extension/           the same add-on for Chrome
-macos-app/                  the menu bar app for macOS — see its own README
 ```
 
 The two extension folders are one program in two packages: every file but
 `manifest.json` and the icons is byte-identical, and `lib/api.js` is what
 absorbs `browser` versus `chrome`. They carry their own copies of the app's
 modules, under the same names, because an extension cannot import from a web
-page. The macOS app carries the same modules again, for the same reason, with
-`lib/bridge.js` in the place of `lib/api.js` — so the rule lives in four
-places, and a change to it belongs in all of them.
+page — so the rule lives in three places, and a change to it belongs in all of
+them.
 
-Dependencies flow one way — `config`/`dom`/`storage` → `i18n` → `ui`/`player`/
-`detector`/`settings` → `mouth-monitor` → `source-picker` → `main` — with no
-cycles. `detector.js` only measures, `mouth-monitor.js` only decides, and
+Dependencies flow one way — `config`/`dom`/`storage`/`mascot`/`range-fill`/
+`layout` → `i18n` → `ui`/`player`/`detector`/`settings` → `mouth-monitor` →
+`source-picker` → `main` — with no cycles. `detector.js` only measures, `mouth-monitor.js` only decides, and
 `player.js` only plays; keeping those three apart is what makes the rule easy
 to reason about.
 
@@ -218,12 +248,14 @@ to reason about.
 
 1. Copy `locales/fr.json`, name it after the language code, and translate the
    values. Every key must be present — missing ones fall back to French.
-2. Add the code to `I18N.SUPPORTED` in `js/config.js`.
-3. Add a button to the language switch in `index.html`, with a matching
-   `data-locale` attribute.
+2. Add the code to `I18N.LOCALES` in `js/config.js`.
+3. Add a button with a matching `data-locale` attribute to **both** language
+   switches in `index.html` — the welcome screen has one and the top bar the
+   other.
 
 No JavaScript changes are needed: the interface reads its text from the JSON.
-The initial language comes from the browser's preferences, falling back to
+Every locale listed is fetched once at startup, so switching costs no request.
+The initial language is the one remembered under `p4l.locale`, falling back to
 French.
 
 ## Contributing
