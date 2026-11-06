@@ -17,8 +17,9 @@
  * For each channel it walks the uploads playlist, newest first, and keeps a
  * video only if it can actually play in the app: public, embeddable, not
  * blocked in the configured region, and within the duration window — which is
- * what keeps Shorts and multi-hour compilations out. Costs a few quota units
- * per channel.
+ * what keeps Shorts and multi-hour compilations out. Videos as long as one
+ * episode of the series (`episodeMinutes`) are listed before compilations.
+ * Costs a few dozen quota units per channel.
  *
  * It depends on nothing but Node 18's fetch.
  */
@@ -78,18 +79,34 @@ function playable(video, region) {
   return true;
 }
 
-/** The newest uploads of one channel that pass every filter. */
+/**
+ * Whether a video lasts as long as one episode of its series, rather than a
+ * compilation of several. `episodeMinutes` lists the usual lengths — some
+ * series come in two formats — and `episodeTolerance` how far off one may be.
+ */
+function isFullEpisode(duration, options) {
+  return (options.episodeMinutes ?? []).some(minutes =>
+    Math.abs(duration - minutes * 60) <= minutes * 60 * options.episodeTolerance);
+}
+
+/**
+ * The uploads of one channel that pass every filter: full episodes first, then
+ * compilations to fill the list, each group newest first. Channels post far
+ * more compilations than single episodes, so the whole scan window is read
+ * rather than stopping at the first `maxEpisodes` matches.
+ */
 async function episodesOf(source, options, region) {
   // Every channel's uploads playlist is its id with UC swapped for UU.
   const uploads = `UU${source.channelId.slice(2)}`;
   const exclude = new RegExp(options.exclude, "i");
-  const kept = [];
+  const episodes = [];
+  const compilations = [];
   // Channels re-upload the same compilation under the same title.
   const titles = new Set();
   let pageToken;
   let scanned = 0;
 
-  while (kept.length < options.maxEpisodes && scanned < options.scanLimit) {
+  while (episodes.length < options.maxEpisodes && scanned < options.scanLimit) {
     const page = await call("playlistItems", {
       part: "contentDetails",
       playlistId: uploads,
@@ -118,14 +135,15 @@ async function episodesOf(source, options, region) {
       if (titles.has(titleKey)) continue;
 
       titles.add(titleKey);
-      kept.push({ id, title, duration });
-      if (kept.length >= options.maxEpisodes) break;
+      (isFullEpisode(duration, options) ? episodes : compilations).push({ id, title, duration });
     }
 
     pageToken = page.nextPageToken;
     if (!pageToken) break;
   }
-  return { kept, scanned };
+
+  const kept = [...episodes, ...compilations].slice(0, options.maxEpisodes);
+  return { kept, full: Math.min(episodes.length, options.maxEpisodes), scanned };
 }
 
 const config = JSON.parse(await readFile(SOURCES, "utf8"));
@@ -137,8 +155,8 @@ for (const [locale, sources] of Object.entries(config.locales)) {
 
   for (const source of sources) {
     const options = { ...config.defaults, ...source };
-    const { kept, scanned } = await episodesOf(source, options, config.region);
-    console.log(`  ${source.name.padEnd(20)} ${String(kept.length).padStart(3)} kept of ${scanned} scanned`);
+    const { kept, full, scanned } = await episodesOf(source, options, config.region);
+    console.log(`  ${source.name.padEnd(20)} ${String(kept.length).padStart(3)} kept (${full} full episodes) of ${scanned} scanned`);
     if (kept.length === 0) continue; // an empty series would only be a dead card
 
     series.push({

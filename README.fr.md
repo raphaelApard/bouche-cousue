@@ -127,9 +127,8 @@ officielles françaises, la version anglaise les chaînes anglaises (Trotro,
 T'choupi, Petit Ours Brun et Yakari n'ont pas de chaîne officielle en anglais,
 ils n'existent donc qu'en français). **Seules des chaînes officielles sont
 listées** — vérifiées par YouTube, ou référencées par la chaîne vérifiée de la
-même série — les mises en
-ligne des ayants droit eux-mêmes, lues par le lecteur intégré de YouTube,
-jamais téléchargées ni rehébergées.
+même série — les mises en ligne des ayants droit eux-mêmes, lues par le
+lecteur intégré de YouTube, jamais téléchargées ni rehébergées.
 
 Le catalogue est un fichier statique par langue, `catalog/fr.json` et
 `catalog/en.json`, généré à partir de `scripts/catalog-sources.json` par un
@@ -144,7 +143,10 @@ La clé se crée dans la console Google Cloud (YouTube Data API v3). Le script
 parcourt les mises en ligne de chaque chaîne, des plus récentes aux plus
 anciennes, et garde les vidéos réellement lisibles ici : publiques,
 intégrables, non bloquées en France, entre 3 et 30 minutes, et ni direct, ni
-Short, ni bande-annonce. Les limites sont dans le bloc `defaults` du fichier de
+Short, ni bande-annonce. Les épisodes complets passent en premier : chaque
+série indique ses durées d'épisode habituelles (`episodeMinutes`), et une vidéo
+à moins de 15 % de l'une d'elles s'affiche avant les compilations, qui ne font
+que compléter la liste. Les limites sont dans le bloc `defaults` du fichier de
 sources, et chaque série peut les remplacer. Tant que le script n'a pas tourné,
 le catalogue indique qu'il est vide.
 

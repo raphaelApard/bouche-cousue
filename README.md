@@ -115,8 +115,8 @@ The lists follow the language: the French build shows the French official
 channels, the English build the English ones (Trotro, T'choupi, Petit Ours
 Brun and Yakari have no official English channel, so they are French only).
 **Only official channels are listed** — verified by YouTube, or linked from the
-verified channel of the same series — the rights holders' own uploads, played through YouTube's embedded
-player, never downloaded or re-hosted.
+verified channel of the same series — the rights holders' own uploads, played
+through YouTube's embedded player, never downloaded or re-hosted.
 
 The catalogue is a static file per language, `catalog/fr.json` and
 `catalog/en.json`, generated from `scripts/catalog-sources.json` by a script
@@ -130,9 +130,12 @@ YOUTUBE_API_KEY=… pnpm catalog
 Get the key from the Google Cloud console (YouTube Data API v3). The script
 walks each channel's uploads, newest first, and keeps the videos that can
 actually play here: public, embeddable, not blocked in France, between 3 and
-30 minutes long, and not a live stream, a Short or a trailer. The limits are
-in the `defaults` block of the sources file, and any series can override
-them. Until the script has run, the catalogue says it is empty.
+30 minutes long, and not a live stream, a Short or a trailer. Full episodes
+come first: each series lists its usual episode lengths (`episodeMinutes`),
+and a video within 15% of one of them is shown before the compilations, which
+only fill the rest of the list. The limits are in the `defaults` block of the
+sources file, and any series can override them. Until the script has run, the
+catalogue says it is empty.
 
 ## How it works
 
