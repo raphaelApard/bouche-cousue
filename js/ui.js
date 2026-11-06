@@ -240,6 +240,7 @@ export function flashReward() {
 
 export function hideWelcome() {
   el.welcome.hidden = true;
+  el.catalog.hidden = true;
   el.quickBarButton.hidden = false;
   // The way out takes the place the language pill holds on the welcome screen.
   el.closeFilmButton.hidden = false;
@@ -247,13 +248,26 @@ export function hideWelcome() {
   document.body.classList.add("is-watching");
 }
 
-export function showWelcome() {
-  el.welcome.hidden = false;
+/** Nothing playing and the camera off — the welcome screen or the catalogue. */
+function showIdle() {
   el.quickBarButton.hidden = true;
   el.quickBar.hidden = true;
   el.closeFilmButton.hidden = true;
   document.body.classList.add("is-idle");
   document.body.classList.remove("is-watching");
+}
+
+export function showWelcome() {
+  el.welcome.hidden = false;
+  el.catalog.hidden = true;
+  showIdle();
+}
+
+/** The catalogue frame; `catalog.js` fills it. */
+export function showCatalogScreen() {
+  el.welcome.hidden = true;
+  el.catalog.hidden = false;
+  showIdle();
 }
 
 /* ---------- Language ---------- */

@@ -66,6 +66,24 @@ export function readNumberInRange(key, { min, max }) {
 }
 
 /**
+ * Reads a JSON object. Anything else — absent, unparsable, an array, a bare
+ * value — reads back as null, so the caller only has to validate the fields
+ * it actually uses.
+ *
+ * @returns {object|null}
+ */
+export function readJsonObject(key) {
+  const raw = readRaw(key);
+  if (raw === null) return null;
+  try {
+    const value = JSON.parse(raw);
+    return value && typeof value === "object" && !Array.isArray(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Reads a string, rejecting anything outside a known set — the same guard as
  * `readNumberInRange`, for preferences whose values are names rather than
  * numbers.

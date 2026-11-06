@@ -81,12 +81,12 @@ rule belongs in all three.**
 Dependencies flow one way, with no cycles:
 
 ```
-config / dom / storage / mascot / range-fill / layout  →  i18n
-                            →  ui / player / detector / settings
+config / dom / storage / mascot / range-fill / layout / watch-history  →  i18n
+                            →  ui / player / detector / settings / consent / catalog
                             →  mouth-monitor  →  source-picker  →  main
 ```
 
-The three-way split is the point of the design and worth preserving: **`detector.js` only measures** (camera frames in, readings out — it never touches the DOM), **`mouth-monitor.js` only decides** (readings in, warnings/pauses/resumes out), and **`player.js` only plays** (it knows nothing about mouths). `ui.js` owns everything visible except the playback bar.
+The three-way split is the point of the design and worth preserving: **`detector.js` only measures** (camera frames in, readings out — it never touches the DOM), **`mouth-monitor.js` only decides** (readings in, warnings/pauses/resumes out), and **`player.js` only plays** (it knows nothing about mouths). `ui.js` owns everything visible except the playback bar and the catalogue's lists, which `catalog.js` draws — it draws only: which screen shows, the history and every click belong to `source-picker.js`, except turning a page of episodes, which changes the drawing and not the screen.
 
 Three things about the interface matter when editing it. It is **bilingual**,
 one language at a time: both locale files are loaded at startup so the FR/EN
@@ -114,6 +114,14 @@ The sensitivity slider maps 15–90 → threshold 0.080–0.005 via `SENSITIVITY
 
 **Manual pause.** `manuallyPaused` early-returns from `tick()`, suspending mouth control entirely until an adult restarts playback (▶ button, click on the stage, or space bar). Do not let the mouth logic override it.
 
+## The catalogue
+
+`catalog/fr.json` and `catalog/en.json` are **generated** — run `YOUTUBE_API_KEY=… pnpm catalog` (`scripts/fetch-catalog.mjs`) after editing `scripts/catalog-sources.json`, and commit the result. The page fetches the file for the current locale and never calls the YouTube API; the key lives only in the environment of whoever runs the script. Only **official** channels go in the sources file — verified by YouTube, or linked from the verified channel of the same series (the French PJ Masks channel has no badge of its own) — embedding an upload known to be unauthorised is a liability that embedding the rights holder's own is not. The sources file is not shipped; `catalog/` is, through `SITE_DIRS`.
+
+Navigation is a stack of history entries — `home`, `catalog`, `series {series}`, `watching` — and `screen` in `source-picker.js` remembers the idle one behind a film, so Close, Back and the end of an episode all land on the screen the film was opened from. An episode counts a view only when `player.onEnded()` fires for the video it was opened as (`currentEpisode`); a pasted link or a file just stops at its end. With `p4l.autoplay` ticked, the next episode in the list replaces the film on the same `watching` entry, so Back still lands on the list. Episode titles are foreign text: build them with `textContent`, never `innerHTML`.
+
+**Out of scope, not forgotten:** the child's veil is drawn over the YouTube player, which YouTube's developer policies forbid. Any change to how the veil covers the embed should move it beside the player for the YouTube source.
+
 ## Conventions
 
 Code, comments, and identifiers are **English**. User-facing strings are **never** written inline — they belong in `locales/fr.json` and `locales/en.json` and are read via `t(key)`, or bound in markup with `data-i18n`, `data-i18n-placeholder`, `data-i18n-aria-label`. Every key must be present in both files.
@@ -126,7 +134,9 @@ UI copy targets young children: keep it short, warm, and reassuring.
 
 Landmark indices in `LANDMARK` come from the MediaPipe FaceLandmarker topology; changing them requires consulting that spec.
 
-`localStorage` holds only preferences, under the `p4l.*` keys in `STORAGE_KEYS` — now including `p4l.locale` and `p4l.mirror`. Always read numbers through `readNumberInRange()` and the rest through `readOneOf()`: a missing key reads back as `null`, and neither `Number(null)` — which is `0`, silently valid for any slider whose minimum is 0 — nor `readBoolean()` can tell that apart from a real value. If you ever store more than preferences, update the Privacy section of both READMEs to stay truthful.
+`localStorage` holds preferences, under the `p4l.*` keys in `STORAGE_KEYS` — now including `p4l.locale`, `p4l.mirror` and `p4l.autoplay` (play catalogue episodes back to back; off unless ticked) — plus `p4l.youtubeConsent`, the date the adult agreed to load YouTube, and `p4l.watched`, the catalogue's viewing history (`{ [videoId]: { views, started } }`, read through `readJsonObject()` and re-validated entry by entry in `watch-history.js`). Always read numbers through `readNumberInRange()` and the rest through `readOneOf()`: a missing key reads back as `null`, and neither `Number(null)` — which is `0`, silently valid for any slider whose minimum is 0 — nor `readBoolean()` can tell that apart from a real value. If you ever store anything else, update the Privacy section of both READMEs to stay truthful.
+
+**YouTube waits for consent.** `consent.js` owns the agreement: nothing from YouTube — the API script, the player, a thumbnail — may be requested before `askYoutubeConsent()` resolves to true. It is stored as a timestamp and read through `readNumberInRange()` with a `CONSENT.MAX_AGE` window, so a missing, expired or garbled value all mean "ask". Accept and decline carry the same weight in the dialog on purpose; keep them equal.
 
 ## The extensions
 
@@ -205,6 +215,7 @@ breakage in a multi-module refactor:
 - every `byId()` in `js/dom.js` matches an `id` in `index.html`
 - every named import exists as an export in the target module, and the graph stays acyclic
 - every key referenced via `t()` or `data-i18n*` exists in **both** locale files
+- each `catalog/<locale>.json` has the shape the page trusts: kebab-case series ids, non-empty episode lists, 11-character video ids, titles and durations
 
 A key built from a variable — ``t(`cause.${...}`)`` — cannot be resolved
 statically and is not looked for; those are the ones `REASON` names, and why

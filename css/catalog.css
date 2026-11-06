@@ -1,0 +1,237 @@
+/*
+  The cartoon catalogue: the series, then one series' episodes.
+
+  It stands where the welcome screen stands — same ground, same room left for
+  the top bar — because it is the same moment: nothing is playing yet and the
+  camera is off. The cards are large and the words few; a child chooses by the
+  picture, an adult by the title under it.
+
+  An episode already watched steps back (dimmer picture, a green tick) but
+  stays fully clickable: watching a favourite again is the point, not a mistake.
+*/
+
+/* ---------- The entry point on the welcome screen ---------- */
+
+.welcome__catalog {
+  width: 100%;
+  height: 58px;
+  font-size: 16px;
+}
+.welcome__catalog .button__icon { width: 20px; height: 20px; }
+
+/* ---------- Frame ---------- */
+
+.catalog {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 84px 56px 48px;
+  background: var(--ground);
+}
+
+.catalog__head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 1180px;
+  margin: 0 auto 26px;
+}
+.catalog__back { flex: none; }
+
+.catalog__heading { min-width: 0; }
+
+.catalog__title {
+  margin: 0;
+  font: 500 32px/1.15 var(--display);
+  letter-spacing: -.01em;
+}
+
+.catalog__channel {
+  margin-top: 2px;
+  font: 400 12.5px var(--text);
+  color: var(--ink-muted);
+}
+
+/* "Play back to back": a preference of the adult's, tucked to the right. */
+.catalog__autoplay {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--panel);
+  font: 500 13px var(--text);
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.catalog__autoplay[hidden] { display: none; }
+.catalog__autoplay input {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+
+.catalog__pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 30px auto 0;
+}
+.catalog__pager[hidden] { display: none; }
+.catalog__pager .button:disabled { opacity: .35; cursor: default; }
+
+.catalog__page {
+  min-width: 110px;
+  text-align: center;
+  font: 500 13px var(--text);
+  color: var(--ink-muted);
+}
+
+.catalog__message {
+  max-width: 520px;
+  margin: 48px auto 0;
+  text-align: center;
+  font: 400 15px/1.6 var(--text);
+  color: var(--ink-soft);
+}
+
+/* ---------- Grids ---------- */
+
+.catalog__series,
+.catalog__episodes {
+  display: grid;
+  gap: 22px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.catalog__series   { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.catalog__episodes { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+/* ---------- Cards ---------- */
+
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 10px 14px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-panel);
+  background: var(--panel);
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .18s, background-color .18s, transform .12s;
+}
+.catalog-card:hover {
+  border-color: rgba(242, 169, 59, .55);
+  background: var(--panel-raised);
+}
+.catalog-card:active { transform: translateY(1px); }
+
+.catalog-card__picture {
+  position: relative;
+  display: block;
+}
+
+.catalog__thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 11px;
+  background: var(--fill);
+}
+
+.catalog-card__name {
+  padding: 0 4px;
+  font: 500 15px/1.3 var(--display);
+  /* Official titles run long; two lines is enough to tell them apart. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.catalog-card--series .catalog-card__name { font-size: 20px; }
+
+.catalog-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 4px;
+  font: 400 12.5px var(--text);
+  color: var(--ink-muted);
+}
+
+.catalog-card__badge {
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  font: 500 11.5px var(--text);
+}
+
+/* Started, not finished: amber, the colour of "there is more to do". */
+.catalog-card.is-started .catalog-card__badge {
+  background: rgba(242, 169, 59, .14);
+  color: var(--amber);
+}
+
+/* Seen: green, the colour of "all is well", and the picture steps back. */
+.catalog-card.is-seen .catalog-card__badge {
+  background: rgba(111, 208, 140, .14);
+  color: var(--green);
+}
+.catalog-card.is-seen .catalog__thumb { opacity: .55; }
+.catalog-card.is-seen:hover .catalog__thumb { opacity: .85; }
+
+.catalog-card__check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--ground);
+  font: 600 16px/1 var(--text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+}
+
+/* ---------- Mobile ---------- */
+
+/* --- is-mobile: --bp-mobile in base.css, via js/layout.js --- */
+/* The stage shrinks to the film's band on a phone; like the welcome screen,
+   the catalogue takes the whole window instead. */
+body.is-mobile .catalog {
+  position: fixed;
+  inset: 0;
+  padding: 76px var(--gutter) 32px;
+}
+body.is-mobile .catalog__head { gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+body.is-mobile .catalog__autoplay { margin-left: 0; }
+body.is-mobile .catalog__pager { gap: 10px; margin-top: 22px; }
+body.is-mobile .catalog__page { min-width: 0; }
+body.is-mobile .catalog__title { font-size: 22px; }
+body.is-mobile .catalog__series,
+body.is-mobile .catalog__episodes {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+body.is-mobile .catalog-card { padding: 8px 8px 12px; }
+body.is-mobile .catalog-card--series .catalog-card__name { font-size: 16px; }
+body.is-mobile .catalog-card__name { font-size: 13.5px; }
