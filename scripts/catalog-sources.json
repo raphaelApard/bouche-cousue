@@ -3,8 +3,8 @@
   "defaults": {
     "minSeconds": 180,
     "maxSeconds": 1800,
-    "maxEpisodes": 40,
-    "scanLimit": 400,
+    "maxEpisodes": 100,
+    "scanLimit": 800,
     "episodeTolerance": 0.15,
     "exclude": "#shorts?\\b|🔴|\\blive\\b|en direct|vivre ?:|trailer|bande[- ]annonce|teaser|jouets? pour enfants|jeux? de jouets|jeu avec des jouets|toy play|coloriage|coloring|quiz|devinez|guess the|interacti(?:f|ve)|pawse & play|squad missions|what happens next|match the|read aloud|cake off|drone show|chansons?|comptines?|karaok|\\bsongs?\\b|sing-?along|chante avec|figurines?|in real life|kids explain"
   },
