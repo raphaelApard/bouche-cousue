@@ -42,7 +42,10 @@ export const LANDMARK = Object.freeze({
   MOUTH_RIGHT: 291
 });
 
-/** localStorage keys. Only preferences are ever stored. */
+/**
+ * localStorage keys. Preferences, plus the date the adult agreed to load
+ * YouTube — nothing about the child, and nothing that leaves the browser.
+ */
 export const STORAGE_KEYS = Object.freeze({
   sensitivity: "p4l.sensitivity",
   warningDelay: "p4l.warningDelay",
@@ -50,7 +53,18 @@ export const STORAGE_KEYS = Object.freeze({
   volume: "p4l.volume",
   muted: "p4l.muted",
   locale: "p4l.locale",
-  mirror: "p4l.mirror"
+  mirror: "p4l.mirror",
+  youtubeConsent: "p4l.youtubeConsent"
+});
+
+/**
+ * Loading YouTube hands the visitor's address to Google and lets it set its own
+ * trackers, so it waits for an adult's agreement. The agreement is kept for
+ * six months — the CNIL's guideline for remembering a consent choice — and can
+ * be withdrawn from the settings at any time.
+ */
+export const CONSENT = Object.freeze({
+  MAX_AGE: 182 * 24 * 60 * 60 * 1000
 });
 
 export const DETECTION = Object.freeze({

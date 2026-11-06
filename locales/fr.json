@@ -126,7 +126,8 @@
     "pauseLabel": "Délai avant la pause",
     "secondsUnit": "s",
     "mirror": "Afficher le miroir",
-    "reset": "Réinitialiser"
+    "reset": "Réinitialiser",
+    "revokeYoutube": "Retirer l'accord YouTube"
   },
   "buttons": {
     "settings": "Réglages",
@@ -150,5 +151,15 @@
     "embeddingDenied": "Le propriétaire de cette vidéo interdit sa lecture en dehors de YouTube. Essaie une autre vidéo.",
     "blockedHere": "Cette vidéo est bloquée à la lecture depuis cette page (restriction d'intégration ou d'origine). Essaie une autre vidéo, ou ouvre la page via http://localhost.",
     "otherError": "Erreur YouTube"
+  },
+  "consent": {
+    "badge": "POUR L'ADULTE",
+    "title": "Avant d'ouvrir YouTube",
+    "text": "Les vidéos YouTube sont lues depuis les serveurs de Google, qui reçoivent l'adresse IP de cet appareil et peuvent y déposer leurs propres traceurs.",
+    "policyBefore": "Pour en savoir plus, lis la",
+    "policyLink": "politique de confidentialité de Google",
+    "memory": "Ton choix est gardé six mois sur cet appareil, et tu peux le retirer à tout moment dans les Réglages. Les fichiers de l'ordinateur restent lisibles sans YouTube.",
+    "decline": "Refuser",
+    "accept": "Accepter"
   }
 }

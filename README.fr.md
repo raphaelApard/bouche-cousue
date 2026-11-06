@@ -159,15 +159,21 @@ vrai ré-encodage (`-c:v libx264 -crf 20 -preset fast`).
   degré d'ouverture, ni titre de vidéo — n'est envoyé où que ce soit.
 - Les vidéos locales sont lues directement par le navigateur, jamais envoyées.
 - Les seules données conservées sont vos réglages (sensibilité, délais, volume,
-  miroir, langue), dans le `localStorage` de ce navigateur.
+  miroir, langue) et la date de votre accord pour YouTube, dans le
+  `localStorage` de ce navigateur.
 - Deux choses passent tout de même par le réseau. Des statistiques de
   fréquentation anonymes sont envoyées à un **Matomo auto-hébergé** sur
   `stats.acolad.net` — visites et clics sur les liens, pour savoir si l'outil
   sert à quelque chose ; c'est notre propre instance, pas une régie publicitaire,
   et elle ne reçoit rien de la caméra. Supprimer le bloc `<!-- Matomo -->` en
   haut de `index.html` la désactive ; rien d'autre n'en dépend.
-- Et choisir une vidéo YouTube la charge depuis `youtube-nocookie.com`, qui
-  applique alors ses propres règles.
+- Et YouTube. **Rien n'est demandé à YouTube tant qu'un adulte ne l'a pas
+  accepté**, dans une fenêtre qui dit ce que Google reçoit (l'adresse IP de
+  l'appareil, et ses propres traceurs). L'accord est gardé six mois, et
+  « Retirer l'accord YouTube » dans les réglages l'efface. Refuser laisse les
+  fichiers locaux et la démo fonctionner comme avant. Une fois l'accord donné,
+  les vidéos sont chargées depuis `youtube-nocookie.com`, qui applique ses
+  propres règles.
 
 Il n'y a aucune étape de compilation et rien n'est minifié : tout ce qui
 précède se vérifie en lisant le code de ce dépôt.
@@ -235,6 +241,7 @@ js/
   player.js                 lecture des fichiers locaux et de YouTube
   playback-controls.js      la barre de lecture
   source-picker.js          accueil, barre rapide, sélecteur de fichier
+  consent.js                l'accord de l'adulte avant tout appel à YouTube
 locales/
   en.json, fr.json          tout le texte visible par l'utilisateur
 

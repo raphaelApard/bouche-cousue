@@ -82,7 +82,7 @@ Dependencies flow one way, with no cycles:
 
 ```
 config / dom / storage / mascot / range-fill / layout  →  i18n
-                            →  ui / player / detector / settings
+                            →  ui / player / detector / settings / consent
                             →  mouth-monitor  →  source-picker  →  main
 ```
 
@@ -126,7 +126,9 @@ UI copy targets young children: keep it short, warm, and reassuring.
 
 Landmark indices in `LANDMARK` come from the MediaPipe FaceLandmarker topology; changing them requires consulting that spec.
 
-`localStorage` holds only preferences, under the `p4l.*` keys in `STORAGE_KEYS` — now including `p4l.locale` and `p4l.mirror`. Always read numbers through `readNumberInRange()` and the rest through `readOneOf()`: a missing key reads back as `null`, and neither `Number(null)` — which is `0`, silently valid for any slider whose minimum is 0 — nor `readBoolean()` can tell that apart from a real value. If you ever store more than preferences, update the Privacy section of both READMEs to stay truthful.
+`localStorage` holds preferences, under the `p4l.*` keys in `STORAGE_KEYS` — now including `p4l.locale` and `p4l.mirror` — plus `p4l.youtubeConsent`, the date the adult agreed to load YouTube. Always read numbers through `readNumberInRange()` and the rest through `readOneOf()`: a missing key reads back as `null`, and neither `Number(null)` — which is `0`, silently valid for any slider whose minimum is 0 — nor `readBoolean()` can tell that apart from a real value. If you ever store anything else, update the Privacy section of both READMEs to stay truthful.
+
+**YouTube waits for consent.** `consent.js` owns the agreement: nothing from YouTube — the API script, the player, a thumbnail — may be requested before `askYoutubeConsent()` resolves to true. It is stored as a timestamp and read through `readNumberInRange()` with a `CONSENT.MAX_AGE` window, so a missing, expired or garbled value all mean "ask". Accept and decline carry the same weight in the dialog on purpose; keep them equal.
 
 ## The extensions
 

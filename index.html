@@ -401,6 +401,12 @@
       <span class="setting__name" data-i18n="settings.mirror">Afficher le miroir</span>
     </label>
 
+    <!-- What this browser remembers beyond the tuning, and the way to forget it. -->
+    <div class="settings-panel__privacy">
+      <button type="button" class="button button--link button--small" id="revokeConsentButton" hidden
+              data-i18n="settings.revokeYoutube">Retirer l'accord YouTube</button>
+    </div>
+
     <div class="settings-panel__foot">
       <button type="button" class="button button--link button--small" id="resetButton" data-i18n="settings.reset">Réinitialiser</button>
     </div>
@@ -467,6 +473,29 @@
       <span data-i18n="buttons.exitFullscreen">Quitter le plein écran</span>
     </button>
   </div>
+
+  <!--
+    The adult's agreement to YouTube. Nothing from YouTube is requested before
+    "accept" — not the player, not its script, not a thumbnail. The two
+    answers carry the same weight on purpose: refusing must be as easy as
+    agreeing.
+  -->
+  <dialog class="consent" id="consentDialog" aria-labelledby="consentTitle">
+    <form method="dialog" class="consent__body">
+      <p class="consent__badge" data-i18n="consent.badge">POUR L'ADULTE</p>
+      <h2 class="consent__title" id="consentTitle" data-i18n="consent.title">Avant d'ouvrir YouTube</h2>
+      <p class="consent__text" data-i18n="consent.text">Les vidéos YouTube sont lues depuis les serveurs de Google, qui reçoivent l'adresse IP de cet appareil et peuvent y déposer leurs propres traceurs.</p>
+      <p class="consent__text">
+        <span data-i18n="consent.policyBefore">Pour en savoir plus, lis la</span>
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" data-i18n="consent.policyLink">politique de confidentialité de Google</a>.
+      </p>
+      <p class="consent__note" data-i18n="consent.memory">Ton choix est gardé six mois sur cet appareil, et tu peux le retirer à tout moment dans les Réglages. Les fichiers de l'ordinateur restent lisibles sans YouTube.</p>
+      <p class="consent__actions">
+        <button type="submit" value="decline" class="button button--dark" data-i18n="consent.decline">Refuser</button>
+        <button type="submit" value="accept" class="button button--dark" data-i18n="consent.accept">Accepter</button>
+      </p>
+    </form>
+  </dialog>
 
 </div>
 

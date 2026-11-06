@@ -149,15 +149,20 @@ re-encode (`-c:v libx264 -crf 20 -preset fast`).
   openness reading, no video title — is ever sent anywhere.
 - Local video files are read directly by the browser and never uploaded.
 - The only stored data is your settings (sensitivity, delays, volume, mirror,
-  language), in this browser's `localStorage`.
+  language) and the date you agreed to load YouTube, in this browser's
+  `localStorage`.
 - Two things do reach the network. Anonymous page-view statistics go to a
   **self-hosted Matomo** at `stats.acolad.net` — visits and link clicks, so we
   know whether the thing is used at all; it is the instance's own data, not a
   third-party ad network, and it carries nothing from the camera. Remove the
   `<!-- Matomo -->` block at the top of `index.html` to switch it off; nothing
   else depends on it.
-- And choosing a YouTube video loads it from `youtube-nocookie.com`, which then
-  applies its own rules.
+- And YouTube. **Nothing is requested from YouTube until an adult has agreed
+  to it** in a dialog that says what Google receives (this device's IP
+  address, and its own trackers). The agreement is kept for six months, and
+  "Withdraw the YouTube agreement" in the settings forgets it. Declining
+  leaves local files, and the demo, working exactly as before. Once agreed,
+  videos load from `youtube-nocookie.com`, which applies its own rules.
 
 There is no build step and nothing is minified — all of the above can be
 checked by reading the source in this repository.
@@ -224,6 +229,7 @@ js/
   player.js                 media control for local files and YouTube
   playback-controls.js      the playback bar
   source-picker.js          welcome screen, quick bar, file picker
+  consent.js                the adult's agreement before anything from YouTube
 locales/
   en.json, fr.json          all user-facing text
 

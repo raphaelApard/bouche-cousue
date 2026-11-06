@@ -88,6 +88,7 @@ export const el = {
   pauseDelayValue: byId("pauseDelayValue"),
   mirrorToggle: byId("mirrorToggle"),
   resetButton: byId("resetButton"),
+  revokeConsentButton: byId("revokeConsentButton"),
   panelLinkButton: byId("panelLinkButton"),
 
   // Mirror
@@ -95,6 +96,9 @@ export const el = {
   cameraVideo: byId("cameraVideo"),
   gaugeTrack: byId("gaugeTrack"),
   gauge: byId("gauge"),
+
+  // Consent
+  consentDialog: byId("consentDialog"),
 
   // Playback bar
   playbackBar: byId("playbackBar"),

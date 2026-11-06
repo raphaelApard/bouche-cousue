@@ -12,6 +12,7 @@ import { initUi } from "./ui.js";
 import { initSettings, isPanelOpen } from "./settings.js";
 import { initPlaybackControls } from "./playback-controls.js";
 import { initSourcePicker } from "./source-picker.js";
+import { initConsent } from "./consent.js";
 import { togglePlayback } from "./mouth-monitor.js";
 
 /**
@@ -57,6 +58,7 @@ async function start() {
   initUi();
   initSettings();
   initPlaybackControls();
+  initConsent();
   initSourcePicker();
   wireStageClick();
   wireSpaceBar();

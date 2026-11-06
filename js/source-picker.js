@@ -12,6 +12,7 @@ import { t } from "./i18n.js";
 import * as player from "./player.js";
 import * as ui from "./ui.js";
 import { closePanel } from "./settings.js";
+import { askYoutubeConsent, revokeYoutubeConsent } from "./consent.js";
 import { armForNewFilm, isRunning, startMonitoring, stopMonitoring } from "./mouth-monitor.js";
 import { getSoundSettings, refreshPlaybackBar } from "./playback-controls.js";
 
@@ -142,6 +143,8 @@ async function openYoutube(rawLink, afterSuccess = () => {}) {
     alert(t("alerts.needsServer"));
     return;
   }
+  // Nothing is requested from YouTube before the adult has agreed to it.
+  if (!(await askYoutubeConsent())) return;
 
   const wasRunning = isRunning();
   enterWatchingEntry();
@@ -199,6 +202,14 @@ export function initSourcePicker() {
   wireHistory();
 
   el.closeFilmButton.addEventListener("click", leaveFilm);
+
+  // Withdrawing the agreement also stops what it allowed: a YouTube film on
+  // screen is closed rather than left playing on a consent that no longer
+  // exists.
+  el.revokeConsentButton.addEventListener("click", () => {
+    revokeYoutubeConsent();
+    if (player.getSource() === SOURCE.YOUTUBE) leaveFilm();
+  });
 
   el.chooseFileButton.addEventListener("click", openFilePicker);
   el.quickFileButton.addEventListener("click", openFilePicker);
