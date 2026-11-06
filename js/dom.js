@@ -64,6 +64,16 @@ export const el = {
   filePicker: byId("filePicker"),
   chooseFileButton: byId("chooseFileButton"),
   demoButton: byId("demoButton"),
+  catalogButton: byId("catalogButton"),
+
+  // Catalogue
+  catalog: byId("catalog"),
+  catalogBackButton: byId("catalogBackButton"),
+  catalogTitle: byId("catalogTitle"),
+  catalogChannel: byId("catalogChannel"),
+  catalogMessage: byId("catalogMessage"),
+  catalogSeries: byId("catalogSeries"),
+  catalogEpisodes: byId("catalogEpisodes"),
 
   // Quick change bar
   quickBarButton: byId("quickBarButton"),
@@ -89,6 +99,7 @@ export const el = {
   mirrorToggle: byId("mirrorToggle"),
   resetButton: byId("resetButton"),
   revokeConsentButton: byId("revokeConsentButton"),
+  clearHistoryButton: byId("clearHistoryButton"),
   panelLinkButton: byId("panelLinkButton"),
 
   // Mirror

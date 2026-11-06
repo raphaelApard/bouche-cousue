@@ -46,13 +46,14 @@ python3 -m http.server 8000
 The first launch needs internet to fetch the MediaPipe runtime and face model
 from a CDN. After that, detection runs entirely offline and locally.
 
-Then either paste a YouTube link, pick a video file from the computer, or try
-the demo mode with no video at all.
+Then pick a cartoon from the catalogue, paste a YouTube link, pick a video file
+from the computer, or try the demo mode with no video at all.
 
 The repository also carries a few `pnpm` scripts, none of which you need in
 order to use the app: `pnpm serve` is the command above, `pnpm check` runs the
 static checks that stand in for a test suite, and `pnpm build` stages the site
-into `dist/` for publishing. There are no dependencies, so `pnpm install` has
+into `dist/` for publishing, and `pnpm catalog` regenerates the cartoon
+catalogue (see below). There are no dependencies, so `pnpm install` has
 nothing to fetch.
 
 ## Using it
@@ -63,7 +64,7 @@ nothing to fetch.
 | **▶ / ⏸ button** | Same, from the playback bar (local files) |
 | **⛶ Fullscreen** | Use *this* button — YouTube's own fullscreen breaks detection |
 | **Settings** | Open the adult panel; closes on a second click, on Escape, or on a click outside |
-| **Close** | Leave the film and go back to the welcome screen; the camera closes with it |
+| **Close** | Leave the film and go back to the screen it was opened from — the welcome screen or the episode list; the camera closes with it |
 | **FR / EN** | Switch language; the choice is remembered |
 
 The language switch and the close button share one place on the top bar: the
@@ -99,6 +100,38 @@ The mirror is the child's own face, with the openness gauge below it and a mark
 at the exact point the film stops. It keeps the same size and the same
 bottom-right corner at every width, so there is one shape to recognise whichever
 screen the child is in front of.
+
+## The cartoon catalogue
+
+**Pick a cartoon** on the welcome screen opens a short list of series — Bluey,
+Trotro, PAW Patrol and Peppa Pig to start with — then the episodes of the one
+chosen. An episode plays under the same rule as any other film, and when it
+reaches its end the child is handed back the list, not YouTube's end screen.
+Episodes already watched are dimmed, with a green tick and how many times they
+were seen; one closed before its end is marked *started*. **Clear watched
+episodes** in the settings forgets all of it.
+
+The lists follow the language: the French build shows the French official
+channels, the English build the English ones (Trotro has no official English
+channel, so it is French only). **Only official, verified channels are
+listed** — the rights holders' own uploads, played through YouTube's embedded
+player, never downloaded or re-hosted.
+
+The catalogue is a static file per language, `catalog/fr.json` and
+`catalog/en.json`, generated from `scripts/catalog-sources.json` by a script
+that calls the YouTube Data API. The page never calls that API, and the key
+never ships:
+
+```sh
+YOUTUBE_API_KEY=… pnpm catalog
+```
+
+Get the key from the Google Cloud console (YouTube Data API v3). The script
+walks each channel's uploads, newest first, and keeps the videos that can
+actually play here: public, embeddable, not blocked in France, between 3 and
+30 minutes long, and not a live stream, a Short or a trailer. The limits are
+in the `defaults` block of the sources file, and any series can override
+them. Until the script has run, the catalogue says it is empty.
 
 ## How it works
 
@@ -149,8 +182,9 @@ re-encode (`-c:v libx264 -crf 20 -preset fast`).
   openness reading, no video title — is ever sent anywhere.
 - Local video files are read directly by the browser and never uploaded.
 - The only stored data is your settings (sensitivity, delays, volume, mirror,
-  language) and the date you agreed to load YouTube, in this browser's
-  `localStorage`.
+  language), the date you agreed to load YouTube, and which catalogue episodes
+  were opened and how many times they were watched to the end — all in this
+  browser's `localStorage`, never sent anywhere, and cleared from the settings.
 - Two things do reach the network. Anonymous page-view statistics go to a
   **self-hosted Matomo** at `stats.acolad.net` — visits and link clicks, so we
   know whether the thing is used at all; it is the instance's own data, not a
@@ -162,7 +196,8 @@ re-encode (`-c:v libx264 -crf 20 -preset fast`).
   address, and its own trackers). The agreement is kept for six months, and
   "Withdraw the YouTube agreement" in the settings forgets it. Declining
   leaves local files, and the demo, working exactly as before. Once agreed,
-  videos load from `youtube-nocookie.com`, which applies its own rules.
+  videos load from `youtube-nocookie.com`, which applies its own rules, and the
+  catalogue's thumbnails from `i.ytimg.com`.
 
 There is no build step and nothing is minified — all of the above can be
 checked by reading the source in this repository.
@@ -212,6 +247,7 @@ css/
   mascot.css                the cat, and which of its seven faces shows
   chrome.css                top bar, badges, quick bar, settings panel, mirror
   welcome.css               the welcome screen
+  catalog.css               the cartoon catalogue
   stage.css                 video surface, the veils, full screen
 js/
   main.js                   entry point: boots and wires everything
@@ -230,8 +266,15 @@ js/
   playback-controls.js      the playback bar
   source-picker.js          welcome screen, quick bar, file picker
   consent.js                the adult's agreement before anything from YouTube
+  catalog.js                draws the series and the episode lists
+  watch-history.js          which episodes were opened, and seen how often
 locales/
   en.json, fr.json          all user-facing text
+catalog/
+  en.json, fr.json          the episode lists, generated by pnpm catalog
+scripts/
+  catalog-sources.json      the official channels the catalogue is built from
+  fetch-catalog.mjs         regenerates catalog/ through the YouTube Data API
 
 firefox-extension/          the Firefox add-on — see its own README
 chrome-extension/           the same add-on for Chrome

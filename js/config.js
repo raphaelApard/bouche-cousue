@@ -43,8 +43,9 @@ export const LANDMARK = Object.freeze({
 });
 
 /**
- * localStorage keys. Preferences, plus the date the adult agreed to load
- * YouTube — nothing about the child, and nothing that leaves the browser.
+ * localStorage keys. Preferences, the date the adult agreed to load YouTube,
+ * and which catalogue episodes were watched — none of it ever leaves the
+ * browser.
  */
 export const STORAGE_KEYS = Object.freeze({
   sensitivity: "p4l.sensitivity",
@@ -54,7 +55,17 @@ export const STORAGE_KEYS = Object.freeze({
   muted: "p4l.muted",
   locale: "p4l.locale",
   mirror: "p4l.mirror",
-  youtubeConsent: "p4l.youtubeConsent"
+  youtubeConsent: "p4l.youtubeConsent",
+  watched: "p4l.watched"
+});
+
+/** The cartoon catalogue: one generated file per locale, under this folder. */
+export const CATALOG = Object.freeze({
+  PATH: "catalog",
+  /** Medium thumbnail, 320×180. `{id}` is the YouTube video id. */
+  THUMBNAIL: "https://i.ytimg.com/vi/{id}/mqdefault.jpg",
+  /** Ceiling for a view counter, so a corrupted value cannot grow without bound. */
+  MAX_VIEWS: 9999
 });
 
 /**

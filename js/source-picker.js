@@ -1,9 +1,10 @@
 /**
- * Choosing what to watch: the welcome screen, the quick-change bar, and the
- * local file picker.
+ * Choosing what to watch: the welcome screen, the cartoon catalogue, the
+ * quick-change bar, and the local file picker.
  *
  * This module owns the transitions between "nothing chosen" and "a film is
- * loaded"; the mouth logic itself lives in `mouth-monitor.js`.
+ * loaded", and the browser history that mirrors them; the mouth logic itself
+ * lives in `mouth-monitor.js`, and the catalogue's drawing in `catalog.js`.
  */
 
 import { el } from "./dom.js";
@@ -12,7 +13,9 @@ import { t } from "./i18n.js";
 import * as player from "./player.js";
 import * as ui from "./ui.js";
 import { closePanel } from "./settings.js";
-import { askYoutubeConsent, revokeYoutubeConsent } from "./consent.js";
+import { askYoutubeConsent, hasYoutubeConsent, revokeYoutubeConsent } from "./consent.js";
+import * as catalog from "./catalog.js";
+import { clearHistory, hasHistory, recordEnd, recordStart } from "./watch-history.js";
 import { armForNewFilm, isRunning, startMonitoring, stopMonitoring } from "./mouth-monitor.js";
 import { getSoundSettings, refreshPlaybackBar } from "./playback-controls.js";
 
@@ -32,48 +35,102 @@ async function enterCinema() {
 
 /* ---------- Browser history ----------
 
-   Watching is an entry of its own, pushed the moment the welcome screen is
-   left. The back button then closes the film instead of leaving the site —
-   which is what a child pressing it, or a parent swiping back on a phone,
-   means by it. Swapping films while watching pushes nothing: it is the same
-   entry, showing something else.
+   Every screen is an entry of its own: home, the catalogue's series, one
+   series' episodes, and the film. Back then goes one screen back — from a
+   film to the list it was picked from, from the list to the series, from the
+   series to home — which is what a child pressing it, or a parent swiping back on
+   a phone, means by it. Swapping films while watching pushes nothing: it is
+   the same entry, showing something else.
+
+   A film always sits on top of the idle screen it was opened from. That
+   screen is remembered in `screen`, so closing the film can return to it.
 */
 
 const HOME = "home";
+const CATALOG = "catalog";
+const SERIES = "series";
 const WATCHING = "watching";
+
+/** The idle screen on display, or behind the film when one is playing. */
+let screen = { p4l: HOME };
+
+/**
+ * The catalogue episode on screen, if the film came from the catalogue. Only
+ * that film counts towards the episode's views when it reaches its end.
+ * @type {{seriesId: string, videoId: string} | null}
+ */
+let currentEpisode = null;
 
 /** Whether the entry we are on is the one we pushed for a running film. */
 function onWatchingEntry() {
   return history.state?.p4l === WATCHING;
 }
 
-/** Leaves the welcome screen, and records that in the history. */
+function isScreenState(state) {
+  return state?.p4l === HOME
+    || state?.p4l === CATALOG
+    || (state?.p4l === SERIES && typeof state.series === "string");
+}
+
+/** Leaves the idle screen for the film, and records that in the history. */
 function enterWatchingEntry() {
+  catalog.hideCatalog();
   ui.hideWelcome();
   if (!onWatchingEntry()) history.pushState({ p4l: WATCHING }, "");
 }
 
 /**
- * The one way back to the welcome screen. It goes through the history when the
- * film has an entry of its own, so the button, the close control and the
- * failure paths all leave exactly one entry behind — the home one.
+ * Draws one idle screen. The catalogue is made of YouTube thumbnails, so
+ * without the agreement — withdrawn since, or never given on this device
+ * before a forward button brought it back — it falls back to home.
+ */
+function showScreen(state) {
+  if (state.p4l !== HOME && !hasYoutubeConsent()) {
+    state = { p4l: HOME };
+    if (!onWatchingEntry()) history.replaceState(state, "");
+  }
+  screen = state;
+
+  if (state.p4l === CATALOG) {
+    ui.showCatalogScreen();
+    catalog.showSeriesList();
+  } else if (state.p4l === SERIES) {
+    ui.showCatalogScreen();
+    catalog.showEpisodes(state.series);
+  } else {
+    catalog.hideCatalog();
+    ui.showWelcome();
+  }
+}
+
+/** Moves forward to a new idle screen. */
+function pushScreen(state) {
+  history.pushState(state, "");
+  showScreen(state);
+}
+
+/**
+ * The one way out of a film. It goes through the history when the film has an
+ * entry of its own, so the button, the end of an episode and the failure paths
+ * all leave exactly the screen it was opened from.
  */
 function leaveFilm() {
   if (onWatchingEntry()) history.back(); // `popstate` does the rest
-  else backToWelcome();
+  else backToScreen(screen);
 }
 
 function wireHistory() {
-  history.replaceState({ p4l: HOME }, "");
+  history.replaceState(screen, "");
 
   window.addEventListener("popstate", () => {
-    if (!onWatchingEntry()) {
-      backToWelcome();
+    const state = history.state;
+    if (state?.p4l !== WATCHING) {
+      backToScreen(isScreenState(state) ? state : { p4l: HOME });
       return;
     }
     // Forward, onto a film that was closed and cannot be brought back: keep
-    // the welcome screen and stop the entry claiming otherwise.
-    if (!player.isPlayable()) history.replaceState({ p4l: HOME }, "");
+    // the screen on display and stop the entry claiming otherwise.
+    if (!player.isPlayable()) history.replaceState(screen, "");
   });
 }
 
@@ -118,6 +175,7 @@ function openFilePicker() {
 }
 
 function handleChosenFile(file) {
+  currentEpisode = null;
   player.loadFile(file);
   player.applySound(getSoundSettings());
   enterWatchingEntry();
@@ -132,8 +190,10 @@ function handleChosenFile(file) {
  * Single entry point for every YouTube request, wherever the link came from.
  * @param {string} rawLink
  * @param {() => void} [afterSuccess]
+ * @param {{seriesId: string, videoId: string} | null} [episode] set when the
+ *   video was picked in the catalogue, so its end is counted.
  */
-async function openYoutube(rawLink, afterSuccess = () => {}) {
+async function openYoutube(rawLink, afterSuccess = () => {}, episode = null) {
   const videoId = player.extractYoutubeId(rawLink);
   if (!videoId) {
     alert(t("alerts.invalidLink"));
@@ -158,6 +218,7 @@ async function openYoutube(rawLink, afterSuccess = () => {}) {
     return;
   }
 
+  currentEpisode = episode;
   refreshPlaybackBar();
   afterSuccess();
 
@@ -165,13 +226,49 @@ async function openYoutube(rawLink, afterSuccess = () => {}) {
   if (!wasRunning) enterCinema();
 }
 
-/** Tears the session down: no film, no camera, back to the first screen. */
-function backToWelcome() {
+/* ---------- Catalogue ---------- */
+
+/** The settings' "clear" button only shows when there is something to clear. */
+function refreshHistoryButton() {
+  el.clearHistoryButton.hidden = !hasHistory();
+}
+
+async function openCatalog() {
+  if (!(await askYoutubeConsent())) return;
+  pushScreen({ p4l: CATALOG });
+}
+
+function playEpisode(seriesId, videoId) {
+  openYoutube(videoId, () => {
+    recordStart(videoId);
+    refreshHistoryButton();
+  }, { seriesId, videoId });
+}
+
+/**
+ * An episode that plays to its end counts as seen, and the child is handed
+ * back the list — rather than YouTube's end screen, which suggests videos
+ * nobody chose. A pasted link or a file simply stops at its end, as before.
+ */
+function handleFilmEnded() {
+  if (!currentEpisode) return;
+  if (player.getYoutubeVideoId() !== currentEpisode.videoId) return;
+
+  recordEnd(currentEpisode.videoId);
+  refreshHistoryButton();
+  leaveFilm();
+}
+
+/* ---------- Teardown ---------- */
+
+/** Tears the session down: no film, no camera, then the given idle screen. */
+function backToScreen(state) {
+  currentEpisode = null;
   player.clearSource();
   stopMonitoring();
   closeQuickBar();
   closePanel();
-  ui.showWelcome();
+  showScreen(state);
   refreshPlaybackBar();
 }
 
@@ -209,7 +306,23 @@ export function initSourcePicker() {
   el.revokeConsentButton.addEventListener("click", () => {
     revokeYoutubeConsent();
     if (player.getSource() === SOURCE.YOUTUBE) leaveFilm();
+    else if (!onWatchingEntry()) showScreen(screen); // a catalogue on display goes too
   });
+
+  catalog.initCatalog({
+    onPickSeries: seriesId => pushScreen({ p4l: SERIES, series: seriesId }),
+    onPickEpisode: playEpisode,
+    onBack: () => history.back()
+  });
+  el.catalogButton.addEventListener("click", openCatalog);
+  player.onEnded(handleFilmEnded);
+
+  el.clearHistoryButton.addEventListener("click", () => {
+    clearHistory();
+    refreshHistoryButton();
+    if (!el.catalog.hidden) showScreen(screen); // redraw the badges away
+  });
+  refreshHistoryButton();
 
   el.chooseFileButton.addEventListener("click", openFilePicker);
   el.quickFileButton.addEventListener("click", openFilePicker);
@@ -225,6 +338,7 @@ export function initSourcePicker() {
   });
 
   el.demoButton.addEventListener("click", () => {
+    currentEpisode = null;
     player.startDemo();
     enterWatchingEntry();
     refreshPlaybackBar();
