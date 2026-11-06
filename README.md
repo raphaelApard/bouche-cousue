@@ -104,18 +104,23 @@ screen the child is in front of.
 ## The cartoon catalogue
 
 **Pick a cartoon** on the welcome screen opens a short list of series — Bluey,
-Trotro, PAW Patrol and Peppa Pig to start with — then the episodes of the one
-chosen. An episode plays under the same rule as any other film, and when it
-reaches its end the child is handed back the list, not YouTube's end screen.
-Episodes already watched are dimmed, with a green tick and how many times they
-were seen; one closed before its end is marked *started*. **Clear watched
-episodes** in the settings forgets all of it.
+Trotro, PAW Patrol, Peppa Pig, Simon, T'choupi, Petit Ours Brun, Masha and the
+Bear, PJ Masks and Yakari — then the episodes of the one chosen, up to a
+hundred per series, 24 to a page. An episode plays under the same rule as any
+other film, and when it reaches its end the child is handed back the list, not
+YouTube's end screen — or, with **Play episodes back to back** ticked above
+the list, the next episode starts instead, until the list runs out. That box is
+off until an adult ticks it, and is remembered. Episodes already watched are
+dimmed, with a green tick and how many times they were seen; one closed before
+its end is marked *started*. **Clear watched episodes** in the settings forgets
+all of it.
 
 The lists follow the language: the French build shows the French official
-channels, the English build the English ones (Trotro has no official English
-channel, so it is French only). **Only official, verified channels are
-listed** — the rights holders' own uploads, played through YouTube's embedded
-player, never downloaded or re-hosted.
+channels, the English build the English ones (Trotro, T'choupi, Petit Ours
+Brun and Yakari have no official English channel, so they are French only).
+**Only official channels are listed** — verified by YouTube, or linked from the
+verified channel of the same series — the rights holders' own uploads, played
+through YouTube's embedded player, never downloaded or re-hosted.
 
 The catalogue is a static file per language, `catalog/fr.json` and
 `catalog/en.json`, generated from `scripts/catalog-sources.json` by a script
@@ -129,9 +134,12 @@ YOUTUBE_API_KEY=… pnpm catalog
 Get the key from the Google Cloud console (YouTube Data API v3). The script
 walks each channel's uploads, newest first, and keeps the videos that can
 actually play here: public, embeddable, not blocked in France, between 3 and
-30 minutes long, and not a live stream, a Short or a trailer. The limits are
-in the `defaults` block of the sources file, and any series can override
-them. Until the script has run, the catalogue says it is empty.
+30 minutes long, and not a live stream, a Short or a trailer. Full episodes
+come first: each series lists its usual episode lengths (`episodeMinutes`),
+and a video within 15% of one of them is shown before the compilations, which
+only fill the rest of the list. The limits are in the `defaults` block of the
+sources file, and any series can override them. Until the script has run, the
+catalogue says it is empty.
 
 ## How it works
 
@@ -182,7 +190,7 @@ re-encode (`-c:v libx264 -crf 20 -preset fast`).
   openness reading, no video title — is ever sent anywhere.
 - Local video files are read directly by the browser and never uploaded.
 - The only stored data is your settings (sensitivity, delays, volume, mirror,
-  language), the date you agreed to load YouTube, and which catalogue episodes
+  language, playing episodes back to back), the date you agreed to load YouTube, and which catalogue episodes
   were opened and how many times they were watched to the end — all in this
   browser's `localStorage`, never sent anywhere, and cleared from the settings.
 - Two things do reach the network. Anonymous page-view statistics go to a

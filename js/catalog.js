@@ -4,6 +4,8 @@
  * This module only draws. Which screen is showing, the browser history and
  * what happens on a click all belong to `source-picker.js`, which hands its
  * handlers to `initCatalog()` and calls `showSeriesList()` / `showEpisodes()`.
+ * The one click handled here is turning a page of episodes: it changes what
+ * is drawn, not where the app is, so it pushes no history entry.
  *
  * The lists come from `catalog/<locale>.json`, generated from the official
  * channels by `scripts/fetch-catalog.mjs`. Every title in them is foreign text,
@@ -38,6 +40,17 @@ let renderToken = 0;
 let remembered = null;
 
 let handlers = { onPickSeries() {}, onPickEpisode() {}, onBack() {} };
+
+/** The page shown for each series, so coming back lands on the same one. */
+const pages = new Map();
+
+/**
+ * The episode last opened from the list. Coming back to its series shows its
+ * page and scrolls to it — after episodes played back to back, that may be a
+ * long way from where the list was left.
+ * @type {{seriesId: string, videoId: string} | null}
+ */
+let lastPlayed = null;
 
 function load(code) {
   if (!loaded.has(code)) {
@@ -99,6 +112,8 @@ function showOnly(list, message) {
   el.catalogEpisodes.hidden = list !== el.catalogEpisodes;
   el.catalogMessage.hidden = !message;
   el.catalogMessage.textContent = message ?? "";
+  el.catalogPager.hidden = true;
+  el.catalogAutoplayLabel.hidden = list !== el.catalogEpisodes;
 }
 
 function renderSeries(data) {
@@ -131,16 +146,26 @@ function renderSeries(data) {
   showOnly(el.catalogSeries);
 }
 
+function pageCountOf(series) {
+  return Math.max(1, Math.ceil(series.episodes.length / CATALOG.PAGE_SIZE));
+}
+
 function renderEpisodes(series) {
   el.catalogTitle.textContent = series.name;
   el.catalogChannel.textContent = t("catalog.channel", { channel: series.channelTitle });
   el.catalogChannel.hidden = false;
 
-  const cards = series.episodes.map(episode => {
+  const pageCount = pageCountOf(series);
+  const page = Math.min(pages.get(series.id) ?? 0, pageCount - 1);
+  const first = page * CATALOG.PAGE_SIZE;
+  const shown = series.episodes.slice(first, first + CATALOG.PAGE_SIZE);
+
+  const cards = shown.map(episode => {
     const progress = progressOf(episode.id);
 
     const button = node("button", `catalog-card catalog-card--episode is-${progress.state}`);
     button.type = "button";
+    button.dataset.videoId = episode.id;
 
     const picture = node("span", "catalog-card__picture");
     picture.append(thumbnail(episode.id));
@@ -159,6 +184,12 @@ function renderEpisodes(series) {
 
   el.catalogEpisodes.replaceChildren(...cards);
   showOnly(el.catalogEpisodes);
+
+  el.catalogPager.hidden = pageCount < 2;
+  el.catalogPageLabel.textContent =
+    t("catalog.page", { page: String(page + 1), pages: String(pageCount) });
+  el.catalogPrevPage.disabled = page === 0;
+  el.catalogNextPage.disabled = page === pageCount - 1;
 }
 
 async function render() {
@@ -199,13 +230,41 @@ function keyOf(target) {
   return target.kind === "episodes" ? `episodes:${target.seriesId}` : "series";
 }
 
+/** Puts the page holding the last episode played in front, if it is in this series. */
+async function turnToLastPlayed(seriesId) {
+  if (lastPlayed?.seriesId !== seriesId) return;
+  const data = await load(getLocale()).catch(() => null);
+  const index = data?.series.find(entry => entry.id === seriesId)
+    ?.episodes.findIndex(episode => episode.id === lastPlayed.videoId) ?? -1;
+  if (index >= 0) pages.set(seriesId, Math.floor(index / CATALOG.PAGE_SIZE));
+}
+
+function lastPlayedCard() {
+  if (!lastPlayed) return null;
+  return [...el.catalogEpisodes.children]
+    .map(item => item.firstElementChild)
+    .find(button => button?.dataset.videoId === lastPlayed.videoId) ?? null;
+}
+
 async function enter(next) {
   const top = remembered?.key === keyOf(next) ? remembered.top : 0;
   remembered = null;
   view = next;
+  if (next.kind === "episodes") await turnToLastPlayed(next.seriesId);
   el.catalog.scrollTop = 0;
   await render();
-  el.catalog.scrollTop = top;
+
+  const card = next.kind === "episodes" ? lastPlayedCard() : null;
+  if (card) card.scrollIntoView({ block: "center" });
+  else el.catalog.scrollTop = top;
+}
+
+async function turnPage(step) {
+  if (view?.kind !== "episodes") return;
+  const { seriesId } = view;
+  pages.set(seriesId, Math.max(0, (pages.get(seriesId) ?? 0) + step));
+  await render();
+  el.catalog.scrollTop = 0;
 }
 
 export function showSeriesList() {
@@ -214,6 +273,24 @@ export function showSeriesList() {
 
 export function showEpisodes(seriesId) {
   return enter({ kind: "episodes", seriesId });
+}
+
+/** An episode was opened from the list. */
+export function markPlayed(seriesId, videoId) {
+  lastPlayed = { seriesId, videoId };
+}
+
+/**
+ * The episode listed after this one in its series, for playing them back to
+ * back — or null at the end of the list, or if the series is gone (a language
+ * switch mid-film).
+ * @returns {Promise<string|null>}
+ */
+export async function episodeAfter(seriesId, videoId) {
+  const data = await load(getLocale()).catch(() => null);
+  const episodes = data?.series.find(entry => entry.id === seriesId)?.episodes ?? [];
+  const index = episodes.findIndex(episode => episode.id === videoId);
+  return index >= 0 ? episodes[index + 1]?.id ?? null : null;
 }
 
 /**
@@ -236,6 +313,8 @@ export function hideCatalog() {
 export function initCatalog(given) {
   handlers = given;
   el.catalogBackButton.addEventListener("click", () => handlers.onBack());
+  el.catalogPrevPage.addEventListener("click", () => turnPage(-1));
+  el.catalogNextPage.addEventListener("click", () => turnPage(1));
   onLocaleChange(() => {
     if (view) render();
   });

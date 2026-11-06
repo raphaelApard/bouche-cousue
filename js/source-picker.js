@@ -8,11 +8,12 @@
  */
 
 import { el } from "./dom.js";
-import { SOURCE } from "./config.js";
+import { SOURCE, STORAGE_KEYS } from "./config.js";
 import { t } from "./i18n.js";
 import * as player from "./player.js";
 import * as ui from "./ui.js";
 import { closePanel } from "./settings.js";
+import { readOneOf, writeBoolean } from "./storage.js";
 import { askYoutubeConsent, hasYoutubeConsent, revokeYoutubeConsent } from "./consent.js";
 import * as catalog from "./catalog.js";
 import { clearHistory, hasHistory, recordEnd, recordStart } from "./watch-history.js";
@@ -241,22 +242,33 @@ async function openCatalog() {
 function playEpisode(seriesId, videoId) {
   openYoutube(videoId, () => {
     recordStart(videoId);
+    catalog.markPlayed(seriesId, videoId);
     refreshHistoryButton();
   }, { seriesId, videoId });
 }
 
 /**
- * An episode that plays to its end counts as seen, and the child is handed
- * back the list — rather than YouTube's end screen, which suggests videos
+ * An episode that plays to its end counts as seen. Then either the next one
+ * in the list starts — when "play back to back" is ticked — or the child is
+ * handed back the list; never YouTube's end screen, which suggests videos
  * nobody chose. A pasted link or a file simply stops at its end, as before.
+ *
+ * The next episode replaces the film on the same history entry, so Back still
+ * leads to the list, however many episodes went by.
  */
-function handleFilmEnded() {
+async function handleFilmEnded() {
   if (!currentEpisode) return;
-  if (player.getYoutubeVideoId() !== currentEpisode.videoId) return;
+  const { seriesId, videoId } = currentEpisode;
+  if (player.getYoutubeVideoId() !== videoId) return;
 
-  recordEnd(currentEpisode.videoId);
+  recordEnd(videoId);
   refreshHistoryButton();
-  leaveFilm();
+
+  const next = el.catalogAutoplay.checked ? await catalog.episodeAfter(seriesId, videoId) : null;
+  // The film may have been closed or swapped while the list was read.
+  if (currentEpisode?.videoId !== videoId) return;
+  if (next) playEpisode(seriesId, next);
+  else leaveFilm();
 }
 
 /* ---------- Teardown ---------- */
@@ -315,6 +327,13 @@ export function initSourcePicker() {
     onBack: () => history.back()
   });
   el.catalogButton.addEventListener("click", openCatalog);
+
+  // Off unless it was explicitly turned on: a child should not be handed an
+  // endless stream by default.
+  el.catalogAutoplay.checked = readOneOf(STORAGE_KEYS.autoplay, ["0", "1"]) === "1";
+  el.catalogAutoplay.addEventListener("change", () => {
+    writeBoolean(STORAGE_KEYS.autoplay, el.catalogAutoplay.checked);
+  });
   player.onEnded(handleFilmEnded);
 
   el.clearHistoryButton.addEventListener("click", () => {

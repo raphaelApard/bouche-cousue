@@ -114,20 +114,25 @@ que soit l'écran devant lequel l'enfant se trouve.
 ## Le catalogue de dessins animés
 
 **Choisir un dessin animé**, sur l'écran d'accueil, ouvre une courte liste de
-séries — Bluey, Trotro, La Pat' Patrouille et Peppa Pig pour commencer — puis
-les épisodes de celle qui est choisie. Un épisode se joue avec la même règle que
-n'importe quel film, et quand il arrive à sa fin l'enfant retrouve la liste,
-pas l'écran de fin de YouTube. Les épisodes déjà vus sont estompés, avec une
+séries — Bluey, Trotro, La Pat' Patrouille, Peppa Pig, Simon, T'choupi, Petit
+Ours Brun, Masha et Michka, Pyjamasques et Yakari — puis les épisodes de celle
+qui est choisie, jusqu'à cent par série, 24 par page. Un épisode se joue avec
+la même règle que n'importe quel film, et quand il arrive à sa fin l'enfant
+retrouve la liste, pas l'écran de fin de YouTube — ou, si **Enchaîner les
+épisodes** est coché au-dessus de la liste, l'épisode suivant démarre, jusqu'au
+bout de la liste. Cette case reste décochée tant qu'un adulte ne l'a pas
+cochée, et elle est mémorisée. Les épisodes déjà vus sont estompés, avec une
 coche verte et le nombre de visionnages ; un épisode fermé avant la fin est
 marqué *commencé*. **Effacer les épisodes vus**, dans les réglages, oublie
 tout cela.
 
 Les listes suivent la langue : la version française montre les chaînes
-officielles françaises, la version anglaise les chaînes anglaises (Trotro n'a
-pas de chaîne officielle en anglais, il n'existe donc qu'en français).
-**Seules des chaînes officielles et vérifiées sont listées** — les mises en
-ligne des ayants droit eux-mêmes, lues par le lecteur intégré de YouTube,
-jamais téléchargées ni rehébergées.
+officielles françaises, la version anglaise les chaînes anglaises (Trotro,
+T'choupi, Petit Ours Brun et Yakari n'ont pas de chaîne officielle en anglais,
+ils n'existent donc qu'en français). **Seules des chaînes officielles sont
+listées** — vérifiées par YouTube, ou référencées par la chaîne vérifiée de la
+même série — les mises en ligne des ayants droit eux-mêmes, lues par le
+lecteur intégré de YouTube, jamais téléchargées ni rehébergées.
 
 Le catalogue est un fichier statique par langue, `catalog/fr.json` et
 `catalog/en.json`, généré à partir de `scripts/catalog-sources.json` par un
@@ -142,7 +147,10 @@ La clé se crée dans la console Google Cloud (YouTube Data API v3). Le script
 parcourt les mises en ligne de chaque chaîne, des plus récentes aux plus
 anciennes, et garde les vidéos réellement lisibles ici : publiques,
 intégrables, non bloquées en France, entre 3 et 30 minutes, et ni direct, ni
-Short, ni bande-annonce. Les limites sont dans le bloc `defaults` du fichier de
+Short, ni bande-annonce. Les épisodes complets passent en premier : chaque
+série indique ses durées d'épisode habituelles (`episodeMinutes`), et une vidéo
+à moins de 15 % de l'une d'elles s'affiche avant les compilations, qui ne font
+que compléter la liste. Les limites sont dans le bloc `defaults` du fichier de
 sources, et chaque série peut les remplacer. Tant que le script n'a pas tourné,
 le catalogue indique qu'il est vide.
 
@@ -195,7 +203,7 @@ vrai ré-encodage (`-c:v libx264 -crf 20 -preset fast`).
   degré d'ouverture, ni titre de vidéo — n'est envoyé où que ce soit.
 - Les vidéos locales sont lues directement par le navigateur, jamais envoyées.
 - Les seules données conservées sont vos réglages (sensibilité, délais, volume,
-  miroir, langue), la date de votre accord pour YouTube, et les épisodes du
+  miroir, langue, enchaînement des épisodes), la date de votre accord pour YouTube, et les épisodes du
   catalogue ouverts avec le nombre de fois où ils ont été vus jusqu'au bout —
   le tout dans le `localStorage` de ce navigateur, jamais envoyé, et effaçable
   depuis les réglages.

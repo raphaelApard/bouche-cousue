@@ -3,9 +3,10 @@
   "defaults": {
     "minSeconds": 180,
     "maxSeconds": 1800,
-    "maxEpisodes": 40,
-    "scanLimit": 400,
-    "exclude": "#shorts?\\b|🔴|\\blive\\b|en direct|vivre ?:|trailer|bande[- ]annonce|teaser|jouets? pour enfants|jeux? de jouets|jeu avec des jouets|toy play|coloriage|coloring|quiz|devinez|guess the|interacti(?:f|ve)|pawse & play|squad missions|what happens next|match the|read aloud|cake off|drone show"
+    "maxEpisodes": 100,
+    "scanLimit": 800,
+    "episodeTolerance": 0.15,
+    "exclude": "#shorts?\\b|🔴|\\blive\\b|en direct|vivre ?:|trailer|bande[- ]annonce|teaser|jouets? pour enfants|jeux? de jouets|jeu avec des jouets|toy play|coloriage|coloring|quiz|devinez|guess the|interacti(?:f|ve)|pawse & play|squad missions|what happens next|match the|read aloud|cake off|drone show|chansons?|comptines?|karaok|\\bsongs?\\b|sing-?along|chante avec|figurines?|in real life|kids explain"
   },
   "locales": {
     "fr": [
@@ -13,25 +14,71 @@
         "id": "bluey",
         "name": "Bluey",
         "channelTitle": "Bluey - Français Chaîne Officielle",
-        "channelId": "UCrGR1w7FATM8OiK_EzN3GAw"
+        "channelId": "UCrGR1w7FATM8OiK_EzN3GAw",
+        "episodeMinutes": [7]
       },
       {
         "id": "trotro",
         "name": "Trotro",
         "channelTitle": "TROTRO OFFICIEL",
-        "channelId": "UCNy0cDNYdgx8qGMk-t1H_QA"
+        "channelId": "UCNy0cDNYdgx8qGMk-t1H_QA",
+        "episodeMinutes": [3.5]
       },
       {
         "id": "paw-patrol",
         "name": "La Pat' Patrouille",
         "channelTitle": "La Pat' Patrouille - PAW Patrol en Français",
-        "channelId": "UCkSTT5rzj5abufhWXu3-J5g"
+        "channelId": "UCkSTT5rzj5abufhWXu3-J5g",
+        "episodeMinutes": [10, 20]
       },
       {
         "id": "peppa-pig",
         "name": "Peppa Pig",
         "channelTitle": "Peppa Pig Français - Chaîne Officielle",
-        "channelId": "UCXptamDYEVcU4JCio30hYTw"
+        "channelId": "UCXptamDYEVcU4JCio30hYTw",
+        "episodeMinutes": [5]
+      },
+      {
+        "id": "simon",
+        "name": "Simon",
+        "channelTitle": "Simon Super Lapin [Français]",
+        "channelId": "UCo9j7fWproKYTos4_RY-LUw",
+        "episodeMinutes": [5]
+      },
+      {
+        "id": "tchoupi",
+        "name": "T'choupi",
+        "channelTitle": "T'choupi",
+        "channelId": "UC5hqGTWVyQQSpsh-5pyFo8Q",
+        "episodeMinutes": [5, 7]
+      },
+      {
+        "id": "petit-ours-brun",
+        "name": "Petit Ours Brun",
+        "channelTitle": "Petit Ours Brun",
+        "channelId": "UC736wpHH44mdw-lhKTy89ZQ",
+        "episodeMinutes": [7]
+      },
+      {
+        "id": "masha",
+        "name": "Masha et Michka",
+        "channelTitle": "Masha et Michka",
+        "channelId": "UCjd32KVfRCli1d9iqo4YZ5A",
+        "episodeMinutes": [7, 8]
+      },
+      {
+        "id": "pj-masks",
+        "name": "Pyjamasques",
+        "channelTitle": "Pyjamasques - Chaîne Officielle",
+        "channelId": "UCmwN7oJTsAeiPPcV4FF8HRw",
+        "episodeMinutes": [11, 12]
+      },
+      {
+        "id": "yakari",
+        "name": "Yakari",
+        "channelTitle": "YAKARI OFFICIEL",
+        "channelId": "UC7kI7S2COLludBkwJsNJXKg",
+        "episodeMinutes": [12.5]
       }
     ],
     "en": [
@@ -39,19 +86,43 @@
         "id": "bluey",
         "name": "Bluey",
         "channelTitle": "Bluey - Official Channel",
-        "channelId": "UCVzLLZkDuFGAE2BGdBuBNBg"
+        "channelId": "UCVzLLZkDuFGAE2BGdBuBNBg",
+        "episodeMinutes": [7]
       },
       {
         "id": "paw-patrol",
         "name": "PAW Patrol",
         "channelTitle": "PAW Patrol Official & Friends",
-        "channelId": "UCSVSJ1OCSv5ClFgKFTHIDew"
+        "channelId": "UCSVSJ1OCSv5ClFgKFTHIDew",
+        "episodeMinutes": [10, 20]
       },
       {
         "id": "peppa-pig",
         "name": "Peppa Pig",
         "channelTitle": "Peppa Pig - Official Channel",
-        "channelId": "UCAOtE1V7Ots4DjM8JLlrYgg"
+        "channelId": "UCAOtE1V7Ots4DjM8JLlrYgg",
+        "episodeMinutes": [5]
+      },
+      {
+        "id": "simon",
+        "name": "Simon",
+        "channelTitle": "Simon Super Rabbit [English]",
+        "channelId": "UCMAGJ9Hhe_IjsiuYHrns8ag",
+        "episodeMinutes": [5]
+      },
+      {
+        "id": "masha",
+        "name": "Masha and the Bear",
+        "channelTitle": "Masha and The Bear",
+        "channelId": "UCu59yAFE8fM0sVNTipR4edw",
+        "episodeMinutes": [7, 8]
+      },
+      {
+        "id": "pj-masks",
+        "name": "PJ Masks",
+        "channelTitle": "PJ Masks Official",
+        "channelId": "UCY2jUnU118sVkdj2xafiJ0g",
+        "episodeMinutes": [11, 12]
       }
     ]
   }
