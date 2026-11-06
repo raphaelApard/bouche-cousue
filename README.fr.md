@@ -114,8 +114,8 @@ que soit l'écran devant lequel l'enfant se trouve.
 ## Le catalogue de dessins animés
 
 **Choisir un dessin animé**, sur l'écran d'accueil, ouvre une courte liste de
-séries — Bluey, Trotro, La Pat' Patrouille et Peppa Pig pour commencer — puis
-les épisodes de celle qui est choisie. Un épisode se joue avec la même règle que
+séries — Bluey, Trotro, La Pat' Patrouille, Peppa Pig, Simon, T'choupi, Petit
+Ours Brun, Masha et Michka, Pyjamasques et Yakari — puis les épisodes de celle qui est choisie. Un épisode se joue avec la même règle que
 n'importe quel film, et quand il arrive à sa fin l'enfant retrouve la liste,
 pas l'écran de fin de YouTube. Les épisodes déjà vus sont estompés, avec une
 coche verte et le nombre de visionnages ; un épisode fermé avant la fin est
@@ -123,9 +123,11 @@ marqué *commencé*. **Effacer les épisodes vus**, dans les réglages, oublie
 tout cela.
 
 Les listes suivent la langue : la version française montre les chaînes
-officielles françaises, la version anglaise les chaînes anglaises (Trotro n'a
-pas de chaîne officielle en anglais, il n'existe donc qu'en français).
-**Seules des chaînes officielles et vérifiées sont listées** — les mises en
+officielles françaises, la version anglaise les chaînes anglaises (Trotro,
+T'choupi, Petit Ours Brun et Yakari n'ont pas de chaîne officielle en anglais,
+ils n'existent donc qu'en français). **Seules des chaînes officielles sont
+listées** — vérifiées par YouTube, ou référencées par la chaîne vérifiée de la
+même série — les mises en
 ligne des ayants droit eux-mêmes, lues par le lecteur intégré de YouTube,
 jamais téléchargées ni rehébergées.
 

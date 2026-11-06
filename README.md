@@ -104,17 +104,18 @@ screen the child is in front of.
 ## The cartoon catalogue
 
 **Pick a cartoon** on the welcome screen opens a short list of series — Bluey,
-Trotro, PAW Patrol and Peppa Pig to start with — then the episodes of the one
-chosen. An episode plays under the same rule as any other film, and when it
+Trotro, PAW Patrol, Peppa Pig, Simon, T'choupi, Petit Ours Brun, Masha and the
+Bear, PJ Masks and Yakari — then the episodes of the one chosen. An episode plays under the same rule as any other film, and when it
 reaches its end the child is handed back the list, not YouTube's end screen.
 Episodes already watched are dimmed, with a green tick and how many times they
 were seen; one closed before its end is marked *started*. **Clear watched
 episodes** in the settings forgets all of it.
 
 The lists follow the language: the French build shows the French official
-channels, the English build the English ones (Trotro has no official English
-channel, so it is French only). **Only official, verified channels are
-listed** — the rights holders' own uploads, played through YouTube's embedded
+channels, the English build the English ones (Trotro, T'choupi, Petit Ours
+Brun and Yakari have no official English channel, so they are French only).
+**Only official channels are listed** — verified by YouTube, or linked from the
+verified channel of the same series — the rights holders' own uploads, played through YouTube's embedded
 player, never downloaded or re-hosted.
 
 The catalogue is a static file per language, `catalog/fr.json` and

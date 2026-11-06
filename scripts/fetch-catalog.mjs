@@ -9,7 +9,8 @@
  * never ships, and a visitor's browser asks YouTube for nothing until the
  * adult has agreed to it — the catalogue itself is just a file on our server.
  *
- * Only official, verified channels belong in the sources file. Embedding an
+ * Only official channels belong in the sources file: verified by YouTube, or
+ * linked from the verified channel of the same series. Embedding an
  * upload you know to be unauthorised is not the same as embedding the rights
  * holder's own video, legally or otherwise.
  *

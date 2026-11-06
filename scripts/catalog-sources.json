@@ -5,7 +5,7 @@
     "maxSeconds": 1800,
     "maxEpisodes": 40,
     "scanLimit": 400,
-    "exclude": "#shorts?\\b|🔴|\\blive\\b|en direct|vivre ?:|trailer|bande[- ]annonce|teaser|jouets? pour enfants|jeux? de jouets|jeu avec des jouets|toy play|coloriage|coloring|quiz|devinez|guess the|interacti(?:f|ve)|pawse & play|squad missions|what happens next|match the|read aloud|cake off|drone show"
+    "exclude": "#shorts?\\b|🔴|\\blive\\b|en direct|vivre ?:|trailer|bande[- ]annonce|teaser|jouets? pour enfants|jeux? de jouets|jeu avec des jouets|toy play|coloriage|coloring|quiz|devinez|guess the|interacti(?:f|ve)|pawse & play|squad missions|what happens next|match the|read aloud|cake off|drone show|chansons?|comptines?|karaok|\\bsongs?\\b|sing-?along|chante avec"
   },
   "locales": {
     "fr": [
@@ -32,6 +32,42 @@
         "name": "Peppa Pig",
         "channelTitle": "Peppa Pig Français - Chaîne Officielle",
         "channelId": "UCXptamDYEVcU4JCio30hYTw"
+      },
+      {
+        "id": "simon",
+        "name": "Simon",
+        "channelTitle": "Simon Super Lapin [Français]",
+        "channelId": "UCo9j7fWproKYTos4_RY-LUw"
+      },
+      {
+        "id": "tchoupi",
+        "name": "T'choupi",
+        "channelTitle": "T'choupi",
+        "channelId": "UC5hqGTWVyQQSpsh-5pyFo8Q"
+      },
+      {
+        "id": "petit-ours-brun",
+        "name": "Petit Ours Brun",
+        "channelTitle": "Petit Ours Brun",
+        "channelId": "UC736wpHH44mdw-lhKTy89ZQ"
+      },
+      {
+        "id": "masha",
+        "name": "Masha et Michka",
+        "channelTitle": "Masha et Michka",
+        "channelId": "UCjd32KVfRCli1d9iqo4YZ5A"
+      },
+      {
+        "id": "pj-masks",
+        "name": "Pyjamasques",
+        "channelTitle": "Pyjamasques - Chaîne Officielle",
+        "channelId": "UCmwN7oJTsAeiPPcV4FF8HRw"
+      },
+      {
+        "id": "yakari",
+        "name": "Yakari",
+        "channelTitle": "YAKARI OFFICIEL",
+        "channelId": "UC7kI7S2COLludBkwJsNJXKg"
       }
     ],
     "en": [
@@ -52,6 +88,24 @@
         "name": "Peppa Pig",
         "channelTitle": "Peppa Pig - Official Channel",
         "channelId": "UCAOtE1V7Ots4DjM8JLlrYgg"
+      },
+      {
+        "id": "simon",
+        "name": "Simon",
+        "channelTitle": "Simon Super Rabbit [English]",
+        "channelId": "UCMAGJ9Hhe_IjsiuYHrns8ag"
+      },
+      {
+        "id": "masha",
+        "name": "Masha and the Bear",
+        "channelTitle": "Masha and The Bear",
+        "channelId": "UCu59yAFE8fM0sVNTipR4edw"
+      },
+      {
+        "id": "pj-masks",
+        "name": "PJ Masks",
+        "channelTitle": "PJ Masks Official",
+        "channelId": "UCY2jUnU118sVkdj2xafiJ0g"
       }
     ]
   }
