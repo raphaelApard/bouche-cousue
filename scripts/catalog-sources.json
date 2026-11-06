@@ -1,0 +1,58 @@
+{
+  "region": "FR",
+  "defaults": {
+    "minSeconds": 180,
+    "maxSeconds": 1800,
+    "maxEpisodes": 40,
+    "scanLimit": 400,
+    "exclude": "#shorts?\\b|🔴|\\blive\\b|en direct|vivre ?:|trailer|bande[- ]annonce|teaser|jouets? pour enfants|jeux? de jouets|jeu avec des jouets|toy play|coloriage|coloring|quiz|devinez|guess the|interacti(?:f|ve)|pawse & play|squad missions|what happens next|match the|read aloud|cake off|drone show"
+  },
+  "locales": {
+    "fr": [
+      {
+        "id": "bluey",
+        "name": "Bluey",
+        "channelTitle": "Bluey - Français Chaîne Officielle",
+        "channelId": "UCrGR1w7FATM8OiK_EzN3GAw"
+      },
+      {
+        "id": "trotro",
+        "name": "Trotro",
+        "channelTitle": "TROTRO OFFICIEL",
+        "channelId": "UCNy0cDNYdgx8qGMk-t1H_QA"
+      },
+      {
+        "id": "paw-patrol",
+        "name": "La Pat' Patrouille",
+        "channelTitle": "La Pat' Patrouille - PAW Patrol en Français",
+        "channelId": "UCkSTT5rzj5abufhWXu3-J5g"
+      },
+      {
+        "id": "peppa-pig",
+        "name": "Peppa Pig",
+        "channelTitle": "Peppa Pig Français - Chaîne Officielle",
+        "channelId": "UCXptamDYEVcU4JCio30hYTw"
+      }
+    ],
+    "en": [
+      {
+        "id": "bluey",
+        "name": "Bluey",
+        "channelTitle": "Bluey - Official Channel",
+        "channelId": "UCVzLLZkDuFGAE2BGdBuBNBg"
+      },
+      {
+        "id": "paw-patrol",
+        "name": "PAW Patrol",
+        "channelTitle": "PAW Patrol Official & Friends",
+        "channelId": "UCSVSJ1OCSv5ClFgKFTHIDew"
+      },
+      {
+        "id": "peppa-pig",
+        "name": "Peppa Pig",
+        "channelTitle": "Peppa Pig - Official Channel",
+        "channelId": "UCAOtE1V7Ots4DjM8JLlrYgg"
+      }
+    ]
+  }
+}

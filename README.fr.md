@@ -54,13 +54,14 @@ Le premier lancement nécessite internet pour télécharger le moteur MediaPipe 
 le modèle de visage depuis un CDN. Ensuite, la détection tourne entièrement en
 local, hors ligne.
 
-Il reste à coller un lien YouTube, choisir une vidéo sur l'ordinateur, ou tester
-le mode démo sans vidéo.
+Il reste à choisir un dessin animé dans le catalogue, coller un lien YouTube,
+choisir une vidéo sur l'ordinateur, ou tester le mode démo sans vidéo.
 
 Le dépôt embarque aussi quelques scripts `pnpm`, dont aucun n'est nécessaire
 pour utiliser l'app : `pnpm serve` est la commande ci-dessus, `pnpm check`
-lance les vérifications statiques qui tiennent lieu de tests, et `pnpm build`
-prépare le site dans `dist/` en vue d'une publication. Il n'y a aucune
+lance les vérifications statiques qui tiennent lieu de tests, `pnpm build`
+prépare le site dans `dist/` en vue d'une publication, et `pnpm catalog`
+régénère le catalogue de dessins animés (voir plus bas). Il n'y a aucune
 dépendance : `pnpm install` n'a rien à télécharger.
 
 ## Utilisation
@@ -71,7 +72,7 @@ dépendance : `pnpm install` n'a rien à télécharger.
 | **Bouton ▶ / ⏸** | Idem, depuis la barre de lecture (fichiers locaux) |
 | **⛶ Plein écran** | Utiliser *ce* bouton — celui de YouTube casse la détection |
 | **Réglages** | Ouvrir le panneau adulte ; il se referme au second clic, sur Échap, ou sur un clic à l'extérieur |
-| **Fermer** | Quitter le film et revenir à l'accueil ; la caméra se ferme avec lui |
+| **Fermer** | Quitter le film et revenir à l'écran d'où il a été lancé — l'accueil ou la liste d'épisodes ; la caméra se ferme avec lui |
 | **FR / EN** | Changer de langue ; le choix est mémorisé |
 
 Le sélecteur de langue et le bouton de fermeture partagent une place sur la
@@ -109,6 +110,41 @@ Le miroir est le visage de l'enfant, avec la jauge d'ouverture en dessous et un
 repère à l'endroit exact où le film s'arrête. Il garde la même taille et le même
 coin en bas à droite à toutes les largeurs : une seule forme à reconnaître, quel
 que soit l'écran devant lequel l'enfant se trouve.
+
+## Le catalogue de dessins animés
+
+**Choisir un dessin animé**, sur l'écran d'accueil, ouvre une courte liste de
+séries — Bluey, Trotro, La Pat' Patrouille et Peppa Pig pour commencer — puis
+les épisodes de celle qui est choisie. Un épisode se joue avec la même règle que
+n'importe quel film, et quand il arrive à sa fin l'enfant retrouve la liste,
+pas l'écran de fin de YouTube. Les épisodes déjà vus sont estompés, avec une
+coche verte et le nombre de visionnages ; un épisode fermé avant la fin est
+marqué *commencé*. **Effacer les épisodes vus**, dans les réglages, oublie
+tout cela.
+
+Les listes suivent la langue : la version française montre les chaînes
+officielles françaises, la version anglaise les chaînes anglaises (Trotro n'a
+pas de chaîne officielle en anglais, il n'existe donc qu'en français).
+**Seules des chaînes officielles et vérifiées sont listées** — les mises en
+ligne des ayants droit eux-mêmes, lues par le lecteur intégré de YouTube,
+jamais téléchargées ni rehébergées.
+
+Le catalogue est un fichier statique par langue, `catalog/fr.json` et
+`catalog/en.json`, généré à partir de `scripts/catalog-sources.json` par un
+script qui interroge l'API YouTube Data. La page n'appelle jamais cette API, et
+la clé n'est jamais publiée :
+
+```sh
+YOUTUBE_API_KEY=… pnpm catalog
+```
+
+La clé se crée dans la console Google Cloud (YouTube Data API v3). Le script
+parcourt les mises en ligne de chaque chaîne, des plus récentes aux plus
+anciennes, et garde les vidéos réellement lisibles ici : publiques,
+intégrables, non bloquées en France, entre 3 et 30 minutes, et ni direct, ni
+Short, ni bande-annonce. Les limites sont dans le bloc `defaults` du fichier de
+sources, et chaque série peut les remplacer. Tant que le script n'a pas tourné,
+le catalogue indique qu'il est vide.
 
 ## Fonctionnement
 
@@ -159,15 +195,23 @@ vrai ré-encodage (`-c:v libx264 -crf 20 -preset fast`).
   degré d'ouverture, ni titre de vidéo — n'est envoyé où que ce soit.
 - Les vidéos locales sont lues directement par le navigateur, jamais envoyées.
 - Les seules données conservées sont vos réglages (sensibilité, délais, volume,
-  miroir, langue), dans le `localStorage` de ce navigateur.
+  miroir, langue), la date de votre accord pour YouTube, et les épisodes du
+  catalogue ouverts avec le nombre de fois où ils ont été vus jusqu'au bout —
+  le tout dans le `localStorage` de ce navigateur, jamais envoyé, et effaçable
+  depuis les réglages.
 - Deux choses passent tout de même par le réseau. Des statistiques de
   fréquentation anonymes sont envoyées à un **Matomo auto-hébergé** sur
   `stats.acolad.net` — visites et clics sur les liens, pour savoir si l'outil
   sert à quelque chose ; c'est notre propre instance, pas une régie publicitaire,
   et elle ne reçoit rien de la caméra. Supprimer le bloc `<!-- Matomo -->` en
   haut de `index.html` la désactive ; rien d'autre n'en dépend.
-- Et choisir une vidéo YouTube la charge depuis `youtube-nocookie.com`, qui
-  applique alors ses propres règles.
+- Et YouTube. **Rien n'est demandé à YouTube tant qu'un adulte ne l'a pas
+  accepté**, dans une fenêtre qui dit ce que Google reçoit (l'adresse IP de
+  l'appareil, et ses propres traceurs). L'accord est gardé six mois, et
+  « Retirer l'accord YouTube » dans les réglages l'efface. Refuser laisse les
+  fichiers locaux et la démo fonctionner comme avant. Une fois l'accord donné,
+  les vidéos sont chargées depuis `youtube-nocookie.com`, qui applique ses
+  propres règles, et les vignettes du catalogue depuis `i.ytimg.com`.
 
 Il n'y a aucune étape de compilation et rien n'est minifié : tout ce qui
 précède se vérifie en lisant le code de ce dépôt.
@@ -218,6 +262,7 @@ css/
   mascot.css                le chat, et laquelle de ses sept têtes s'affiche
   chrome.css                barre du haut, badges, barre rapide, panneau, miroir
   welcome.css               l'écran d'accueil
+  catalog.css               le catalogue de dessins animés
   stage.css                 surface vidéo, les voiles, le plein écran
 js/
   main.js                   point d'entrée : démarre et relie le tout
@@ -235,8 +280,16 @@ js/
   player.js                 lecture des fichiers locaux et de YouTube
   playback-controls.js      la barre de lecture
   source-picker.js          accueil, barre rapide, sélecteur de fichier
+  consent.js                l'accord de l'adulte avant tout appel à YouTube
+  catalog.js                dessine les séries et les listes d'épisodes
+  watch-history.js          les épisodes ouverts, et combien de fois vus
 locales/
   en.json, fr.json          tout le texte visible par l'utilisateur
+catalog/
+  en.json, fr.json          les listes d'épisodes, générées par pnpm catalog
+scripts/
+  catalog-sources.json      les chaînes officielles dont le catalogue est tiré
+  fetch-catalog.mjs         régénère catalog/ via l'API YouTube Data
 
 firefox-extension/          l'extension Firefox — voir son propre README
 chrome-extension/           la même extension pour Chrome

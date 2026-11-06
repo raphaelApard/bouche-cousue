@@ -11,9 +11,10 @@
  * It depends on nothing. `pnpm install` has no work to do, which is what keeps
  * the promise the READMEs make: clone it, serve it, it runs.
  *
- * The checks are the three from CLAUDE.md, the ones that replace a test suite:
- * every byId() resolves, every named import exists and the graph is acyclic,
- * and every translation key exists in both locale files. They run on dist/,
+ * The checks are the ones from CLAUDE.md that replace a test suite: every
+ * byId() resolves, every named import exists and the graph is acyclic, every
+ * translation key exists in both locale files, and the catalogue has the shape
+ * the page trusts. They run on dist/,
  * not on the sources, so what is verified is what would ship.
  *
  *   node scripts/build.mjs              build, then check dist/
@@ -30,7 +31,7 @@ const DIST = path.join(ROOT, "dist");
 
 /** The site, file by file. Everything else belongs to another front end. */
 const SITE_FILES = ["index.html", "favicon.svg", "favicon-32.png", "favicon-180.png"];
-const SITE_DIRS = ["css", "js", "locales"];
+const SITE_DIRS = ["css", "js", "locales", "catalog"];
 
 const checkOnly = process.argv.includes("--check-only");
 
@@ -252,6 +253,53 @@ async function checkLocales(base, html) {
   return `${locales.fr.size} keys in both files, ${used.size} referenced`;
 }
 
+/**
+ * The catalogue is generated (scripts/fetch-catalog.mjs), but it can be edited
+ * by hand, and the page trusts its shape: one file per locale, each series with
+ * a name and episodes, each episode an 11-character YouTube id with a title.
+ * An empty list is valid — it is what ships before the script has been run.
+ */
+async function checkCatalog(base) {
+  let series = 0;
+  let episodes = 0;
+  for (const code of ["fr", "en"]) {
+    const file = `catalog/${code}.json`;
+    let data;
+    try {
+      data = JSON.parse(await readFile(path.join(base, file), "utf8"));
+    } catch (error) {
+      fail(`${file} cannot be read: ${error.message}`);
+      continue;
+    }
+    if (!Array.isArray(data.series)) {
+      fail(`${file} has no "series" array`);
+      continue;
+    }
+    const ids = new Set();
+    for (const entry of data.series) {
+      series += 1;
+      const where = `${file} › ${entry.id ?? "?"}`;
+      if (!/^[a-z0-9-]+$/.test(entry.id ?? "")) fail(`${where}: id must be lowercase kebab-case`);
+      if (ids.has(entry.id)) fail(`${where}: id appears twice`);
+      ids.add(entry.id);
+      if (!entry.name) fail(`${where}: no name`);
+      if (!Array.isArray(entry.episodes) || entry.episodes.length === 0) {
+        fail(`${where}: no episodes`);
+        continue;
+      }
+      for (const episode of entry.episodes) {
+        episodes += 1;
+        if (!/^[\w-]{11}$/.test(episode.id ?? "")) fail(`${where}: "${episode.id}" is not a YouTube id`);
+        if (!episode.title) fail(`${where}: ${episode.id} has no title`);
+        if (!Number.isFinite(episode.duration) || episode.duration <= 0) {
+          fail(`${where}: ${episode.id} has no duration`);
+        }
+      }
+    }
+  }
+  return `${series} series, ${episodes} episodes`;
+}
+
 // --- Run --------------------------------------------------------------------
 
 if (checkOnly) {
@@ -269,6 +317,7 @@ await run("assets", () => checkAssets(base, html));
 await run("dom", () => checkDom(base, html));
 await run("modules", () => checkModules(base));
 await run("locales", () => checkLocales(base, html));
+await run("catalog", () => checkCatalog(base));
 
 if (problems.length) {
   // A build that failed its checks is the one thing rsync must never find

@@ -32,7 +32,8 @@
   },
   "welcome": {
     "title": "What are we watching?",
-    "subtitle": "Paste a YouTube link, or open a file from this computer.",
+    "subtitle": "Pick a cartoon, paste a YouTube link, or open a file from this computer.",
+    "catalog": "Pick a cartoon",
     "urlPlaceholder": "https://www.youtube.com/watch?v=…",
     "urlLabel": "YouTube link",
     "openCinema": "Open the cinema",
@@ -126,12 +127,14 @@
     "pauseLabel": "Delay before the pause",
     "secondsUnit": "s",
     "mirror": "Show the mirror",
-    "reset": "Reset"
+    "reset": "Reset",
+    "revokeYoutube": "Withdraw the YouTube agreement",
+    "clearHistory": "Clear watched episodes"
   },
   "buttons": {
     "settings": "Parameters",
     "close": "Close",
-    "closeLabel": "Close the film and go back home",
+    "closeLabel": "Close the film",
     "fullscreen": "Full screen",
     "exitFullscreen": "Leave full screen"
   },
@@ -150,5 +153,27 @@
     "embeddingDenied": "The owner of this video does not allow it to play outside YouTube. Try another video.",
     "blockedHere": "This video is blocked from playing on this page (embedding or origin restriction). Try another video, or open the page over http://localhost.",
     "otherError": "YouTube error"
+  },
+  "consent": {
+    "badge": "FOR THE ADULT",
+    "title": "Before opening YouTube",
+    "text": "YouTube videos play from Google's servers, which receive this device's IP address and may set their own trackers on it.",
+    "policyBefore": "To find out more, read",
+    "policyLink": "Google's privacy policy",
+    "memory": "Your choice is kept for six months on this device, and you can withdraw it at any time in the settings. Files from this computer still play without YouTube.",
+    "decline": "Decline",
+    "accept": "Accept"
+  },
+  "catalog": {
+    "title": "Which cartoon?",
+    "back": "Back",
+    "channel": "Official channel: {channel}",
+    "episodeCount": "{count} episodes",
+    "started": "Started",
+    "seenOnce": "Seen",
+    "seenTimes": "Seen {count} times",
+    "loading": "The catalogue is on its way…",
+    "empty": "The catalogue is still empty. In the meantime, paste a YouTube link or open a file from this computer.",
+    "loadFailed": "The catalogue could not be loaded. Check the connection and try again."
   }
 }

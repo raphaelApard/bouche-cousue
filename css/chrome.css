@@ -479,3 +479,79 @@ body.is-adult-paused .mirror { display: none; }
 
 /* Nothing to make full screen, and no rule running yet, before a film. */
 body.is-idle #fullscreenButton { display: none; }
+
+/* ---------- Privacy controls in the panel ---------- */
+
+.settings-panel__privacy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+/* Both buttons can be hidden; an empty group must not leave a gap behind. */
+.settings-panel__privacy:not(:has(> :not([hidden]))) { display: none; }
+
+/* ---------- YouTube consent ---------- */
+
+/*
+  Paper, like the adult's pause: this question is for the grown-up, and the
+  child's dark cinema is not where it belongs. Accept and decline are the same
+  button — refusing has to be exactly as easy as agreeing.
+*/
+.consent {
+  width: 480px;
+  max-width: calc(100% - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .55);
+}
+.consent::backdrop { background: rgba(12, 10, 8, .72); }
+.consent[open] { animation: pc-rise .2s ease-out; }
+
+.consent__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px 28px 24px;
+}
+
+.consent__badge {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(43, 33, 27, .08);
+  font: 500 11.5px var(--text);
+  color: var(--paper-ink-soft);
+  letter-spacing: .04em;
+}
+
+.consent__title {
+  margin: 4px 0 0;
+  font: 500 26px/1.15 var(--display);
+}
+
+.consent__text {
+  font: 400 14px/1.6 var(--text);
+  color: var(--paper-ink-soft);
+}
+.consent__text a { color: var(--paper-ink); text-underline-offset: 3px; }
+
+.consent__note {
+  font: 400 12.5px/1.55 var(--text);
+  color: var(--paper-ink-faint);
+}
+
+.consent__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.consent__actions .button { flex: 1; }
+.consent :focus-visible { outline-color: var(--paper-ink); }
+
+body.is-mobile .consent__body { padding: 22px 20px 20px; }
+body.is-mobile .consent__title { font-size: 22px; }

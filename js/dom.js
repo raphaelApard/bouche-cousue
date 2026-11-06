@@ -64,6 +64,16 @@ export const el = {
   filePicker: byId("filePicker"),
   chooseFileButton: byId("chooseFileButton"),
   demoButton: byId("demoButton"),
+  catalogButton: byId("catalogButton"),
+
+  // Catalogue
+  catalog: byId("catalog"),
+  catalogBackButton: byId("catalogBackButton"),
+  catalogTitle: byId("catalogTitle"),
+  catalogChannel: byId("catalogChannel"),
+  catalogMessage: byId("catalogMessage"),
+  catalogSeries: byId("catalogSeries"),
+  catalogEpisodes: byId("catalogEpisodes"),
 
   // Quick change bar
   quickBarButton: byId("quickBarButton"),
@@ -88,6 +98,8 @@ export const el = {
   pauseDelayValue: byId("pauseDelayValue"),
   mirrorToggle: byId("mirrorToggle"),
   resetButton: byId("resetButton"),
+  revokeConsentButton: byId("revokeConsentButton"),
+  clearHistoryButton: byId("clearHistoryButton"),
   panelLinkButton: byId("panelLinkButton"),
 
   // Mirror
@@ -95,6 +107,9 @@ export const el = {
   cameraVideo: byId("cameraVideo"),
   gaugeTrack: byId("gaugeTrack"),
   gauge: byId("gauge"),
+
+  // Consent
+  consentDialog: byId("consentDialog"),
 
   // Playback bar
   playbackBar: byId("playbackBar"),

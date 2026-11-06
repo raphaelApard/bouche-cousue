@@ -13,6 +13,21 @@ import { t } from "./i18n.js";
 let source = null;
 let youtubePlayer = null;
 let objectUrl = null; // current local file, revoked when it is replaced
+let youtubeVideoId = null; // the video last asked of the embed
+
+const endListeners = new Set();
+
+/**
+ * Called when the film plays to its very end, whichever source it came from.
+ * A pause, a seek or a closed film is not an end.
+ */
+export function onEnded(listener) {
+  endListeners.add(listener);
+}
+
+function notifyEnded() {
+  for (const listener of endListeners) listener();
+}
 
 export function getSource() {
   return source;
@@ -47,6 +62,10 @@ export function applySound({ volume, muted }) {
 }
 
 /* ---------- Local file ---------- */
+
+el.video.addEventListener("ended", () => {
+  if (source === SOURCE.FILE) notifyEnded();
+});
 
 /** Releases the current object URL and empties the video element. */
 function releaseFile() {
@@ -86,6 +105,12 @@ export function extractYoutubeId(input) {
   return text.match(pattern)?.[1] ?? null;
 }
 
+/** The id of the YouTube video on screen, or null when the source is not YouTube. */
+export function getYoutubeVideoId() {
+  if (source !== SOURCE.YOUTUBE) return null;
+  return youtubePlayer?.getVideoData?.()?.video_id || youtubeVideoId;
+}
+
 /** YouTube refuses to play from a `file://` page, so warn before trying. */
 export function canEmbedYoutube() {
   return location.protocol === "http:" || location.protocol === "https:";
@@ -108,6 +133,7 @@ function destroyYoutube() {
     /* Already gone. */
   }
   youtubePlayer = null;
+  youtubeVideoId = null;
   el.youtubeWrap.innerHTML = '<div id="youtubeFrame"></div>';
   el.youtubeWrap.hidden = true;
 }
@@ -131,6 +157,7 @@ function youtubeErrorMessage(code) {
 export async function loadYoutube(videoId) {
   if (source === SOURCE.YOUTUBE && youtubePlayer?.loadVideoById) {
     youtubePlayer.loadVideoById(videoId);
+    youtubeVideoId = videoId;
     return;
   }
 
@@ -140,6 +167,7 @@ export async function loadYoutube(videoId) {
   destroyYoutube();
   el.youtubeWrap.hidden = false;
   source = SOURCE.YOUTUBE;
+  youtubeVideoId = videoId;
 
   await new Promise((resolve, reject) => {
     youtubePlayer = new YT.Player("youtubeFrame", {
@@ -156,6 +184,9 @@ export async function loadYoutube(videoId) {
       },
       events: {
         onReady: () => resolve(),
+        onStateChange: event => {
+          if (event.data === YT.PlayerState.ENDED) notifyEnded();
+        },
         onError: event => reject(new Error(youtubeErrorMessage(event.data)))
       }
     });

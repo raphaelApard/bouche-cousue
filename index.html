@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="css/mascot.css">
 <link rel="stylesheet" href="css/chrome.css">
 <link rel="stylesheet" href="css/welcome.css">
+<link rel="stylesheet" href="css/catalog.css">
 <link rel="stylesheet" href="css/stage.css">
 
 <!-- Matomo -->
@@ -170,7 +171,18 @@
 
         <div class="welcome__panel">
           <h1 class="welcome__title" data-i18n="welcome.title">Quel film aujourd'hui ?</h1>
-          <p class="welcome__subtitle" data-i18n="welcome.subtitle">Colle un lien YouTube ou ouvre un film de l'ordinateur.</p>
+          <p class="welcome__subtitle" data-i18n="welcome.subtitle">Choisis un dessin animé, colle un lien YouTube ou ouvre un film de l'ordinateur.</p>
+
+          <button type="button" class="button button--primary welcome__catalog" id="catalogButton">
+            <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="6" width="18" height="13" rx="2.5"></rect>
+              <path d="M8 2.5 12 6l4-3.5"></path>
+              <path d="M10.5 10v5l4-2.5z"></path>
+            </svg>
+            <span data-i18n="welcome.catalog">Choisir un dessin animé</span>
+          </button>
+
+          <p class="welcome__or"><span data-i18n="welcome.or">OU</span></p>
 
           <form class="welcome__form" id="welcomeForm">
             <span class="field">
@@ -183,7 +195,7 @@
                      data-i18n-aria-label="welcome.urlLabel"
                      placeholder="https://www.youtube.com/watch?v=…" aria-label="Lien YouTube">
             </span>
-            <button type="submit" class="button button--primary" data-i18n="welcome.openCinema">Ouvrir la salle</button>
+            <button type="submit" class="button button--outline" data-i18n="welcome.openCinema">Ouvrir la salle</button>
           </form>
 
           <p class="welcome__or"><span data-i18n="welcome.or">OU</span></p>
@@ -209,6 +221,30 @@
           <a href="https://github.com/raphaelApard/bouche-cousue" target="_blank" rel="noopener" data-i18n="welcome.sourceLink">GitHub</a>.
         </p>
       </footer>
+    </section>
+
+    <!--
+      The cartoon catalogue: the series, then one series' episodes. Built by
+      js/catalog.js from catalog/<locale>.json; only the frame lives here.
+      Nothing in it is drawn before the YouTube agreement, since every
+      thumbnail comes from YouTube's servers.
+    -->
+    <section class="catalog" id="catalog" hidden aria-labelledby="catalogTitle">
+      <header class="catalog__head">
+        <button type="button" class="button button--quiet catalog__back" id="catalogBackButton">
+          <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7"></path>
+          </svg>
+          <span data-i18n="catalog.back">Retour</span>
+        </button>
+        <div class="catalog__heading">
+          <h1 class="catalog__title" id="catalogTitle">Quel dessin animé ?</h1>
+          <p class="catalog__channel" id="catalogChannel" hidden></p>
+        </div>
+      </header>
+      <p class="catalog__message" id="catalogMessage" role="status" hidden></p>
+      <ul class="catalog__series" id="catalogSeries" hidden></ul>
+      <ol class="catalog__episodes" id="catalogEpisodes" hidden></ol>
     </section>
 
     <!-- The child's veil: warning (film keeps playing) and pause (film stopped) -->
@@ -401,6 +437,14 @@
       <span class="setting__name" data-i18n="settings.mirror">Afficher le miroir</span>
     </label>
 
+    <!-- What this browser remembers beyond the tuning, and the way to forget it. -->
+    <div class="settings-panel__privacy">
+      <button type="button" class="button button--link button--small" id="revokeConsentButton" hidden
+              data-i18n="settings.revokeYoutube">Retirer l'accord YouTube</button>
+      <button type="button" class="button button--link button--small" id="clearHistoryButton" hidden
+              data-i18n="settings.clearHistory">Effacer les épisodes vus</button>
+    </div>
+
     <div class="settings-panel__foot">
       <button type="button" class="button button--link button--small" id="resetButton" data-i18n="settings.reset">Réinitialiser</button>
     </div>
@@ -467,6 +511,29 @@
       <span data-i18n="buttons.exitFullscreen">Quitter le plein écran</span>
     </button>
   </div>
+
+  <!--
+    The adult's agreement to YouTube. Nothing from YouTube is requested before
+    "accept" — not the player, not its script, not a thumbnail. The two
+    answers carry the same weight on purpose: refusing must be as easy as
+    agreeing.
+  -->
+  <dialog class="consent" id="consentDialog" aria-labelledby="consentTitle">
+    <form method="dialog" class="consent__body">
+      <p class="consent__badge" data-i18n="consent.badge">POUR L'ADULTE</p>
+      <h2 class="consent__title" id="consentTitle" data-i18n="consent.title">Avant d'ouvrir YouTube</h2>
+      <p class="consent__text" data-i18n="consent.text">Les vidéos YouTube sont lues depuis les serveurs de Google, qui reçoivent l'adresse IP de cet appareil et peuvent y déposer leurs propres traceurs.</p>
+      <p class="consent__text">
+        <span data-i18n="consent.policyBefore">Pour en savoir plus, lis la</span>
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" data-i18n="consent.policyLink">politique de confidentialité de Google</a>.
+      </p>
+      <p class="consent__note" data-i18n="consent.memory">Ton choix est gardé six mois sur cet appareil, et tu peux le retirer à tout moment dans les Réglages. Les fichiers de l'ordinateur restent lisibles sans YouTube.</p>
+      <p class="consent__actions">
+        <button type="submit" value="decline" class="button button--dark" data-i18n="consent.decline">Refuser</button>
+        <button type="submit" value="accept" class="button button--dark" data-i18n="consent.accept">Accepter</button>
+      </p>
+    </form>
+  </dialog>
 
 </div>
 

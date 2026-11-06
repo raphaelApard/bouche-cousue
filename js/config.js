@@ -42,7 +42,11 @@ export const LANDMARK = Object.freeze({
   MOUTH_RIGHT: 291
 });
 
-/** localStorage keys. Only preferences are ever stored. */
+/**
+ * localStorage keys. Preferences, the date the adult agreed to load YouTube,
+ * and which catalogue episodes were watched — none of it ever leaves the
+ * browser.
+ */
 export const STORAGE_KEYS = Object.freeze({
   sensitivity: "p4l.sensitivity",
   warningDelay: "p4l.warningDelay",
@@ -50,7 +54,28 @@ export const STORAGE_KEYS = Object.freeze({
   volume: "p4l.volume",
   muted: "p4l.muted",
   locale: "p4l.locale",
-  mirror: "p4l.mirror"
+  mirror: "p4l.mirror",
+  youtubeConsent: "p4l.youtubeConsent",
+  watched: "p4l.watched"
+});
+
+/** The cartoon catalogue: one generated file per locale, under this folder. */
+export const CATALOG = Object.freeze({
+  PATH: "catalog",
+  /** Medium thumbnail, 320×180. `{id}` is the YouTube video id. */
+  THUMBNAIL: "https://i.ytimg.com/vi/{id}/mqdefault.jpg",
+  /** Ceiling for a view counter, so a corrupted value cannot grow without bound. */
+  MAX_VIEWS: 9999
+});
+
+/**
+ * Loading YouTube hands the visitor's address to Google and lets it set its own
+ * trackers, so it waits for an adult's agreement. The agreement is kept for
+ * six months — the CNIL's guideline for remembering a consent choice — and can
+ * be withdrawn from the settings at any time.
+ */
+export const CONSENT = Object.freeze({
+  MAX_AGE: 182 * 24 * 60 * 60 * 1000
 });
 
 export const DETECTION = Object.freeze({
