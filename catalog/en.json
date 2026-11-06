@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T20:54:55.084Z",
+  "generatedAt": "2026-11-06T21:05:42.259Z",
   "series": [
     {
       "id": "bluey",
@@ -141,6 +141,36 @@
       "channelId": "UCSVSJ1OCSv5ClFgKFTHIDew",
       "episodes": [
         {
+          "id": "YXwTn59VT0M",
+          "title": "PUPS ASSEMBLED: Rex Reports for Dino Duty! | PAW Patrol | Compilation",
+          "duration": 1164
+        },
+        {
+          "id": "dJrNIwyt14A",
+          "title": "PUPS ASSEMBLED: Marshall Reports for Dino Duty! | PAW Patrol | Compilation",
+          "duration": 1367
+        },
+        {
+          "id": "wrLv0lU27Z0",
+          "title": "PUPS ASSEMBLED: Rocky Reports for Dino Duty! | PAW Patrol | Compilation",
+          "duration": 1200
+        },
+        {
+          "id": "NulhgeDnc_A",
+          "title": "PUPS ASSEMBLED: Zuma Reports for Dino Duty! | PAW Patrol | Compilation",
+          "duration": 1352
+        },
+        {
+          "id": "o2dxipRHfEo",
+          "title": "Out of Control Fire AND No Water?! Marshall to the Rescue! 🚒  | PAW Patrol | Compilation",
+          "duration": 1226
+        },
+        {
+          "id": "-wb7saa7J9c",
+          "title": "Skye’s Syrupy Save | PAW Patrol | Compilation",
+          "duration": 1273
+        },
+        {
           "id": "7GLfL8AX3pc",
           "title": "Rubble & Crew: The Crew Builds a Butterfly Garden | Compilation | PAW Patrol",
           "duration": 721
@@ -206,16 +236,6 @@
           "duration": 1486
         },
         {
-          "id": "YXwTn59VT0M",
-          "title": "PUPS ASSEMBLED: Rex Reports for Dino Duty! | PAW Patrol | Compilation",
-          "duration": 1164
-        },
-        {
-          "id": "dJrNIwyt14A",
-          "title": "PUPS ASSEMBLED: Marshall Reports for Dino Duty! | PAW Patrol | Compilation",
-          "duration": 1367
-        },
-        {
           "id": "Pt_z2wCmniE",
           "title": "PUPS ASSEMBLED: Rubble Reports for Dino Duty! | PAW Patrol | Compilation",
           "duration": 1493
@@ -224,16 +244,6 @@
           "id": "v6sY4V8nluA",
           "title": "Maverick Hurt His Wing! Skye & Rex Save the Dino! 🚁 | PAW Patrol | Compilation",
           "duration": 1506
-        },
-        {
-          "id": "wrLv0lU27Z0",
-          "title": "PUPS ASSEMBLED: Rocky Reports for Dino Duty! | PAW Patrol | Compilation",
-          "duration": 1200
-        },
-        {
-          "id": "NulhgeDnc_A",
-          "title": "PUPS ASSEMBLED: Zuma Reports for Dino Duty! | PAW Patrol | Compilation",
-          "duration": 1352
         },
         {
           "id": "MB28PXmSsYQ",
@@ -254,16 +264,6 @@
           "id": "WGHwmmlkgNw",
           "title": "Quicksand Rescue! Tracker Saves the Mayor! | PAW Patrol | Compilation",
           "duration": 981
-        },
-        {
-          "id": "o2dxipRHfEo",
-          "title": "Out of Control Fire AND No Water?! Marshall to the Rescue! 🚒  | PAW Patrol | Compilation",
-          "duration": 1226
-        },
-        {
-          "id": "-wb7saa7J9c",
-          "title": "Skye’s Syrupy Save | PAW Patrol | Compilation",
-          "duration": 1273
         },
         {
           "id": "MJnKzy0OShQ",
@@ -392,94 +392,9 @@
       "channelId": "UCMAGJ9Hhe_IjsiuYHrns8ag",
       "episodes": [
         {
-          "id": "EU_vdvk5z5k",
-          "title": "Simon & Friends' Rainy Day Adventures! 🌧️🍂 | Outdoor Fun",
-          "duration": 777
-        },
-        {
-          "id": "LnsULfRF-Ww",
-          "title": "Let’s Take Care of the Bird! | Simon | Full episodes Compilation 30m S1 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "t9zlYexuwpE",
-          "title": "Push Me Super Fast! 💨 Simon | Full episodes Compilation 30m S2 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "qcd9UH6WFjc",
-          "title": "🎃 Professor Wolf's Spookiest Moments! Halloween Best Moments",
-          "duration": 809
-        },
-        {
-          "id": "aVTYRI-bqZ4",
-          "title": "We’re Knights! 🛡️ Simon | Full episodes Compilation 30m S1 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "YMIGOGvRERY",
-          "title": "Boo! Gaspard Isn't Scared… Or Is He? | Halloween Special | Simon",
-          "duration": 845
-        },
-        {
-          "id": "Sy9c5xMw2_A",
-          "title": "Where's My Blankie? 😢 Simon | Full episodes Compilation 30m S1 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "1dLKdQ_VRCc",
-          "title": "🎃 Spooky Nights with Simon & Gaspard! 👻 Storms, Shadows & Monsters",
-          "duration": 816
-        },
-        {
-          "id": "HszI6mr-nKs",
-          "title": "Ready for Takeoff? | Simon | Full episodes Compilation 30m S1 | Cartoons for Kids",
-          "duration": 1796
-        },
-        {
-          "id": "kBV5HiAVWZ8",
-          "title": "Simon Is Super Brave! Bikes, Dragons & Super Rabbit Rescues",
-          "duration": 733
-        },
-        {
-          "id": "I813vQhhE_E",
-          "title": "Gaspard growing up: honesty, bravery, and big brother wins in sweet family moments",
-          "duration": 1069
-        },
-        {
-          "id": "y_PpMp4FD8I",
-          "title": "Let’s Play Superheroes! | Simon | Full episodes Compilation 30m S1 | Cartoons for Kids",
-          "duration": 1796
-        },
-        {
-          "id": "ckPA4pcn-zA",
-          "title": "Simon's Biggest Splashes! Pool Slides, Sea Surprises, and Super Brave Moments Compilation",
-          "duration": 1044
-        },
-        {
-          "id": "Q4cZqN1ovjU",
-          "title": "Sweet Bedtime Adventures: Monsters, Storms & Nighttime Fun",
-          "duration": 1107
-        },
-        {
           "id": "unzBstD3uu0",
           "title": "The Super Duper New Game | Simon | Season 3 Full Episode | Cartoons for Kids",
           "duration": 299
-        },
-        {
-          "id": "UrPXR4ovcSM",
-          "title": "Simon and the Bathtub Monster! 🛁 Simon | Full episodes Compilation 30m S4 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "YVNLXv5EXtc",
-          "title": "Grandma day out compilation: beach surprises, bedtime fears, and super rabbit mix-ups",
-          "duration": 703
-        },
-        {
-          "id": "gD6abj1eTeU",
-          "title": "Funny Doctor Games with Simon! | Simon | Full episodes Compilation 30m S1 | Cartoons for Kids",
-          "duration": 1795
         },
         {
           "id": "cVctINYJypI",
@@ -487,24 +402,9 @@
           "duration": 298
         },
         {
-          "id": "3iDQAcesUQg",
-          "title": "Simon and Grandpa's tall tales and tiny adventures: fairies, frogs, monsters and pranks compilation",
-          "duration": 1129
-        },
-        {
-          "id": "rfGCpfNh7gs",
-          "title": "🌊🐟 A Fishy Rescue with Simon & Gaspard! 💙 Simon | Full episodes Compilation 30m S4",
-          "duration": 1795
-        },
-        {
           "id": "smoOFSgHLwQ",
           "title": "It’s Not Yours | Simon | Season 3 Full Episode | Cartoons for Kids",
           "duration": 297
-        },
-        {
-          "id": "EoHCdNuHJZc",
-          "title": "Simon’s Epic School Journey: Goals & Giggles! ⚽😄 Simon | Full episodes Compilation 30m S1",
-          "duration": 1795
         },
         {
           "id": "37qnbPsGtTQ",
@@ -512,19 +412,9 @@
           "duration": 299
         },
         {
-          "id": "A-cZ_g6t5Gc",
-          "title": "Where’s My Banana?! 🍌 Simon | Full episodes Compilation 30m S2 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
           "id": "V2Em6zsQPxs",
           "title": "I Don’t Want To Be The Monster | Simon | Season 3 Full Episode | Cartoons for Kids",
           "duration": 299
-        },
-        {
-          "id": "aSOpqk0QzMc",
-          "title": "🐱 We Found a Baby Cat! 💛 Simon | Full episodes Compilation 30m S3 | Cartoons for Kids",
-          "duration": 1795
         },
         {
           "id": "2d2T_wUEX18",
@@ -532,24 +422,9 @@
           "duration": 299
         },
         {
-          "id": "7DwyDCJ9ewg",
-          "title": "Where did my truck go? | Simon | Full episodes Compilation 30m S3 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "AP9h45ekR2o",
-          "title": "🚚 Gaspard Wants the Shiny Truck! ✨ Simon | Full episodes Compilation 30m S2 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
           "id": "-dTRrZuIpUU",
           "title": "But We're Not Joking | Simon | Season 3 Full Episode | Cartoons for Kids",
           "duration": 299
-        },
-        {
-          "id": "1YvcWtHmfs4",
-          "title": "Gaspard's Super Beach Day! 🌞🏖️ Simon | Full episodes Compilation 30m S2 | Cartoons for Kids",
-          "duration": 1795
         },
         {
           "id": "sjxYPHB0844",
@@ -557,24 +432,9 @@
           "duration": 299
         },
         {
-          "id": "8PcMnp3Um-4",
-          "title": "🐸 We Jump Like Frogs! 💚 Simon | Full episodes Compilation 30m S3 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
           "id": "CBDGAVZvwJY",
           "title": "It Wasn't Me | Simon | Season 3 Full Episode | Cartoons for Kids",
           "duration": 299
-        },
-        {
-          "id": "BNb1Jqg63Rg",
-          "title": "You'll Never Catch Me! 🏃💨 Simon | Full episodes Compilation 30m S3 | Cartoons for Kids",
-          "duration": 1795
-        },
-        {
-          "id": "YSuV7E3X5_c",
-          "title": "Simon's Best Family Trips 🚗 | Road Trips, Trains & Outdoor Adventures",
-          "duration": 751
         },
         {
           "id": "m6LpL3X6n40",
@@ -582,14 +442,154 @@
           "duration": 299
         },
         {
-          "id": "eEL6RcIhxGA",
-          "title": "Oh No... I Drew on the Wall! We Can Clean It Up! 💦 Simon | Full episodes Compilation 30m S2",
-          "duration": 1795
+          "id": "pemzs2LOEXs",
+          "title": "Super Ferdi’s Robot | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
         },
         {
-          "id": "tGYK2hdm6gQ",
-          "title": "Simon's Ultimate Friends Compilation! | Best Playtime Moments",
-          "duration": 821
+          "id": "a65wjvR6Apg",
+          "title": "We’ve lost the mega watch!  | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "dM6ARKp5abI",
+          "title": "Stop Sulking | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "-GVvzR1c0LY",
+          "title": "The Super Mega Course | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "ilSUimdlTQc",
+          "title": "The Mega Marble | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "XglD5gbzwuI",
+          "title": "On the Hunt for Mega Snails | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "CJ30tRYD9XA",
+          "title": "The Mega Robot Who Knows it all | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "xfNY6fxzqLg",
+          "title": "What a monster | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "vlmO8pfN1-4",
+          "title": "I don't want to go on stage | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "7yLGJp9OAnY",
+          "title": "Let's play tag! | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "_nmsIO4Jktk",
+          "title": "Easy Peasy Rackets | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "ee7R-M2IWcs",
+          "title": "We're all just little babies | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "QgopzJIb17M",
+          "title": "Hey…that's not fair! | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "OuJumJxzlV4",
+          "title": "I saw it first! | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "HrQAJu_RGjM",
+          "title": "Hiding the blankie | Simon | Season 2 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "j09zOng9rno",
+          "title": "No more stabilisers | Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "hssNLm2cA3w",
+          "title": "A night in the treehouse | Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "h8aF0ghmVdE",
+          "title": "A deal is a deal 🤖 Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "MudfhfDNs00",
+          "title": "Albert the hamster | Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "uN3cjVW2l44",
+          "title": "The champ! 🔥🏀 Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "pq0h4sG-Exc",
+          "title": "My big cousin 🏆😄 Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "mquV97abpCw",
+          "title": "Sleepover at Ferdinand's 🥦🌋 Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "biH-V7-0XlA",
+          "title": "I am not your friend anymore 😲⚽ Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "QrrWPsn2buo",
+          "title": "I'm the boss 🚀😄 Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "W5gT-h3pkns",
+          "title": "🤫 The secret 🎁 Simon | Season 1 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "U2SbyJNf9uY",
+          "title": "😆 Pulling Faces 💥 Funny Face Challenge | Simon | S4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "u3kN1ko_qNo",
+          "title": "✨ Operation Learning To Fly 🛸 Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "uuAXizcwwUU",
+          "title": "🐦 Professor Wolf’s Bird 🚀 Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "t4dEdR_4bO8",
+          "title": "Look Out For Lightning! ⚡ Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
+        },
+        {
+          "id": "pEnIz62ayv8",
+          "title": "Frogs In Danger 🐸🎶 Froggy Chaos! | Simon | Season 4 Full Episode | Cartoons for Kids",
+          "duration": 299
         }
       ]
     },
