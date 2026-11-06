@@ -74,6 +74,10 @@ export const el = {
   catalogMessage: byId("catalogMessage"),
   catalogSeries: byId("catalogSeries"),
   catalogEpisodes: byId("catalogEpisodes"),
+  catalogPager: byId("catalogPager"),
+  catalogPrevPage: byId("catalogPrevPage"),
+  catalogPageLabel: byId("catalogPageLabel"),
+  catalogNextPage: byId("catalogNextPage"),
 
   // Quick change bar
   quickBarButton: byId("quickBarButton"),

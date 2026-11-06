@@ -245,6 +245,22 @@
       <p class="catalog__message" id="catalogMessage" role="status" hidden></p>
       <ul class="catalog__series" id="catalogSeries" hidden></ul>
       <ol class="catalog__episodes" id="catalogEpisodes" hidden></ol>
+      <nav class="catalog__pager" id="catalogPager" hidden
+           aria-label="Pages" data-i18n-aria-label="catalog.pages">
+        <button type="button" class="button button--outline button--small" id="catalogPrevPage">
+          <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7"></path>
+          </svg>
+          <span data-i18n="catalog.previous">Précédents</span>
+        </button>
+        <span class="catalog__page" id="catalogPageLabel"></span>
+        <button type="button" class="button button--outline button--small" id="catalogNextPage">
+          <span data-i18n="catalog.next">Suivants</span>
+          <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </nav>
     </section>
 
     <!-- The child's veil: warning (film keeps playing) and pause (film stopped) -->

@@ -241,6 +241,7 @@ async function openCatalog() {
 function playEpisode(seriesId, videoId) {
   openYoutube(videoId, () => {
     recordStart(videoId);
+    catalog.markPlayed(seriesId, videoId);
     refreshHistoryButton();
   }, { seriesId, videoId });
 }

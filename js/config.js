@@ -65,7 +65,9 @@ export const CATALOG = Object.freeze({
   /** Medium thumbnail, 320×180. `{id}` is the YouTube video id. */
   THUMBNAIL: "https://i.ytimg.com/vi/{id}/mqdefault.jpg",
   /** Ceiling for a view counter, so a corrupted value cannot grow without bound. */
-  MAX_VIEWS: 9999
+  MAX_VIEWS: 9999,
+  /** Episodes per page of a series: divides evenly into 2, 3, 4 or 6 columns. */
+  PAGE_SIZE: 24
 });
 
 /**

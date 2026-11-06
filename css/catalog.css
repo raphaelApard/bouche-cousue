@@ -54,6 +54,24 @@
   color: var(--ink-muted);
 }
 
+.catalog__pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 30px auto 0;
+}
+.catalog__pager[hidden] { display: none; }
+.catalog__pager .button:disabled { opacity: .35; cursor: default; }
+
+.catalog__page {
+  min-width: 110px;
+  text-align: center;
+  font: 500 13px var(--text);
+  color: var(--ink-muted);
+}
+
 .catalog__message {
   max-width: 520px;
   margin: 48px auto 0;
@@ -180,7 +198,9 @@ body.is-mobile .catalog {
   inset: 0;
   padding: 76px var(--gutter) 32px;
 }
-body.is-mobile .catalog__head { gap: 12px; margin-bottom: 18px; }
+body.is-mobile .catalog__head { gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+body.is-mobile .catalog__pager { gap: 10px; margin-top: 22px; }
+body.is-mobile .catalog__page { min-width: 0; }
 body.is-mobile .catalog__title { font-size: 22px; }
 body.is-mobile .catalog__series,
 body.is-mobile .catalog__episodes {
