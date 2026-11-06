@@ -105,11 +105,15 @@ screen the child is in front of.
 
 **Pick a cartoon** on the welcome screen opens a short list of series — Bluey,
 Trotro, PAW Patrol, Peppa Pig, Simon, T'choupi, Petit Ours Brun, Masha and the
-Bear, PJ Masks and Yakari — then the episodes of the one chosen. An episode plays under the same rule as any other film, and when it
-reaches its end the child is handed back the list, not YouTube's end screen.
-Episodes already watched are dimmed, with a green tick and how many times they
-were seen; one closed before its end is marked *started*. **Clear watched
-episodes** in the settings forgets all of it.
+Bear, PJ Masks and Yakari — then the episodes of the one chosen, up to a
+hundred per series, 24 to a page. An episode plays under the same rule as any
+other film, and when it reaches its end the child is handed back the list, not
+YouTube's end screen — or, with **Play episodes back to back** ticked above
+the list, the next episode starts instead, until the list runs out. That box is
+off until an adult ticks it, and is remembered. Episodes already watched are
+dimmed, with a green tick and how many times they were seen; one closed before
+its end is marked *started*. **Clear watched episodes** in the settings forgets
+all of it.
 
 The lists follow the language: the French build shows the French official
 channels, the English build the English ones (Trotro, T'choupi, Petit Ours
@@ -186,7 +190,7 @@ re-encode (`-c:v libx264 -crf 20 -preset fast`).
   openness reading, no video title — is ever sent anywhere.
 - Local video files are read directly by the browser and never uploaded.
 - The only stored data is your settings (sensitivity, delays, volume, mirror,
-  language), the date you agreed to load YouTube, and which catalogue episodes
+  language, playing episodes back to back), the date you agreed to load YouTube, and which catalogue episodes
   were opened and how many times they were watched to the end — all in this
   browser's `localStorage`, never sent anywhere, and cleared from the settings.
 - Two things do reach the network. Anonymous page-view statistics go to a

@@ -115,9 +115,13 @@ que soit l'écran devant lequel l'enfant se trouve.
 
 **Choisir un dessin animé**, sur l'écran d'accueil, ouvre une courte liste de
 séries — Bluey, Trotro, La Pat' Patrouille, Peppa Pig, Simon, T'choupi, Petit
-Ours Brun, Masha et Michka, Pyjamasques et Yakari — puis les épisodes de celle qui est choisie. Un épisode se joue avec la même règle que
-n'importe quel film, et quand il arrive à sa fin l'enfant retrouve la liste,
-pas l'écran de fin de YouTube. Les épisodes déjà vus sont estompés, avec une
+Ours Brun, Masha et Michka, Pyjamasques et Yakari — puis les épisodes de celle
+qui est choisie, jusqu'à cent par série, 24 par page. Un épisode se joue avec
+la même règle que n'importe quel film, et quand il arrive à sa fin l'enfant
+retrouve la liste, pas l'écran de fin de YouTube — ou, si **Enchaîner les
+épisodes** est coché au-dessus de la liste, l'épisode suivant démarre, jusqu'au
+bout de la liste. Cette case reste décochée tant qu'un adulte ne l'a pas
+cochée, et elle est mémorisée. Les épisodes déjà vus sont estompés, avec une
 coche verte et le nombre de visionnages ; un épisode fermé avant la fin est
 marqué *commencé*. **Effacer les épisodes vus**, dans les réglages, oublie
 tout cela.
@@ -199,7 +203,7 @@ vrai ré-encodage (`-c:v libx264 -crf 20 -preset fast`).
   degré d'ouverture, ni titre de vidéo — n'est envoyé où que ce soit.
 - Les vidéos locales sont lues directement par le navigateur, jamais envoyées.
 - Les seules données conservées sont vos réglages (sensibilité, délais, volume,
-  miroir, langue), la date de votre accord pour YouTube, et les épisodes du
+  miroir, langue, enchaînement des épisodes), la date de votre accord pour YouTube, et les épisodes du
   catalogue ouverts avec le nombre de fois où ils ont été vus jusqu'au bout —
   le tout dans le `localStorage` de ce navigateur, jamais envoyé, et effaçable
   depuis les réglages.

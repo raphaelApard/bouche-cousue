@@ -175,6 +175,7 @@
     "loading": "Le catalogue arrive…",
     "empty": "Le catalogue est encore vide. En attendant, colle un lien YouTube ou ouvre un film de l'ordinateur.",
     "loadFailed": "Le catalogue n'a pas pu être chargé. Vérifie la connexion et réessaie.",
+    "autoplay": "Enchaîner les épisodes",
     "pages": "Pages d'épisodes",
     "previous": "Précédents",
     "next": "Suivants",

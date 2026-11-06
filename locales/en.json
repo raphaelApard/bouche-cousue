@@ -175,6 +175,7 @@
     "loading": "The catalogue is on its way…",
     "empty": "The catalogue is still empty. In the meantime, paste a YouTube link or open a file from this computer.",
     "loadFailed": "The catalogue could not be loaded. Check the connection and try again.",
+    "autoplay": "Play episodes back to back",
     "pages": "Episode pages",
     "previous": "Previous",
     "next": "Next",

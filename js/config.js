@@ -56,7 +56,8 @@ export const STORAGE_KEYS = Object.freeze({
   locale: "p4l.locale",
   mirror: "p4l.mirror",
   youtubeConsent: "p4l.youtubeConsent",
-  watched: "p4l.watched"
+  watched: "p4l.watched",
+  autoplay: "p4l.autoplay"
 });
 
 /** The cartoon catalogue: one generated file per locale, under this folder. */

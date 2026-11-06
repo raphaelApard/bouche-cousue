@@ -113,6 +113,7 @@ function showOnly(list, message) {
   el.catalogMessage.hidden = !message;
   el.catalogMessage.textContent = message ?? "";
   el.catalogPager.hidden = true;
+  el.catalogAutoplayLabel.hidden = list !== el.catalogEpisodes;
 }
 
 function renderSeries(data) {
@@ -277,6 +278,19 @@ export function showEpisodes(seriesId) {
 /** An episode was opened from the list. */
 export function markPlayed(seriesId, videoId) {
   lastPlayed = { seriesId, videoId };
+}
+
+/**
+ * The episode listed after this one in its series, for playing them back to
+ * back — or null at the end of the list, or if the series is gone (a language
+ * switch mid-film).
+ * @returns {Promise<string|null>}
+ */
+export async function episodeAfter(seriesId, videoId) {
+  const data = await load(getLocale()).catch(() => null);
+  const episodes = data?.series.find(entry => entry.id === seriesId)?.episodes ?? [];
+  const index = episodes.findIndex(episode => episode.id === videoId);
+  return index >= 0 ? episodes[index + 1]?.id ?? null : null;
 }
 
 /**
